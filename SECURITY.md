@@ -20,8 +20,11 @@ Requirements:
 - Revoke the current session on logout by setting `Session.revokedAt`.
 - Redirect users by role after login.
 - Return generic errors for failed login attempts.
+- Show generic login UI errors only.
+- Do not log passwords, cookies, session tokens, or password/session hashes from the login UI.
 - Do not use Auth.js unless explicitly requested later.
 - 2FA remains deferred until a later approved phase.
+- Registration remains deferred until a later approved phase.
 
 ## Authorization
 
@@ -40,6 +43,8 @@ Expected helpers:
 - `requireRole`
 
 Access checks must happen in backend/server code, not only in UI components.
+
+Dashboard route protection and middleware are still future work. Current dashboard pages remain placeholders until a later approved phase adds protected layouts or middleware.
 
 ## Session And Cookie Requirements
 

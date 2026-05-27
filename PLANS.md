@@ -225,6 +225,49 @@ Validation:
 - `npm.cmd run build` passed.
 - `npx.cmd prisma validate` passed.
 
+### Phase 3B: Login UI And Auth Smoke Test
+
+Status: Completed
+
+Completed:
+
+- Added a working `/login` client-side form.
+- Login form submits to the existing `/api/auth/login` route.
+- Successful login uses `router.replace(redirectTo)`.
+- Added development-only account email hints without passwords.
+- Added already-authenticated `/login` redirect by role.
+- Kept `/api/auth/register` as `501 Not Implemented`.
+
+Role redirects:
+
+- `ADMIN` -> `/admin/dashboard`
+- `DOCTOR` -> `/doctor/dashboard`
+- `PATIENT` -> `/patient/dashboard`
+
+Manual smoke test results:
+
+- `admin@example.local` login redirects to `/admin/dashboard`.
+- `doctor@example.local` login redirects to `/doctor/dashboard`.
+- `patient@example.local` login redirects to `/patient/dashboard`.
+- Invalid credentials show a generic error.
+- Already-authenticated `/login` redirects by role.
+- Logout works through `POST /api/auth/logout`.
+- No passwords, cookies, session tokens, hashes, `DATABASE_URL`, `DIRECT_URL`, or `.env.local` contents were printed.
+
+Deferred:
+
+- Registration remains unimplemented.
+- Dashboards are still placeholders.
+- No middleware or route protection layouts were implemented.
+- No chat, booking, uploads, Supabase Realtime, Supabase Storage, or admin management logic was implemented.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
 ## Phase 4: Consultation Chat And Files
 
 Status: Not started
