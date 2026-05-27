@@ -17,9 +17,11 @@ Requirements:
 - Use HTTP-only cookies for session tokens.
 - Use secure cookies in production.
 - Validate sessions server-side.
-- Rotate or invalidate sessions on logout.
+- Revoke the current session on logout by setting `Session.revokedAt`.
 - Redirect users by role after login.
+- Return generic errors for failed login attempts.
 - Do not use Auth.js unless explicitly requested later.
+- 2FA remains deferred until a later approved phase.
 
 ## Authorization
 
@@ -46,12 +48,13 @@ Recommended cookie properties:
 - `HttpOnly`
 - `Secure` in production
 - `SameSite=Lax` unless a stricter or cross-site requirement is identified
-- reasonable expiration
+- fixed 7-day expiration for the initial auth foundation
 - server-side invalidation through the `Session` table
+- raw session tokens are never stored in the database
+- only SHA-256 session token hashes are stored in the database
 
 Pending decision:
 
-- exact session expiration duration
 - whether to use sliding renewal
 
 ## Data Protection
@@ -125,8 +128,8 @@ Secrets must be configured locally in `.env.local` and in Vercel environment var
 Before considering MVP complete:
 
 - [ ] Passwords are hashed.
-- [ ] Sessions are server-side and cookie-based.
-- [ ] Cookies are HTTP-only.
+- [x] Sessions are server-side and cookie-based.
+- [x] Cookies are HTTP-only.
 - [ ] Role checks exist for protected routes and API handlers.
 - [ ] Patients cannot access other patients' consultations.
 - [ ] Doctors cannot access unassigned consultations.

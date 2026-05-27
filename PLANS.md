@@ -2,9 +2,7 @@
 
 ## Current Plan
 
-The current phase is post-scaffold planning for Phase 2.
-
-Phase 1 scaffold is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 3A custom session-cookie auth foundation is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -180,7 +178,7 @@ Deferred:
 
 ## Phase 3: Core MVP Workflows
 
-Status: Not started
+Status: In progress
 
 Goals:
 
@@ -189,6 +187,43 @@ Goals:
 - Doctor schedule slots.
 - Consultation booking.
 - Role-specific dashboards.
+
+### Phase 3A: Custom Session-Cookie Auth Foundation
+
+Status: Completed
+
+Completed:
+
+- Implemented custom session-cookie auth foundation.
+- Added Prisma runtime helper for server-side database access.
+- Added password verification with `bcryptjs`.
+- Added session helpers for token creation, SHA-256 token hashing, session creation, session revocation, and cookie handling.
+- Added `getCurrentUser`, `requireUser`, `requireRole`, `unauthorized`, and `forbidden` helpers.
+- Made the login API route functional.
+- Made the logout API route revoke only the current session and clear the cookie.
+- Kept the register API route as `501 Not Implemented`.
+
+Security notes:
+
+- Session cookie name is `telemedicine_session`.
+- Session cookies are HTTP-only, secure in production, and use `SameSite=Lax`.
+- Raw session tokens are never stored in PostgreSQL.
+- Only SHA-256 session token hashes are stored in the `Session` table.
+
+Deferred:
+
+- No registration implementation.
+- No UI forms.
+- No dashboards.
+- No middleware or layout route protection.
+- No chat, booking, uploads, Supabase Realtime, Supabase Storage, or admin logic.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
 
 ## Phase 4: Consultation Chat And Files
 

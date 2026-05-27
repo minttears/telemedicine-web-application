@@ -106,6 +106,38 @@ Use `@prisma/adapter-pg` when runtime scripts instantiate `PrismaClient` for Pos
 
 Reason: Prisma 7 requires runtime client options for direct database access. The PostgreSQL adapter provides the required runtime connection path for seed scripts and future server-side Prisma usage.
 
+### D014: Use `telemedicine_session` As The Session Cookie Name
+
+Status: Accepted
+
+Use `telemedicine_session` as the custom auth session cookie name.
+
+Reason: A project-specific cookie name is explicit, avoids Auth.js conventions, and keeps session handling easy to identify in backend code.
+
+### D015: Use Fixed 7-Day Sessions For The Initial Auth Foundation
+
+Status: Accepted
+
+Sessions expire after 7 days using `Session.expiresAt`. Sliding renewal is not implemented in Phase 3A.
+
+Reason: Fixed expiry keeps the first session implementation simple and auditable while still supporting a reasonable MVP sign-in duration.
+
+### D016: Allow Multiple Sessions And Revoke Only The Current Session On Logout
+
+Status: Accepted
+
+Users may have multiple active sessions. Logout revokes only the session represented by the current request cookie.
+
+Reason: This supports normal use across multiple browsers/devices while keeping logout behavior predictable. Logout-all-devices can be added later.
+
+### D017: Defer Failed Login Audit Logging
+
+Status: Accepted
+
+Failed login attempts return generic errors, but `AuditLog.LOGIN_FAILED` records are deferred to a later auth hardening phase.
+
+Reason: The auth foundation should establish secure login/logout mechanics first. Audit logging needs a broader policy for rate limiting, metadata, retention, and alerting.
+
 ## Pending Decisions
 
 - Exact application name and public branding.
@@ -113,6 +145,6 @@ Reason: Prisma 7 requires runtime client options for direct database access. The
 - Whether doctor profiles are fully public or partially public.
 - File size limits and final allowed attachment MIME types.
 - Admin policy for exceptional access to private chat content.
-- Session expiration duration and renewal strategy.
+- Session renewal strategy.
 - Whether to use Jitsi or another provider for the first video-call iteration.
 - Whether to add shadcn/ui after base Tailwind setup.

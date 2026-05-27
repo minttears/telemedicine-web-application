@@ -1,6 +1,17 @@
-export function POST() {
-  return Response.json(
-    { error: "Logout is not implemented in Phase 1." },
-    { status: 501 },
-  );
+import {
+  clearSessionCookie,
+  destroySession,
+  getSessionCookie,
+} from "@/lib/auth/session";
+
+export async function POST() {
+  const sessionToken = await getSessionCookie();
+
+  if (sessionToken) {
+    await destroySession(sessionToken);
+  }
+
+  await clearSessionCookie();
+
+  return Response.json({ success: true });
 }

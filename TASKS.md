@@ -39,9 +39,9 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T301 | TODO | Build custom session-cookie authentication foundation | Do not use Auth.js. |
-| T302 | TODO | Implement registration, login, logout | Patient registration first; doctor/admin through seed or admin later. |
-| T303 | TODO | Implement role-based access helpers | Include `getCurrentUser`, `requireUser`, and `requireRole`. |
+| T301 | DONE | Build custom session-cookie authentication foundation | Custom session-cookie auth foundation is implemented without Auth.js. |
+| T302 | TODO | Implement registration, login, logout | Login and logout APIs exist; registration remains `501` and needs a later phase. |
+| T303 | DONE | Implement role-based access helpers | Includes `getCurrentUser`, `requireUser`, `requireRole`, and API response helpers. |
 | T304 | TODO | Add role-based redirects | Patient, doctor, admin dashboards. |
 | T305 | TODO | Add basic auth validation states | Loading, error, forbidden, unauthorized. |
 
