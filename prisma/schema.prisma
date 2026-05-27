@@ -1,0 +1,250 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
+
+enum ConsultationStatus {
+  REQUESTED
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum MessageType {
+  TEXT
+  FILE
+  SYSTEM
+  CALL_STARTED
+  CALL_ENDED
+}
+
+enum ScheduleSlotStatus {
+  AVAILABLE
+  BOOKED
+  CANCELLED
+  BLOCKED
+}
+
+enum AuditAction {
+  USER_CREATED
+  USER_UPDATED
+  USER_DEACTIVATED
+  LOGIN_FAILED
+  DOCTOR_CREATED
+  DOCTOR_UPDATED
+  SPECIALTY_CREATED
+  SPECIALTY_UPDATED
+  CONSULTATION_CREATED
+  CONSULTATION_STATUS_CHANGED
+  FILE_UPLOADED
+  PRIVATE_DATA_ACCESSED
+}
+
+model User {
+  id                     String                  @id @default(cuid())
+  email                  String                  @unique
+  passwordHash           String
+  role                   UserRole                @default(PATIENT)
+  name                   String?
+  phone                  String?
+  isActive               Boolean                 @default(true)
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  sessions               Session[]
+  patientProfile         PatientProfile?
+  doctorProfile          DoctorProfile?
+  messages               Message[]               @relation("MessageSender")
+  attachments            Attachment[]            @relation("AttachmentUploader")
+  auditLogs              AuditLog[]              @relation("AuditActor")
+  twoFactorSecret        TwoFactorSecret?
+  twoFactorRecoveryCodes TwoFactorRecoveryCode[]
+
+  @@index([role])
+  @@index([isActive])
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PatientProfile {
+  id            String         @id @default(cuid())
+  userId        String         @unique
+  dateOfBirth   DateTime?
+  gender        String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  consultations Consultation[] @relation("PatientConsultations")
+}
+
+model DoctorProfile {
+  id              String               @id @default(cuid())
+  userId          String               @unique
+  specialtyId     String?
+  title           String?
+  bio             String?
+  education       String?
+  experienceYears Int?
+  avatarUrl       String?
+  isAvailable     Boolean              @default(true)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialty       Specialty?           @relation(fields: [specialtyId], references: [id], onDelete: SetNull)
+  scheduleSlots   DoctorScheduleSlot[]
+  consultations   Consultation[]       @relation("DoctorConsultations")
+
+  @@index([specialtyId])
+  @@index([isAvailable])
+}
+
+model Specialty {
+  id          String          @id @default(cuid())
+  name        String          @unique
+  slug        String          @unique
+  description String?
+  isActive    Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  doctors     DoctorProfile[]
+
+  @@index([isActive])
+}
+
+model DoctorScheduleSlot {
+  id           String             @id @default(cuid())
+  doctorId     String
+  startsAt     DateTime
+  endsAt       DateTime
+  status       ScheduleSlotStatus @default(AVAILABLE)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  doctor       DoctorProfile      @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  consultation Consultation?
+
+  @@unique([doctorId, startsAt, endsAt])
+  @@index([doctorId])
+  @@index([startsAt])
+  @@index([status])
+}
+
+model Consultation {
+  id             String              @id @default(cuid())
+  patientId      String
+  doctorId       String
+  scheduleSlotId String?             @unique
+  scheduledAt    DateTime
+  status         ConsultationStatus  @default(REQUESTED)
+  subject        String?
+  description    String?
+  doctorNotes    String?
+  completedAt    DateTime?
+  cancelledAt    DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  patient        PatientProfile      @relation("PatientConsultations", fields: [patientId], references: [id], onDelete: Restrict)
+  doctor         DoctorProfile       @relation("DoctorConsultations", fields: [doctorId], references: [id], onDelete: Restrict)
+  scheduleSlot   DoctorScheduleSlot? @relation(fields: [scheduleSlotId], references: [id], onDelete: SetNull)
+  messages       Message[]
+  attachments    Attachment[]
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  consultationId String
+  senderId       String
+  type           MessageType  @default(TEXT)
+  body           String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  consultation   Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+  sender         User         @relation("MessageSender", fields: [senderId], references: [id], onDelete: Restrict)
+  attachments    Attachment[]
+
+  @@index([consultationId])
+  @@index([senderId])
+  @@index([createdAt])
+}
+
+model Attachment {
+  id             String       @id @default(cuid())
+  consultationId String
+  messageId      String?
+  uploadedById   String
+  fileName       String
+  fileType       String
+  fileSize       Int
+  storagePath    String
+  createdAt      DateTime     @default(now())
+  consultation   Consultation @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+  message        Message?     @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  uploadedBy     User         @relation("AttachmentUploader", fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([consultationId])
+  @@index([messageId])
+  @@index([uploadedById])
+}
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  actorId    String?
+  action     AuditAction
+  entityType String
+  entityId   String?
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime    @default(now())
+  actor      User?       @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model TwoFactorSecret {
+  id         String    @id @default(cuid())
+  userId     String    @unique
+  secretHash String
+  enabledAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TwoFactorRecoveryCode {
+  id        String    @id @default(cuid())
+  userId    String
+  codeHash  String    @unique
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}

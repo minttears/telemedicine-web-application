@@ -74,6 +74,14 @@ Codex may suggest commits, branches, pushes, and pull requests, but must ask bef
 
 Reason: The user wants control over repository history and deployment flow.
 
+### D010: Use Prisma 7 Config For Database URL
+
+Status: Accepted
+
+Use `prisma.config.ts` for Prisma 7 datasource URL configuration in this project. `schema.prisma` defines the PostgreSQL provider, while `prisma.config.ts` reads `DATABASE_URL`.
+
+Reason: Prisma 7 no longer accepts `url` and `directUrl` datasource properties inside `schema.prisma`. `DIRECT_URL` remains documented for later Supabase and migration work, but it is not used in the current Prisma config yet.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

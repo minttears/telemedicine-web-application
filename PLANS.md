@@ -87,6 +87,33 @@ Goals:
 - Implement password hashing and session-cookie auth.
 - Implement `getCurrentUser`, `requireUser`, and `requireRole`.
 
+### Phase 2A: Prisma Schema And Database Foundation
+
+Status: Completed
+
+Completed:
+
+- Created `prisma/schema.prisma`.
+- Added all initial MVP Prisma models and enums for users, sessions, profiles, specialties, schedule slots, consultations, messages, attachments, audit logs, and future 2FA storage.
+- Added `prisma.config.ts` for Prisma 7 configuration.
+- Added `prisma/seed.ts` with development seed constants only.
+
+Deferred:
+
+- `prisma/seed.ts` was not executed.
+- No migration was run.
+- No Supabase connection was made.
+- Authentication, UI, chat, file upload, booking, and admin business logic remain unimplemented.
+
+Validation:
+
+- `npx.cmd prisma format` passed.
+- `npx.cmd prisma validate` passed.
+- `npx.cmd prisma generate` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run lint` passed.
+- `npm.cmd run build` passed.
+
 ## Phase 3: Core MVP Workflows
 
 Status: Not started
