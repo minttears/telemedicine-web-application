@@ -1,0 +1,16 @@
+# Example Codex project config.
+# Copy to .codex/config.toml only if you understand and approve these settings.
+
+model = "gpt-5.5"
+model_reasoning_effort = "high"
+
+# Safer default: allows workspace edits but asks for risky operations.
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+# Let Codex use web search if available in your environment.
+web_search = "live"
+
+# MCP servers can also be added with:
+# codex mcp add context7 -- npx -y @upstash/context7-mcp
+# codex mcp add playwright -- npx @playwright/mcp@latest
