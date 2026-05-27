@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 4A workspace dashboard shells are completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 4B patient doctor directory is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -419,6 +419,63 @@ Smoke test:
 
 - Browser automation and mobile visual verification were blocked by the local Windows sandbox/browser automation issue.
 - Safe local HTTP smoke testing passed for logged-out redirects, patient/doctor/admin login redirects, own-dashboard access, wrong-role redirects, and logout.
+
+### Phase 4B: Doctor Directory
+
+Status: Completed
+
+Completed:
+
+- Added a server-rendered patient-only doctor directory at `/patient/doctors`.
+- Added a safe patient doctor profile placeholder route at `/patient/doctors/[doctorId]`.
+- Updated changed files:
+  - `app/patient/doctors/page.tsx`
+  - `app/patient/doctors/[doctorId]/page.tsx`
+- The doctor directory uses server-side Prisma reads under the existing protected patient workspace layout.
+- The directory shows safe doctor fields only:
+  - name
+  - title
+  - specialty
+  - short bio
+  - education
+  - experience
+  - availability
+- Search by doctor name works through the `q` URL param.
+- Specialty filtering works through the `specialty` URL param.
+- Clear filters and empty states were added.
+- `View profile` links to `/patient/doctors/[doctorId]`.
+- The doctor profile route is only a safe placeholder and does not implement booking or consultation creation.
+
+Deferred:
+
+- No booking was implemented.
+- No consultation creation was implemented.
+- No schedule selection was implemented.
+- No chat was implemented.
+- No uploads were implemented.
+- No Supabase Realtime was implemented.
+- No Supabase Storage was implemented.
+- No 2FA was implemented.
+- No admin management was implemented.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
+Smoke test:
+
+- Patient can open `/patient/doctors`.
+- Seeded doctor appears.
+- Doctor name search works.
+- Specialty filtering works.
+- Combined search and specialty filtering works.
+- Clear filters and empty state work.
+- `View profile` route opens.
+- Doctor and admin users are redirected away from `/patient/doctors`.
+- Mobile browser visual check was not completed because browser automation is unavailable.
 
 ## Phase 5: Admin And Operational Views
 

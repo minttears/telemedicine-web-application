@@ -61,6 +61,14 @@ Dashboard data boundaries:
 - Admin dashboard uses aggregate counts only.
 - Admin dashboard does not display audit log details, private messages, file contents, passwords, tokens, cookies, or environment secrets.
 
+Doctor directory boundaries:
+
+- `/patient/doctors` is protected by the existing patient workspace layout.
+- The patient doctor directory uses server-side Prisma reads.
+- Doctor and admin users are redirected away from `/patient/doctors`.
+- Only directory-safe doctor profile fields are displayed.
+- The doctor directory does not display private messages, files, passwords, hashes, cookies, tokens, or environment secrets.
+
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
 ## Session And Cookie Requirements
