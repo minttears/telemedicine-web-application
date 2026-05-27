@@ -24,7 +24,11 @@ Requirements:
 - Do not log passwords, cookies, session tokens, or password/session hashes from the login UI.
 - Do not use Auth.js unless explicitly requested later.
 - 2FA remains deferred until a later approved phase.
-- Registration remains deferred until a later approved phase.
+- Public registration is patient-only.
+- Public doctor and admin registration are not allowed.
+- Registration hashes passwords with `bcryptjs`.
+- Duplicate registration email handling returns a safe conflict error.
+- Registration must not log passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, or `.env.local` contents.
 
 ## Authorization
 

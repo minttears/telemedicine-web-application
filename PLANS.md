@@ -310,6 +310,61 @@ Validation:
 - `npm.cmd run build` passed.
 - `npx.cmd prisma validate` passed.
 
+### Phase 3D: Patient Registration
+
+Status: Completed
+
+Completed:
+
+- Added a working `/register` patient registration page.
+- Implemented `POST /api/auth/register`.
+- Added `components/auth/register-form.tsx`.
+- Added `hashPassword()` in `lib/auth/password.ts` using `bcryptjs.hash(password, 12)`.
+- Public registration creates `PATIENT` users only.
+- Public doctor and admin registration are not allowed from the UI or API.
+- Registration normalizes email with trim and lowercase.
+- Registration validates email, minimum 8-character password, matching password confirmation, optional date of birth, and optional gender.
+- Registration hashes passwords before storage.
+- Registration creates `User` and related `PatientProfile` together with a nested Prisma create.
+- Successful registration creates a session and returns `redirectTo: /patient/dashboard`.
+- Duplicate email returns `409 Conflict` with the safe error text `An account with this email cannot be registered.`
+
+Implemented files:
+
+- `app/(auth)/register/page.tsx`
+- `app/api/auth/register/route.ts`
+- `components/auth/register-form.tsx`
+- `lib/auth/password.ts`
+
+Smoke test results:
+
+- `/register` page loads.
+- No doctor/admin role option is exposed.
+- Invalid email is rejected.
+- Short password is rejected.
+- Mismatched password confirmation is rejected.
+- New patient registration succeeds.
+- Registered user role is `PATIENT`.
+- Successful registration returns `/patient/dashboard`.
+- Registration sets a session cookie.
+- New session can access the patient dashboard.
+- Duplicate email returns the safe `409` conflict response.
+- No passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, or `.env.local` contents were printed.
+
+Deferred:
+
+- No public doctor/admin registration.
+- No 2FA.
+- Dashboards are still placeholders.
+- No chat, booking, uploads, Supabase Realtime, Supabase Storage, or admin management logic was implemented.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
 ## Phase 4: Consultation Chat And Files
 
 Status: Not started
