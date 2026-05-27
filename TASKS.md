@@ -32,7 +32,7 @@
 | --- | --- | --- | --- |
 | T201 | DONE | Configure Prisma and Supabase Postgres connection | Supabase Postgres connection validated; `DATABASE_URL` and `DIRECT_URL` are configured locally. |
 | T202 | DONE | Draft the initial Prisma schema | Includes users, sessions, profiles, specialties, schedule slots, consultations, messages, attachments, audit log, and future 2FA models. |
-| T203 | TODO | Add seed data | Admin, doctor, patient, specialties, and sample schedule slots. |
+| T203 | DONE | Add seed data | Development admin, doctor, patient, specialties, profiles, and schedule slots were seeded. |
 | T204 | DONE | Validate Prisma setup | Initial migration was created/applied and Prisma validation commands passed. |
 
 ## Milestone 3: Authentication And Authorization

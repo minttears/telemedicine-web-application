@@ -143,6 +143,41 @@ Validation:
 - `npm.cmd run lint` passed.
 - `npm.cmd run build` passed.
 
+### Phase 2C: Development Seed Data
+
+Status: Completed
+
+Completed:
+
+- Added `bcryptjs` for development seed password hashing.
+- Added `@prisma/adapter-pg` for Prisma 7 runtime PostgreSQL access.
+- Replaced `prisma/seed.ts` with runnable `prisma/seed.mjs`.
+- Made `prisma/seed.mjs` idempotent where practical with upserts.
+- Ran the seed successfully against Supabase using the private `DIRECT_URL` mapping approach.
+
+Seeded development account emails:
+
+- `admin@example.local`
+- `doctor@example.local`
+- `patient@example.local`
+
+Safe seed counts:
+
+- users: 3
+- specialties: 4
+- doctorProfiles: 1
+- patientProfiles: 1
+- scheduleSlots: 5
+
+Security notes:
+
+- No passwords or password hashes were recorded.
+- `.env.local` was not printed, staged, or committed.
+
+Deferred:
+
+- Authentication, UI, chat, booking, uploads, Supabase Realtime, Supabase Storage, and admin logic remain unimplemented.
+
 ## Phase 3: Core MVP Workflows
 
 Status: Not started

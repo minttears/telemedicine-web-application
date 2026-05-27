@@ -90,6 +90,22 @@ Prisma migrations must use `DIRECT_URL` with the Supabase session-mode connectio
 
 Reason: Prisma migrations should not run through the transaction-mode pooler. Local `.env.local` values must never be printed, staged, or committed.
 
+### D012: Use bcryptjs For Password Hashing
+
+Status: Accepted
+
+Use `bcryptjs` for development seed password hashing and future custom authentication password verification.
+
+Reason: `bcryptjs` avoids native build friction, works in the current Node.js runtime, and provides a simple password hashing path for the MVP. Development seed accounts are development-only and must not be used in production.
+
+### D013: Use Prisma PostgreSQL Adapter For Runtime Access
+
+Status: Accepted
+
+Use `@prisma/adapter-pg` when runtime scripts instantiate `PrismaClient` for PostgreSQL access with Prisma 7.
+
+Reason: Prisma 7 requires runtime client options for direct database access. The PostgreSQL adapter provides the required runtime connection path for seed scripts and future server-side Prisma usage.
+
 ## Pending Decisions
 
 - Exact application name and public branding.
