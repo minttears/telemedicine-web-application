@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 3A custom session-cookie auth foundation is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 4A workspace dashboard shells are completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -376,6 +376,49 @@ Goals:
 - Add Supabase Realtime subscriptions for UI updates.
 - Add Supabase Storage file attachments.
 - Store attachment metadata in PostgreSQL.
+
+### Phase 4A: Workspace Dashboard Shells
+
+Status: Completed
+
+Completed:
+
+- Added responsive shell dashboards for patient, doctor, and admin workspaces.
+- Added role-aware navigation to `WorkspaceShell`.
+- Updated changed files:
+  - `app/patient/dashboard/page.tsx`
+  - `app/doctor/dashboard/page.tsx`
+  - `app/admin/dashboard/page.tsx`
+  - `app/patient/layout.tsx`
+  - `app/doctor/layout.tsx`
+  - `app/admin/layout.tsx`
+  - `components/workspace/workspace-shell.tsx`
+- Patient dashboard reads only the current patient profile and the current patient's consultation counts.
+- Doctor dashboard reads only the current doctor profile, the current doctor's consultation counts, and the next 3 available schedule slots.
+- Admin dashboard shows aggregate counts only, including audit log count without audit log details.
+
+Deferred:
+
+- No doctor directory was implemented.
+- No booking was implemented.
+- No chat was implemented.
+- No uploads were implemented.
+- No Supabase Realtime was implemented.
+- No Supabase Storage was implemented.
+- No 2FA was implemented.
+- No admin management actions were implemented.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
+Smoke test:
+
+- Browser automation and mobile visual verification were blocked by the local Windows sandbox/browser automation issue.
+- Safe local HTTP smoke testing passed for logged-out redirects, patient/doctor/admin login redirects, own-dashboard access, wrong-role redirects, and logout.
 
 ## Phase 5: Admin And Operational Views
 

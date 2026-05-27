@@ -52,7 +52,14 @@ Expected helpers:
 
 Access checks must happen in backend/server code, not only in UI components.
 
-Workspace pages are protected by server-side layout checks. Current dashboard pages remain placeholders until a later approved phase builds real dashboard functionality.
+Workspace pages are protected by server-side layout checks. Dashboard shell data is role-scoped and read server-side.
+
+Dashboard data boundaries:
+
+- Patient dashboard reads only the current patient's profile and consultation counts.
+- Doctor dashboard reads only the current doctor's profile, consultation counts, and upcoming available schedule slots.
+- Admin dashboard uses aggregate counts only.
+- Admin dashboard does not display audit log details, private messages, file contents, passwords, tokens, cookies, or environment secrets.
 
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
@@ -137,6 +144,8 @@ Do not log:
 Required variables are listed in `.env.example`.
 
 Secrets must be configured locally in `.env.local` and in Vercel environment variables. Do not commit real values.
+
+Development seed credentials are development-only placeholders and must never be used in production.
 
 ## MVP Security Checklist
 

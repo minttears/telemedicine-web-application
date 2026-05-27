@@ -58,10 +58,10 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T501 | TODO | Create patient workspace route structure | Dashboard, profile, doctors, consultations, chat history, files, archive placeholder. |
-| T502 | TODO | Create doctor workspace route structure | Dashboard, profile, schedule, consultations, patients, templates placeholder, security. |
-| T503 | TODO | Create admin workspace route structure | Dashboard, users, doctors, specialties, consultations, audit log, settings. |
-| T504 | TODO | Add responsive layout patterns | Desktop, tablet, mobile. |
+| T501 | DONE | Create patient workspace route structure | Patient workspace routes exist with a responsive dashboard shell and navigation. Doctor directory, booking, chat, and file workflows remain TODO. |
+| T502 | DONE | Create doctor workspace route structure | Doctor workspace routes exist with a responsive dashboard shell and navigation. Schedule management, consultations, chat, and patient workflows remain TODO. |
+| T503 | DONE | Create admin workspace route structure | Admin workspace routes exist with a responsive aggregate dashboard shell and navigation. Admin management actions remain TODO. |
+| T504 | DONE | Add responsive layout patterns | Workspace shell and role dashboards use responsive desktop/mobile layout patterns. Further page-specific responsive checks remain part of quality work. |
 
 ## Milestone 6: Doctors, Scheduling, And Booking
 
