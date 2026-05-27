@@ -82,6 +82,14 @@ Use `prisma.config.ts` for Prisma 7 datasource URL configuration in this project
 
 Reason: Prisma 7 no longer accepts `url` and `directUrl` datasource properties inside `schema.prisma`. `DIRECT_URL` remains documented for later Supabase and migration work, but it is not used in the current Prisma config yet.
 
+### D011: Use Session-Mode Connection For Prisma Migrations
+
+Status: Accepted
+
+Prisma migrations must use `DIRECT_URL` with the Supabase session-mode connection on port `5432`. `DATABASE_URL` may remain the transaction-mode pooler on port `6543` for later application and serverless query workflows.
+
+Reason: Prisma migrations should not run through the transaction-mode pooler. Local `.env.local` values must never be printed, staged, or committed.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

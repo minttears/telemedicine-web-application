@@ -114,6 +114,35 @@ Validation:
 - `npm.cmd run lint` passed.
 - `npm.cmd run build` passed.
 
+### Phase 2B: Supabase Postgres Connection And Initial Migration
+
+Status: Completed
+
+Completed:
+
+- Created migration `20260527180124_init`.
+- Applied migration `20260527180124_init` to Supabase Postgres.
+- Used `.env.local` privately for local database connection values.
+- Confirmed `.env.local` was not printed, staged, or committed.
+- Confirmed `DATABASE_URL` uses port `6543` transaction pooler.
+- Confirmed `DIRECT_URL` uses port `5432` session-mode pooler.
+- Prisma migration commands temporarily mapped `DATABASE_URL = DIRECT_URL` inside the shell process only.
+
+Deferred:
+
+- Seed was not run.
+- Authentication, UI, chat, booking, uploads, Supabase Realtime, Supabase Storage, and admin logic remain unimplemented.
+
+Validation:
+
+- `npx.cmd prisma format` passed.
+- `npx.cmd prisma validate` passed.
+- `npx.cmd prisma migrate dev --name init` passed.
+- `npx.cmd prisma generate` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run lint` passed.
+- `npm.cmd run build` passed.
+
 ## Phase 3: Core MVP Workflows
 
 Status: Not started
