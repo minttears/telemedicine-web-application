@@ -35,6 +35,10 @@ Role rules:
 - `PATIENT`: can access only their own profile, consultations, messages, and files.
 - `DOCTOR`: can access only assigned consultations, related patients, messages, and files.
 - `ADMIN`: can manage operational records, but should not read private consultation chats without explicit need.
+- `/patient/*` workspace pages require the `PATIENT` role.
+- `/doctor/*` workspace pages require the `DOCTOR` role.
+- `/admin/*` workspace pages require the `ADMIN` role.
+- Wrong-role users are redirected to their own dashboard.
 
 Expected helpers:
 
@@ -44,7 +48,9 @@ Expected helpers:
 
 Access checks must happen in backend/server code, not only in UI components.
 
-Dashboard route protection and middleware are still future work. Current dashboard pages remain placeholders until a later approved phase adds protected layouts or middleware.
+Workspace pages are protected by server-side layout checks. Current dashboard pages remain placeholders until a later approved phase builds real dashboard functionality.
+
+API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
 ## Session And Cookie Requirements
 

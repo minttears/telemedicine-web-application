@@ -268,6 +268,48 @@ Validation:
 - `npm.cmd run build` passed.
 - `npx.cmd prisma validate` passed.
 
+### Phase 3C: Authenticated Layouts And Route Protection
+
+Status: Completed
+
+Completed:
+
+- Added server-side protected layouts for patient, doctor, and admin workspaces.
+- Protected layout files:
+  - `app/patient/layout.tsx`
+  - `app/doctor/layout.tsx`
+  - `app/admin/layout.tsx`
+- Logged-out users opening `/patient/*`, `/doctor/*`, or `/admin/*` are redirected to `/login`.
+- Wrong-role users are redirected to their own dashboard:
+  - `PATIENT` -> `/patient/dashboard`
+  - `DOCTOR` -> `/doctor/dashboard`
+  - `ADMIN` -> `/admin/dashboard`
+- Added a minimal logout button that calls `POST /api/auth/logout` and returns users to `/login`.
+
+Manual smoke test results:
+
+- Logged-out workspace access redirects to `/login`.
+- Patient access allows `/patient/*` and redirects away from doctor/admin workspaces.
+- Doctor access allows `/doctor/*` and redirects away from patient/admin workspaces.
+- Admin access allows `/admin/*` and redirects away from patient/doctor workspaces.
+- Logout invalidates the current session.
+- Raw HTTP status may be `200` for App Router server-component redirects, but browser navigation follows Next redirect markers.
+- No passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, or `.env.local` contents were printed.
+
+Deferred:
+
+- Registration remains unimplemented.
+- Dashboards are still placeholders.
+- API route authorization for business domains remains future work.
+- No chat, booking, uploads, Supabase Realtime, Supabase Storage, or admin management logic was implemented.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
 ## Phase 4: Consultation Chat And Files
 
 Status: Not started

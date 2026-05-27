@@ -42,7 +42,7 @@
 | T301 | DONE | Build custom session-cookie authentication foundation | Custom session-cookie auth foundation is implemented without Auth.js. |
 | T302 | TODO | Implement registration, login, logout | Login UI/API and logout API are implemented; registration remains `501` and needs a later phase. |
 | T303 | DONE | Implement role-based access helpers | Includes `getCurrentUser`, `requireUser`, `requireRole`, and API response helpers. |
-| T304 | TODO | Add role-based redirects | Login redirects by role; dashboard protection and full role routing remain future work. |
+| T304 | DONE | Add role-based redirects | Login redirects by role; protected workspace layouts enforce role access and wrong-role redirects. |
 | T305 | TODO | Add basic auth validation states | Loading, error, forbidden, unauthorized. |
 
 ## Milestone 4: Public Pages And SEO
