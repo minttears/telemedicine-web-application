@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import {
+  ConsultationStatusBadge,
+  PlaceholderPanel,
+} from "@/components/consultations/consultation-display";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
 import { prisma } from "@/lib/prisma";
 
@@ -15,6 +19,21 @@ function formatDateTime(value: Date) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
+}
+
+function DetailItem({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div>
+      <dt className="font-medium text-slate-700">{label}</dt>
+      <dd className="mt-1 text-slate-600">{value}</dd>
+    </div>
+  );
 }
 
 export default async function PatientConsultationPage({
@@ -71,41 +90,49 @@ export default async function PatientConsultationPage({
               </p>
             ) : null}
           </div>
-          <span className="inline-flex w-fit rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-medium text-teal-700">
-            {consultation.status}
-          </span>
+          <ConsultationStatusBadge status={consultation.status} />
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Scheduled time</p>
-          <p className="mt-2 text-lg font-semibold text-slate-950">
-            {formatDateTime(consultation.scheduledAt)}
-          </p>
+      <section className="grid gap-4 lg:grid-cols-[1fr_320px]">
+        <div className="space-y-4">
+          <PlaceholderPanel
+            body="Messages will be added in a later phase."
+            title="Chat is not available yet"
+          />
+          <PlaceholderPanel
+            body="Uploads will be added in a later phase."
+            title="File attachments are not available yet"
+          />
         </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Consultation status</p>
-          <p className="mt-2 text-lg font-semibold text-slate-950">
-            {consultation.status}
-          </p>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Slot status</p>
-          <p className="mt-2 text-lg font-semibold text-slate-950">
-            {consultation.scheduleSlot?.status ?? "Not linked"}
-          </p>
-        </div>
-      </section>
 
-      <section className="rounded-lg border border-dashed border-slate-300 bg-white p-6">
-        <h2 className="text-lg font-semibold text-slate-950">
-          Consultation workspace is not available yet
-        </h2>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          This first booking phase creates the scheduled consultation. Chat,
-          messages, file uploads, and video calls will be added in later phases.
-        </p>
+        <aside className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <p className="text-sm font-medium text-teal-700">
+            Consultation summary
+          </p>
+          <dl className="mt-5 grid gap-4 text-sm">
+            <DetailItem
+              label="Scheduled time"
+              value={formatDateTime(consultation.scheduledAt)}
+            />
+            <DetailItem
+              label="Consultation status"
+              value={consultation.status}
+            />
+            <DetailItem
+              label="Slot status"
+              value={consultation.scheduleSlot?.status ?? "Not linked"}
+            />
+            <DetailItem
+              label="Doctor"
+              value={consultation.doctor.user.name ?? "Doctor profile"}
+            />
+            <DetailItem
+              label="Specialty"
+              value={consultation.doctor.specialty?.name ?? "Not assigned"}
+            />
+          </dl>
+        </aside>
       </section>
     </div>
   );

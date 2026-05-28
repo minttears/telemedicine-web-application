@@ -77,7 +77,7 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T701 | TODO | Implement consultation chat persistence | Messages are written and read through backend APIs using Prisma. |
+| T701 | TODO | Implement consultation chat persistence | Consultation detail shells and static chat/files placeholders are completed. Actual chat, message creation, uploads, Realtime, Storage, video calls, diagnosis, prescriptions, medical notes, status changes, admin management, and doctor schedule management remain TODO. |
 | T702 | TODO | Add Supabase Realtime chat UI updates | PostgreSQL remains the source of truth. |
 | T703 | TODO | Implement file attachment metadata and storage flow | Store blobs in Supabase Storage and metadata in PostgreSQL. |
 | T704 | TODO | Add future call-ready message types | `CALL_STARTED`, `CALL_ENDED` should be supported in the enum. |

@@ -92,6 +92,14 @@ Doctor consultation boundaries:
 - Patient, admin, and logged-out users are redirected away by the existing doctor workspace protection.
 - Doctor consultation pages do not display or print patient email, patient phone, messages, attachments, storage paths, doctor notes, diagnosis, prescriptions, medical notes, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, or development seed password literals.
 
+Consultation detail shell boundaries:
+
+- Consultation detail shells remain scoped by patient or doctor ownership.
+- Patient consultation detail pages show only consultations owned by the current patient.
+- Doctor consultation detail pages show only consultations assigned to the current doctor.
+- Chat and file placeholders are static and do not query messages or attachments.
+- Consultation detail shells do not display or print private messages, attachments, storage paths, medical notes, diagnosis, prescriptions, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, or development seed password literals.
+
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
 ## Session And Cookie Requirements

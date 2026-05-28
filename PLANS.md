@@ -626,6 +626,48 @@ Smoke test:
 - Doctor login, `/doctor/consultations`, assigned consultation list rendering, consultation detail rendering, safe summary fields, fake consultation safe not-found behavior, patient/admin redirects away from doctor routes, and logged-out redirect to `/login` were checked with local HTTP smoke tests.
 - Smoke-test output did not print credentials, cookies, session tokens, password hashes, environment values, database URLs, or development seed password literals.
 
+### Phase 5C: Consultation Detail Shells And Chat Preparation
+
+Status: Completed
+
+Completed:
+
+- Improved patient and doctor consultation detail shells.
+- Updated changed files:
+  - `app/patient/consultations/[consultationId]/page.tsx`
+  - `app/doctor/consultations/[consultationId]/page.tsx`
+  - `components/consultations/consultation-display.tsx`
+- Patient and doctor consultation detail pages now use stacked mobile layout and two-column desktop layout.
+- Both pages remain server-rendered and keep server-side ownership checks.
+- Missing, fake, or unowned consultations use safe `notFound()` behavior.
+- Static read-only placeholders were added for future chat and file attachments.
+
+Deferred:
+
+- No messages were implemented.
+- No message composer was implemented.
+- No send button was implemented.
+- No upload controls were implemented.
+- No Supabase Realtime was implemented.
+- No Supabase Storage was implemented.
+- No video calls were implemented.
+- No diagnosis was implemented.
+- No prescriptions were implemented.
+- No medical notes were implemented.
+- No status changes were implemented.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
+Smoke test:
+
+- Patient and doctor consultation detail rendering, safe summary fields, static chat placeholder, static files placeholder, fake consultation safe not-found behavior, and protected-route redirects were checked with local HTTP smoke tests.
+- Smoke-test output did not print credentials, cookies, session tokens, password hashes, environment values, database URLs, or development seed password literals.
+
 ## Phase 5: Admin And Operational Views
 
 Status: Not started
