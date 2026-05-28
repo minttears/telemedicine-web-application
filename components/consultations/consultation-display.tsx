@@ -1,5 +1,10 @@
+import { AttachmentForm } from "@/components/consultations/attachment-form";
 import { MessageForm } from "@/components/consultations/message-form";
 import { MessageRefresh } from "@/components/consultations/message-refresh";
+import {
+  formatFileSize,
+  getAttachmentTypeLabel,
+} from "@/lib/attachments/validation";
 
 type ConsultationStatusBadgeProps = {
   status: string;
@@ -85,6 +90,17 @@ export function ConsultationSummaryPanel({
 }
 
 type ConsultationMessage = {
+  attachments: {
+    createdAt: Date;
+    fileName: string;
+    fileSize: number;
+    fileType: string;
+    id: string;
+    uploadedBy: {
+      name: string | null;
+      role: string;
+    };
+  }[];
   body: string | null;
   createdAt: Date;
   id: string;
@@ -92,6 +108,7 @@ type ConsultationMessage = {
     name: string | null;
     role: string;
   };
+  type: string;
 };
 
 type ConsultationMessagesPanelProps = {
@@ -159,9 +176,48 @@ export function ConsultationMessagesPanel({
                   {formatMessageDate(message.createdAt)}
                 </time>
               </div>
-              <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-700">
-                {message.body}
-              </p>
+              {message.type === "FILE" ? (
+                <div className="mt-3 space-y-2">
+                  {message.attachments.length > 0 ? (
+                    message.attachments.map((attachment) => (
+                      <div
+                        className="rounded-md border border-slate-200 bg-white p-3"
+                        key={attachment.id}
+                      >
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-slate-900">
+                              {attachment.fileName}
+                            </p>
+                            <p className="mt-1 text-xs text-slate-500">
+                              {getAttachmentTypeLabel(attachment.fileType)} -{" "}
+                              {formatFileSize(attachment.fileSize)} - Uploaded
+                              by{" "}
+                              {attachment.uploadedBy.name ??
+                                attachment.uploadedBy.role}{" "}
+                              - {formatMessageDate(attachment.createdAt)}
+                            </p>
+                          </div>
+                          <a
+                            className="inline-flex min-h-9 w-fit items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
+                            href={`/api/files/${attachment.id}`}
+                          >
+                            Download
+                          </a>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm leading-6 text-slate-600">
+                      File metadata is not available.
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                  {message.body}
+                </p>
+              )}
             </article>
           ))}
         </div>
@@ -189,7 +245,10 @@ export function ConsultationMessagesPanel({
           </p>
         </div>
       ) : (
-        <MessageForm consultationId={consultationId} />
+        <>
+          <MessageForm consultationId={consultationId} />
+          <AttachmentForm consultationId={consultationId} />
+        </>
       )}
     </section>
   );

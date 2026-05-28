@@ -130,6 +130,12 @@ Consultation detail shell boundaries:
 - Message bodies are rendered as plain React text, and `dangerouslySetInnerHTML` is not used.
 - Doctor completion summary text is rendered as plain React text, and `dangerouslySetInnerHTML` is not used.
 - Completed consultation message history remains visible, but message records and consultation records are not deleted.
+- File attachments use server-mediated Next.js route handlers and the private Supabase Storage bucket.
+- Patients can upload and download files only for consultations owned by their `PatientProfile`.
+- Doctors can upload and download files only for consultations assigned to their `DoctorProfile`.
+- Admin users cannot access attachment content in this phase.
+- Completed consultations reject new file uploads and show existing file messages read-only.
+- Attachment UI shows safe metadata only and never displays `storagePath`.
 - No secrets, cookies, session tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, service role keys, or development seed password literals should be printed or displayed.
 
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
@@ -156,6 +162,9 @@ Pending decision:
 - Supabase Storage stores file blobs.
 - Attachment metadata must include owner and consultation context.
 - Never expose Supabase service role keys to the browser.
+- `SUPABASE_SERVICE_ROLE_KEY` is server-only and must not be imported into client components.
+- Direct browser upload to Supabase Storage is not implemented.
+- Public buckets and public file URLs are not used for consultation attachments.
 - Do not commit `.env.local` or real secrets.
 - Do not log passwords, session tokens, 2FA secrets, or private file contents.
 
@@ -173,27 +182,46 @@ Pending decision:
 
 ## File Upload Security
 
-MVP allowed file types:
+Consultation file attachments use a private Supabase Storage bucket.
 
-- PDF
-- JPG
-- PNG
-- DOC/DOCX if convenient
+Upload and download rules:
 
-Implementation should include:
+- Uploads and downloads are server-mediated through Next.js route handlers.
+- Prisma/PostgreSQL remains the authorization source of truth.
+- Supabase Storage stores file bytes only.
+- PostgreSQL stores attachment metadata.
+- Patients can upload/download only for consultations owned by their `PatientProfile`.
+- Doctors can upload/download only for consultations assigned to their `DoctorProfile`.
+- Admin users cannot access attachment content in this phase.
+- Completed consultations reject new uploads.
+- Direct browser Supabase Storage upload is not implemented.
+- Public buckets and public URLs are not used.
+- `storagePath` is never displayed in the UI.
 
-- MIME type validation
-- file extension validation
-- file size limits
-- per-user authorization checks
+MVP file limits and allowlist:
+
+- Maximum size: 10 MB.
+- PDF.
+- JPG/JPEG.
+- PNG.
+- DOCX.
+
+Implementation includes:
+
+- MIME type validation.
+- File extension validation.
+- File size limits.
+- Per-user authorization checks.
 - storage paths that avoid leaking private information
 - metadata records in PostgreSQL
+- `FILE_UPLOADED` audit logs with safe metadata only.
 
-Pending decision:
+Not included in the MVP:
 
-- exact file size limit
-- exact MIME type allowlist
-- file retention policy
+- Virus scanning; this remains a production hardening gap.
+- Advanced file previews.
+- Admin break-glass attachment content access.
+- File retention policy.
 
 ## Audit Logging
 

@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 8A consultation completion and doctor summary is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 9B secure consultation file attachments is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -907,6 +907,69 @@ Smoke test:
 
 - Automated smoke testing failed because the temporary-record script had a PowerShell parser error and the dev server did not become ready within the timeout for the limited route smoke.
 - No credentials, cookies, tokens, passwords, password hashes, database URLs, environment values, service role keys, or development seed password literals were printed.
+
+### Phase 9B: File Attachments Implementation
+
+Status: Completed
+
+Completed:
+
+- Added first-version secure consultation file attachments.
+- Added `@supabase/supabase-js` and used it only from a server-only Supabase Storage helper.
+- Uploads use the private Supabase Storage bucket `consultation-attachments`.
+- Upload and download are server-mediated through Next.js route handlers.
+- Prisma/PostgreSQL remains the authorization source of truth.
+- Supabase Storage stores file bytes only.
+- Attachment metadata is stored in PostgreSQL using the existing `Attachment` model.
+- File messages use the existing `MessageType.FILE`.
+- `storagePath` is used only server-side and is never shown in the UI.
+- Maximum file size is 10 MB.
+- Allowed file types are PDF, JPG/JPEG, PNG, and DOCX.
+- Completed consultations remain read-only for uploads.
+- Admin has no attachment content access in this phase.
+- `FILE_UPLOADED` audit logs are created with safe metadata only: consultation id, file size, and file type.
+- Patient and doctor consultation detail pages render `MessageType.FILE` safely with filename, type, size, uploader, timestamp, and authorized download links.
+
+Changed files:
+
+- `package.json`
+- `package-lock.json`
+- `lib/supabase/storage.ts`
+- `lib/attachments/validation.ts`
+- `app/api/files/route.ts`
+- `app/api/files/[attachmentId]/route.ts`
+- `components/consultations/attachment-form.tsx`
+- `app/patient/consultations/[consultationId]/page.tsx`
+- `app/doctor/consultations/[consultationId]/page.tsx`
+- `components/consultations/consultation-display.tsx`
+
+Deferred:
+
+- True Supabase Realtime.
+- Video calls.
+- Legal prescription workflow.
+- Admin attachment/message content access.
+- Virus scanning.
+- Advanced file previews.
+- Production file-handling hardening.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed after `DATABASE_URL` was loaded silently into the process from `.env.local`.
+
+Dependency/audit note:
+
+- `npm install @supabase/supabase-js` reported 5 moderate audit findings.
+- `npm audit fix` was not run because dependency updates and audit fixes were outside the approved Phase 9B scope.
+
+Smoke test:
+
+- Automated local HTTP smoke testing did not complete because temporary dev-server startup timed out in the Windows environment.
+- The temporary dev-server process tree was stopped after the timeout.
+- No credentials, cookies, tokens, passwords, password hashes, database URLs, service role keys, environment values, or development seed password literals were printed.
 
 ## Phase 5: Admin And Operational Views
 

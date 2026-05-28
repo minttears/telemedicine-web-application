@@ -10,7 +10,8 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Tailwind CSS for UI
 - Prisma ORM with Supabase Postgres
 - Custom session-cookie authentication
-- Supabase Realtime and Supabase Storage are planned but not implemented in active workflows
+- Supabase Storage is implemented for first-version secure consultation file attachments
+- Supabase Realtime is planned but not implemented in active workflows
 - Vercel is the target deployment platform
 
 ## Completed Major Phases
@@ -29,28 +30,36 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 7B code-level MVP workflow QA and small copy/documentation polish
 - Phase 8A first-version doctor-only consultation completion summary
 - Phase 8B consultation history filters and read-only completed chat
+- Phase 9B first-version secure consultation file attachments
 
 ## Current MVP Behavior
 
-- Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, and view a read-only doctor summary after completion.
-- Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with one plain-text conclusion/recommendations summary.
+- Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, upload/download allowed consultation files, and view a read-only doctor summary after completion.
+- Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with one plain-text conclusion/recommendations summary.
 - Booking creates a `SCHEDULED` consultation and changes the selected slot from `AVAILABLE` to `BOOKED` inside a Prisma transaction.
 - Patient and doctor consultation reads are server-rendered and scoped by current profile ownership.
 - Patient and doctor consultation lists support `Upcoming`, `Completed`, and `All` history filters.
 - Completed consultations remain visible in consultation history and stay accessible from the completed and all filters.
 - Message creation uses `POST /api/messages`, stores `MessageType.TEXT`, trims body text, and enforces a 2000-character limit.
+- File attachment upload uses server-mediated `POST /api/files`, stores `MessageType.FILE` plus `Attachment` metadata in PostgreSQL, and stores file bytes only in the private Supabase Storage bucket.
+- File attachment download uses server-mediated `GET /api/files/[attachmentId]` and verifies consultation ownership/assignment before returning file bytes.
+- Patients can upload/download attachments only for consultations owned by their `PatientProfile`.
+- Doctors can upload/download attachments only for consultations assigned to their `DoctorProfile`.
+- Allowed attachment types are PDF, JPG/JPEG, PNG, and DOCX, with a 10 MB maximum file size.
 - Chat auto-refresh uses polling with `router.refresh()` every 5 seconds only while the document is visible.
 - Consultation completion uses existing `Consultation.doctorNotes` for the MVP doctor summary, sets `Consultation.status` to `COMPLETED`, and sets `Consultation.completedAt`.
 - Completed consultations show preserved chat history in read-only mode.
+- Completed consultations show existing file messages read-only and reject new file uploads.
 - `POST /api/messages` rejects completed consultations with a safe `409`, while non-completed consultation chat remains writable.
+- Admin has no attachment content access in this phase.
 - Admin has protected workspace routes but operational management is still mostly placeholder/deferred.
 
 ## Deferred Features
 
 - True Supabase Realtime subscriptions and the required custom auth/RLS/JWT security design
-- File uploads, attachment metadata flow, and Supabase Storage
 - Admin management screens and audit-log workflows
 - Admin break-glass/private consultation access
+- Virus scanning, advanced file previews, and production file-handling hardening
 - Doctor profile/specialty management beyond seeded data
 - Recurring schedules, booked slot cancellation, consultation cancellation, and status changes
 - Legal prescription workflow, structured diagnosis/recommendation/follow-up fields, medical notes, and archives
@@ -72,12 +81,12 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 8B: Consultation History And Archive Rules.
+Phase 9B: File Attachments Implementation.
 
 Latest known commit:
 
-- `0c780bd feat: add doctor consultation completion summary`
+- `b9205a2 feat: add consultation history archive rules`
 
 ## Next Recommended Phase
 
-Choose the next MVP gap deliberately. Strong candidates are admin management foundations, file attachment metadata/storage planning, public SEO/deployment readiness, or broader authenticated browser QA. Supabase Realtime should remain deferred until a separate security plan is approved.
+Choose the next MVP gap deliberately. Strong candidates are admin management foundations, public SEO/deployment readiness, broader authenticated browser QA, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.

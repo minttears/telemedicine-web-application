@@ -6,7 +6,6 @@ import {
   ConsultationSummaryPanel,
   ConsultationStatusBadge,
   ConsultationMessagesPanel,
-  PlaceholderPanel,
 } from "@/components/consultations/consultation-display";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
 import { prisma } from "@/lib/prisma";
@@ -64,12 +63,29 @@ export default async function PatientConsultationPage({
       scheduleSlot: true,
       messages: {
         where: {
-          type: MessageType.TEXT,
+          type: {
+            in: [MessageType.TEXT, MessageType.FILE],
+          },
         },
         orderBy: {
           createdAt: "asc",
         },
         select: {
+          attachments: {
+            select: {
+              createdAt: true,
+              fileName: true,
+              fileSize: true,
+              fileType: true,
+              id: true,
+              uploadedBy: {
+                select: {
+                  name: true,
+                  role: true,
+                },
+              },
+            },
+          },
           body: true,
           createdAt: true,
           id: true,
@@ -79,6 +95,7 @@ export default async function PatientConsultationPage({
               role: true,
             },
           },
+          type: true,
         },
       },
     },
@@ -131,10 +148,6 @@ export default async function PatientConsultationPage({
             consultationId={consultation.id}
             messages={consultation.messages}
             readOnly={consultation.status === "COMPLETED"}
-          />
-          <PlaceholderPanel
-            body="Uploads will be added in a later phase."
-            title="File attachments are not available yet"
           />
         </div>
 

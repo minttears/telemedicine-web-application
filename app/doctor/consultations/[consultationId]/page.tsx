@@ -6,7 +6,6 @@ import {
   ConsultationSummaryPanel,
   ConsultationStatusBadge,
   ConsultationMessagesPanel,
-  PlaceholderPanel,
 } from "@/components/consultations/consultation-display";
 import { ConsultationCompletionForm } from "@/components/consultations/consultation-completion-form";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
@@ -79,12 +78,29 @@ export default async function DoctorConsultationPage({
       scheduleSlot: true,
       messages: {
         where: {
-          type: MessageType.TEXT,
+          type: {
+            in: [MessageType.TEXT, MessageType.FILE],
+          },
         },
         orderBy: {
           createdAt: "asc",
         },
         select: {
+          attachments: {
+            select: {
+              createdAt: true,
+              fileName: true,
+              fileSize: true,
+              fileType: true,
+              id: true,
+              uploadedBy: {
+                select: {
+                  name: true,
+                  role: true,
+                },
+              },
+            },
+          },
           body: true,
           createdAt: true,
           id: true,
@@ -94,6 +110,7 @@ export default async function DoctorConsultationPage({
               role: true,
             },
           },
+          type: true,
         },
       },
     },
@@ -146,10 +163,6 @@ export default async function DoctorConsultationPage({
             consultationId={consultation.id}
             messages={consultation.messages}
             readOnly={consultation.status === "COMPLETED"}
-          />
-          <PlaceholderPanel
-            body="Uploads will be added in a later phase."
-            title="File attachments are not available yet"
           />
         </div>
 
