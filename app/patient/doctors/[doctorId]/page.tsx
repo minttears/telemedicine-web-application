@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { BookingForm } from "@/components/patient/booking-form";
 import { prisma } from "@/lib/prisma";
 
 type PatientDoctorProfilePageProps = {
@@ -57,7 +58,7 @@ export default async function PatientDoctorProfilePage({
         orderBy: {
           startsAt: "asc",
         },
-        take: 3,
+        take: 5,
       },
       user: true,
     },
@@ -144,7 +145,7 @@ export default async function PatientDoctorProfilePage({
               </h2>
             </div>
             <span className="inline-flex w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
-              Read-only
+              Available slots
             </span>
           </div>
 
@@ -162,6 +163,7 @@ export default async function PatientDoctorProfilePage({
                     {formatSlotTime(slot.startsAt)} -{" "}
                     {formatSlotTime(slot.endsAt)}
                   </p>
+                  <BookingForm doctorId={doctor.id} scheduleSlotId={slot.id} />
                 </li>
               ))}
             </ul>
@@ -171,26 +173,29 @@ export default async function PatientDoctorProfilePage({
                 No upcoming available slots are listed yet.
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                New availability will appear here after schedule management is
-                implemented.
+                New availability will appear here when future schedule slots are
+                available for booking.
               </p>
             </div>
           )}
 
           <p className="mt-4 text-sm leading-6 text-slate-600">
-            These times are shown for preview only. Slot selection and booking
-            will be implemented in a later phase.
+            Booking creates a scheduled consultation for the selected time. Chat
+            and file uploads will be added in later phases.
           </p>
         </div>
 
-        <aside className="rounded-lg border border-dashed border-slate-300 bg-white p-6">
+        <aside className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-950">
-            Booking is not available yet
+            Book a consultation
           </h2>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Consultation booking, schedule selection, chat, and file uploads
-            will be added in later phases. This page currently shows safe
-            read-only doctor profile information.
+            Choose an available time from the schedule preview. The selected
+            slot will be reserved when the booking is confirmed.
+          </p>
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            Consultation chat, messages, and file uploads are not available in
+            this phase.
           </p>
         </aside>
       </section>

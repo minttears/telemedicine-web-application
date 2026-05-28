@@ -74,6 +74,16 @@ Doctor directory boundaries:
 - The doctor profile schedule preview shows only future `AVAILABLE` slots and is read-only.
 - Doctor profile detail pages do not display consultations, booking controls, chat content, files, session tokens, cookies, passwords, password hashes, environment values, storage paths, or private account data.
 
+Consultation booking boundaries:
+
+- The booking API is patient-only.
+- The booking API performs server-side role checks with `requireRole("PATIENT")`.
+- Patients can create consultations only for their own `PatientProfile`.
+- Patients cannot book past, unavailable, booked, or wrong-doctor schedule slots.
+- Double-booking is prevented with a Prisma transaction, a conditional slot update from `AVAILABLE` to `BOOKED`, and `Consultation.scheduleSlotId` uniqueness.
+- Patient consultation list and detail pages show only consultations owned by the current patient.
+- Booking and consultation pages must not print or display secrets, passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, development seed password literals, storage paths, private messages, or file contents.
+
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
 ## Session And Cookie Requirements

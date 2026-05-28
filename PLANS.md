@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 4C patient doctor profile details are completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 5A patient consultation booking is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -531,6 +531,53 @@ Security note:
 
 - Development seed password literals were accidentally exposed during Phase 4C smoke-test setup and must not be printed again.
 - Development seed credentials are development-only and must never be used in production.
+
+### Phase 5A: Consultation Booking
+
+Status: Completed
+
+Completed:
+
+- Added first-version patient consultation booking.
+- Updated changed files:
+  - `app/api/consultations/route.ts`
+  - `app/patient/doctors/[doctorId]/page.tsx`
+  - `app/patient/consultations/page.tsx`
+  - `app/patient/consultations/[consultationId]/page.tsx`
+  - `components/patient/booking-form.tsx`
+- Patients can book a future `AVAILABLE` doctor schedule slot from the doctor profile page.
+- Booking creates a `SCHEDULED` `Consultation`.
+- Booking changes the selected `DoctorScheduleSlot` from `AVAILABLE` to `BOOKED`.
+- Booking uses a Prisma transaction.
+- Double-booking is handled with a conditional slot update and safe `409 Conflict` responses.
+- Successful booking redirects to `/patient/consultations/[consultationId]`.
+- `/patient/consultations` lists the current patient's consultations.
+- `/patient/consultations/[consultationId]` shows a safe consultation summary.
+
+Deferred:
+
+- No chat was implemented.
+- No messages were implemented.
+- No uploads were implemented.
+- No Supabase Realtime was implemented.
+- No Supabase Storage was implemented.
+- No video calls were implemented.
+- No payment was implemented.
+- No doctor schedule management was implemented.
+- No admin management was implemented.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
+Smoke test:
+
+- Patient login, doctor profile booking options, successful slot booking, redirect to consultation detail, `SCHEDULED` consultation summary, booked slot removal from available profile slots, consultation list visibility, repeat booking safe `409`, doctor/admin forbidden API attempts, and logged-out unauthorized API attempts were checked with local HTTP smoke tests.
+- Smoke-test output did not print credentials, cookies, session tokens, password hashes, environment values, database URLs, or development seed password literals.
+- One development slot was booked during smoke testing.
 
 ## Phase 5: Admin And Operational Views
 

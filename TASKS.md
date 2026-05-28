@@ -71,7 +71,7 @@
 | T602 | DONE | Implement doctor list and filters | Patient doctor directory supports doctor name search and specialty filtering. Availability is shown on cards, but availability filtering remains deferred. |
 | T603 | DONE | Implement doctor profile page | Patient-only doctor profile details and a read-only upcoming slot preview are completed. Booking, consultation creation, and schedule selection remain TODO. |
 | T604 | TODO | Implement basic schedule slots | Keep scheduling simple for MVP. |
-| T605 | TODO | Implement consultation booking | Selecting a slot creates a consultation and reserves the slot. |
+| T605 | DONE | Implement consultation booking | First-version patient booking is completed: selecting a future available slot creates a scheduled consultation and books the slot. Chat, messages, uploads, Realtime, Storage, video calls, payment, doctor schedule management, and admin management remain TODO. |
 
 ## Milestone 7: Consultation Chat And Files
 
