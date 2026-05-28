@@ -187,8 +187,7 @@ export default async function PatientDoctorProfilePage({
 
           <p className="mt-4 text-sm leading-6 text-slate-600">
             Booking creates a scheduled consultation for the selected time. Chat
-            is available after booking. File uploads will be added in a later
-            phase.
+            and secure file attachments are available after booking.
           </p>
         </div>
 
@@ -202,8 +201,8 @@ export default async function PatientDoctorProfilePage({
             least 30 minutes from now are shown.
           </p>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Consultation chat is available after booking. File uploads are not
-            available in this phase.
+            Consultation chat and secure file attachments are available from the
+            consultation page after booking.
           </p>
         </aside>
       </section>

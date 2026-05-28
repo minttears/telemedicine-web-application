@@ -1,13 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const genericLoginError = "Invalid email or password.";
-
-type LoginFormProps = {
-  developmentEmails: string[];
-};
 
 type LoginResponse = {
   redirectTo?: string;
@@ -17,7 +14,7 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-export function LoginForm({ developmentEmails }: LoginFormProps) {
+export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -82,7 +79,8 @@ export function LoginForm({ developmentEmails }: LoginFormProps) {
           Sign in to Telemedicine
         </h1>
         <p className="text-sm leading-6 text-slate-600">
-          Use your account to access patient, doctor, or admin workspaces.
+          Access your secure workspace for consultations, messages, files, and
+          care history.
         </p>
       </div>
 
@@ -141,22 +139,14 @@ export function LoginForm({ developmentEmails }: LoginFormProps) {
       </button>
 
       <p className="mt-4 text-sm leading-6 text-slate-600">
-        Registration is not available yet. Patient registration will be added in
-        a later phase.
+        Don&apos;t have an account?{" "}
+        <Link
+          className="font-medium text-teal-700 hover:text-teal-800"
+          href="/register"
+        >
+          Create a patient account.
+        </Link>
       </p>
-
-      {developmentEmails.length > 0 && (
-        <div className="mt-6 rounded-md border border-teal-100 bg-teal-50 p-4">
-          <p className="text-sm font-medium text-teal-900">
-            Development account emails
-          </p>
-          <ul className="mt-2 space-y-1 text-sm text-teal-800">
-            {developmentEmails.map((developmentEmail) => (
-              <li key={developmentEmail}>{developmentEmail}</li>
-            ))}
-          </ul>
-        </div>
-      )}
     </form>
   );
 }

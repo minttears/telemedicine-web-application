@@ -183,8 +183,8 @@ export default async function PatientDoctorsPage({
           Find a doctor
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Browse available doctor profiles by name and specialty. Booking and
-          schedule selection will be added in a later phase.
+          Browse available doctor profiles by name and specialty, then open a
+          profile to choose an available time.
         </p>
         <p className="mt-4 text-sm font-medium text-slate-700">
           {allDoctorCount} {allDoctorCount === 1 ? "doctor" : "doctors"} in the

@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 10B admin specialty management MVP is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 10C MVP UI copy and workflow polish is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -1120,6 +1120,40 @@ Smoke test:
 - No private internals appeared in new admin specialty pages.
 - Temporary smoke records were left non-public/inactive where applicable; no hard delete was performed.
 - No credentials, passwords, password hashes, cookies, session tokens, database URLs, service role keys, environment values, or development seed password literals were printed.
+
+### Phase 10C: MVP UI Copy And Workflow Polish
+
+Status: Completed
+
+Completed:
+
+- Removed stale login copy saying registration is unavailable or patient registration will be added later.
+- Added a login link to patient-only public registration.
+- Removed development account email hints from the login UI.
+- Replaced login role-workspace cards with concise product copy.
+- Updated patient dashboard copy to reflect completed booking, consultation history, chat, file attachment, and doctor discovery workflows.
+- Updated patient doctor directory and doctor detail copy to reflect available booking, chat, and secure file attachments.
+- Kept public registration patient-only and did not add doctor or admin registration links.
+
+Changed files:
+
+- `app/(auth)/login/page.tsx`
+- `components/auth/login-form.tsx`
+- `app/patient/dashboard/page.tsx`
+- `app/patient/doctors/page.tsx`
+- `app/patient/doctors/[doctorId]/page.tsx`
+- `TASKS.md`
+- `PLANS.md`
+- `CURRENT_STATE.md`
+- `SECURITY.md`
+
+Not implemented:
+
+- No product functionality changes.
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+- No route, authorization, booking, chat, attachment, or admin behavior changes.
 
 ## Phase 5: Admin And Operational Views
 

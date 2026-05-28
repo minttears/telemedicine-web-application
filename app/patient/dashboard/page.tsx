@@ -91,8 +91,8 @@ export default async function PatientDashboardPage() {
           Welcome{user.name ? `, ${user.name}` : ""}
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          This workspace will help you manage consultations, files, and doctor
-          access as the MVP workflows are added.
+          Manage your consultations, messages, files, doctor access, and care
+          history from one protected workspace.
         </p>
       </section>
 
@@ -129,13 +129,13 @@ export default async function PatientDashboardPage() {
           </h2>
           {totalConsultations > 0 ? (
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Your consultation records are ready to appear here as booking and
-              chat workflows are implemented.
+              Your consultation records are available in consultation history,
+              including active chats, attachments, and completed summaries.
             </p>
           ) : (
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              You do not have consultations yet. Booking will be added in a
-              later phase.
+              You do not have consultations yet. Browse available doctors to
+              choose a time and book your first consultation.
             </p>
           )}
         </div>
@@ -151,7 +151,7 @@ export default async function PatientDashboardPage() {
               label="Complete profile"
             />
             <ActionLink
-              description="Doctor discovery will be connected in a later phase."
+              description="Find active doctors by name or specialty and book an available time."
               href="/patient/doctors"
               label="Browse doctors"
             />

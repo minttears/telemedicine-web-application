@@ -95,7 +95,7 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T901 | TODO | Add responsive and state coverage checks | Phase 7B completed a code-level MVP workflow QA and small copy polish pass. Broader authenticated browser, responsive, loading, empty, error, unauthorized, forbidden, and not-found coverage remains TODO. |
+| T901 | TODO | Add responsive and state coverage checks | Phase 7B completed a code-level MVP workflow QA and small copy polish pass. Phase 10C completed MVP UI copy/workflow polish for login and patient-facing booking/chat/file copy. Broader authenticated browser, responsive, loading, empty, error, unauthorized, forbidden, and not-found coverage remains TODO. |
 | T902 | TODO | Add deployment configuration guidance for Vercel | Ensure environment variables are documented. |
 | T903 | TODO | Add basic quality gates | Lint, typecheck, build, and Prisma validation scripts when app setup exists. |
 | T904 | TODO | Use Playwright MCP to verify key UI flows when available | Login, dashboards, booking, chat. |

@@ -30,6 +30,7 @@ Requirements:
 - Registration hashes passwords with `bcryptjs`.
 - Duplicate registration email handling returns a safe conflict error.
 - Registration must not log passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, or `.env.local` contents.
+- Login and registration UI must not display development seed account emails or password hints.
 
 ## Authorization
 
@@ -275,6 +276,7 @@ Secrets must be configured locally in `.env.local` and in Vercel environment var
 
 Development seed credentials are development-only placeholders and must never be used in production.
 Development seed credentials must not be printed in logs, terminal output, documentation, or chat summaries.
+Development seed account hints must not be displayed in the login UI.
 
 ## MVP Security Checklist
 

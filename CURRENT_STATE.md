@@ -33,6 +33,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 9B first-version secure consultation file attachments
 - Phase 10A first-version admin doctor management MVP
 - Phase 10B first-version admin specialty management MVP
+- Phase 10C MVP UI copy and workflow polish
 
 ## Current MVP Behavior
 
@@ -63,6 +64,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - `POST /api/messages` rejects completed consultations with a safe `409`, while non-completed consultation chat remains writable.
 - Admin has no attachment content access in this phase.
 - Admin doctor management is implemented for the MVP, while broader operational management remains deferred.
+- Login and patient-facing workflow copy now reflects current MVP behavior for patient registration, doctor discovery, booking, chat, file attachments, consultation history, and admin-created doctor/specialty management.
 
 ## Deferred Features
 
@@ -91,11 +93,11 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 10B: Admin Specialty Management MVP.
+Phase 10C: MVP UI Copy And Workflow Polish.
 
 Latest known commit:
 
-- See `git log --oneline` for the latest committed Phase 10A hash after commit.
+- See `git log --oneline` for the latest committed Phase 10C hash after commit.
 
 ## Next Recommended Phase
 
