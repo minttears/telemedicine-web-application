@@ -84,6 +84,14 @@ Consultation booking boundaries:
 - Patient consultation list and detail pages show only consultations owned by the current patient.
 - Booking and consultation pages must not print or display secrets, passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, development seed password literals, storage paths, private messages, or file contents.
 
+Doctor consultation boundaries:
+
+- Doctor consultation pages are scoped by the current doctor profile.
+- Doctors can see only consultations assigned to their own `DoctorProfile`.
+- Missing, fake, or unassigned doctor consultation detail routes use safe not-found behavior.
+- Patient, admin, and logged-out users are redirected away by the existing doctor workspace protection.
+- Doctor consultation pages do not display or print patient email, patient phone, messages, attachments, storage paths, doctor notes, diagnosis, prescriptions, medical notes, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, or development seed password literals.
+
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
 ## Session And Cookie Requirements

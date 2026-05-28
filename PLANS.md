@@ -579,6 +579,53 @@ Smoke test:
 - Smoke-test output did not print credentials, cookies, session tokens, password hashes, environment values, database URLs, or development seed password literals.
 - One development slot was booked during smoke testing.
 
+### Phase 5B: Doctor Consultations View
+
+Status: Completed
+
+Completed:
+
+- Added read-only doctor consultation list and detail views.
+- Updated changed files:
+  - `app/doctor/consultations/page.tsx`
+  - `app/doctor/consultations/[consultationId]/page.tsx`
+- `/doctor/consultations` lists all consultations assigned to the current doctor, sorted by `scheduledAt` ascending.
+- `/doctor/consultations/[consultationId]` shows a read-only safe consultation summary only when the consultation belongs to the current doctor.
+- Safe fields shown:
+  - patient name
+  - date of birth
+  - gender
+  - scheduled time
+  - consultation status
+  - slot status
+  - doctor specialty
+
+Deferred:
+
+- No chat was implemented.
+- No messages were implemented.
+- No uploads were implemented.
+- No Supabase Realtime was implemented.
+- No Supabase Storage was implemented.
+- No video calls were implemented.
+- No diagnosis was implemented.
+- No prescriptions were implemented.
+- No medical notes were implemented.
+- No status changes were implemented.
+- No admin management was implemented.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
+Smoke test:
+
+- Doctor login, `/doctor/consultations`, assigned consultation list rendering, consultation detail rendering, safe summary fields, fake consultation safe not-found behavior, patient/admin redirects away from doctor routes, and logged-out redirect to `/login` were checked with local HTTP smoke tests.
+- Smoke-test output did not print credentials, cookies, session tokens, password hashes, environment values, database URLs, or development seed password literals.
+
 ## Phase 5: Admin And Operational Views
 
 Status: Not started
