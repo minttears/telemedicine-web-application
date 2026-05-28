@@ -97,6 +97,7 @@ type ConsultationMessage = {
 type ConsultationMessagesPanelProps = {
   consultationId: string;
   messages: ConsultationMessage[];
+  readOnly?: boolean;
 };
 
 function formatMessageDate(value: Date) {
@@ -125,6 +126,7 @@ function getSenderName(message: ConsultationMessage) {
 export function ConsultationMessagesPanel({
   consultationId,
   messages,
+  readOnly = false,
 }: ConsultationMessagesPanelProps) {
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
@@ -169,12 +171,26 @@ export function ConsultationMessagesPanel({
             No messages yet
           </h3>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            Send a text message to start the consultation chat.
+            {readOnly
+              ? "No messages were recorded before this consultation was completed."
+              : "Send a text message to start the consultation chat."}
           </p>
         </div>
       )}
 
-      <MessageForm consultationId={consultationId} />
+      {readOnly ? (
+        <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <h3 className="text-sm font-semibold text-slate-950">
+            Chat is read-only
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            This consultation has been completed. The chat history remains
+            available, but new messages cannot be sent.
+          </p>
+        </div>
+      ) : (
+        <MessageForm consultationId={consultationId} />
+      )}
     </section>
   );
 }

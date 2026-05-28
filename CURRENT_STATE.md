@@ -28,6 +28,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Doctor schedule management with future slot creation, soft cancellation of future `AVAILABLE` slots, and 30-minute minimum lead time
 - Phase 7B code-level MVP workflow QA and small copy/documentation polish
 - Phase 8A first-version doctor-only consultation completion summary
+- Phase 8B consultation history filters and read-only completed chat
 
 ## Current MVP Behavior
 
@@ -35,10 +36,13 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with one plain-text conclusion/recommendations summary.
 - Booking creates a `SCHEDULED` consultation and changes the selected slot from `AVAILABLE` to `BOOKED` inside a Prisma transaction.
 - Patient and doctor consultation reads are server-rendered and scoped by current profile ownership.
+- Patient and doctor consultation lists support `Upcoming`, `Completed`, and `All` history filters.
+- Completed consultations remain visible in consultation history and stay accessible from the completed and all filters.
 - Message creation uses `POST /api/messages`, stores `MessageType.TEXT`, trims body text, and enforces a 2000-character limit.
 - Chat auto-refresh uses polling with `router.refresh()` every 5 seconds only while the document is visible.
 - Consultation completion uses existing `Consultation.doctorNotes` for the MVP doctor summary, sets `Consultation.status` to `COMPLETED`, and sets `Consultation.completedAt`.
-- Chat availability rules were not changed for completed consultations, and chat history remains visible.
+- Completed consultations show preserved chat history in read-only mode.
+- `POST /api/messages` rejects completed consultations with a safe `409`, while non-completed consultation chat remains writable.
 - Admin has protected workspace routes but operational management is still mostly placeholder/deferred.
 
 ## Deferred Features
@@ -50,7 +54,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Doctor profile/specialty management beyond seeded data
 - Recurring schedules, booked slot cancellation, consultation cancellation, and status changes
 - Legal prescription workflow, structured diagnosis/recommendation/follow-up fields, medical notes, and archives
-- Time-based chat restrictions and read-only chat after completion
+- Time-based chat restrictions beyond completed-status read-only behavior
 - Video calls, payments, 2FA enforcement, public SEO polish, and full responsive/browser QA
 
 ## Current Workflow Rules
@@ -68,12 +72,12 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 8A: Consultation Completion And Doctor Summary.
+Phase 8B: Consultation History And Archive Rules.
 
 Latest known commit:
 
-- `8f13d6c chore: polish mvp workflow qa`
+- `0c780bd feat: add doctor consultation completion summary`
 
 ## Next Recommended Phase
 
-Choose the next MVP gap deliberately. Strong candidates are admin management foundations, file attachment metadata/storage planning, public SEO/deployment readiness, or time-based/read-only chat rules after completion. Supabase Realtime should remain deferred until a separate security plan is approved.
+Choose the next MVP gap deliberately. Strong candidates are admin management foundations, file attachment metadata/storage planning, public SEO/deployment readiness, or broader authenticated browser QA. Supabase Realtime should remain deferred until a separate security plan is approved.

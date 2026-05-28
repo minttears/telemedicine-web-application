@@ -862,6 +862,52 @@ Smoke test:
 - Limited route smoke passed: unauthenticated completion API requests return `401`, and the new completion route is served by Next.js.
 - No credentials, passwords, password hashes, cookies, session tokens, environment values, database URLs, service role keys, or development seed password literals were printed.
 
+### Phase 8B: Consultation History And Archive Rules
+
+Status: Completed
+
+Completed:
+
+- Added URL-backed consultation list filters for patient and doctor consultation pages.
+- Supported `filter=upcoming`, `filter=completed`, and `filter=all`.
+- Invalid or missing filters fall back to `upcoming`.
+- `Upcoming` includes `REQUESTED`, `SCHEDULED`, and `IN_PROGRESS`.
+- `Completed` includes `COMPLETED`.
+- `All` includes all consultation statuses, including `CANCELLED`.
+- Completed consultations remain visible and accessible.
+- Consultation records and message records are not deleted.
+- Completed consultation detail pages keep chat history visible.
+- Completed consultations replace the message composer with a read-only notice.
+- `POST /api/messages` returns a safe `409` for completed consultations.
+- Non-completed chat behavior is unchanged.
+
+Changed files:
+
+- `app/patient/consultations/page.tsx`
+- `app/doctor/consultations/page.tsx`
+- `app/patient/consultations/[consultationId]/page.tsx`
+- `app/doctor/consultations/[consultationId]/page.tsx`
+- `components/consultations/consultation-display.tsx`
+- `app/api/messages/route.ts`
+
+Deferred:
+
+- Separate archive tables.
+- Hard deletion of consultations or messages.
+- File uploads, Supabase Storage, true Supabase Realtime, video calls, payment, legal prescription workflow, structured diagnosis fields, admin message access, and admin management.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed after `DATABASE_URL` was loaded silently into the process from `.env.local`.
+
+Smoke test:
+
+- Automated smoke testing failed because the temporary-record script had a PowerShell parser error and the dev server did not become ready within the timeout for the limited route smoke.
+- No credentials, cookies, tokens, passwords, password hashes, database URLs, environment values, service role keys, or development seed password literals were printed.
+
 ## Phase 5: Admin And Operational Views
 
 Status: Not started

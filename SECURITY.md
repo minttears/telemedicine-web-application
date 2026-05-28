@@ -85,6 +85,7 @@ Consultation booking boundaries:
 - Expired `AVAILABLE` slots are hidden and not bookable, but are not auto-cleaned in Phase 7A.
 - Double-booking is prevented with a Prisma transaction, a conditional slot update from `AVAILABLE` to `BOOKED`, and `Consultation.scheduleSlotId` uniqueness.
 - Patient consultation list and detail pages show only consultations owned by the current patient.
+- Patient consultation history filters remain scoped to consultations owned by the current patient.
 - Booking and consultation pages must not print or display secrets, passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, development seed password literals, storage paths, private messages, or file contents.
 
 Doctor schedule boundaries:
@@ -99,6 +100,7 @@ Doctor consultation boundaries:
 
 - Doctor consultation pages are scoped by the current doctor profile.
 - Doctors can see only consultations assigned to their own `DoctorProfile`.
+- Doctor consultation history filters remain scoped to consultations assigned to the current doctor's `DoctorProfile`.
 - Only the assigned doctor can complete a consultation in Phase 8A.
 - The completion endpoint scopes by consultation id and `doctor.userId` for the current user.
 - Patients, admins, and wrong doctors cannot complete consultations.
@@ -106,6 +108,7 @@ Doctor consultation boundaries:
 - `doctorNotes` is rendered as React text with preserved whitespace and without `dangerouslySetInnerHTML`.
 - No legal prescription workflow is implemented in Phase 8A.
 - Chat and message history are not deleted on consultation completion.
+- Completed consultations are read-only for chat in Phase 8B.
 - Missing, fake, or unassigned doctor consultation detail routes use safe not-found behavior.
 - Patient, admin, and logged-out users are redirected away by the existing doctor workspace protection.
 - Doctor consultation pages do not display or print patient email, patient phone, attachments, storage paths, diagnosis, prescriptions, medical notes, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, service role keys, or development seed password literals.
@@ -117,14 +120,17 @@ Consultation detail shell boundaries:
 - Doctor consultation detail pages show only consultations assigned to the current doctor.
 - Patient users can read and send messages only for consultations owned by their `PatientProfile`.
 - Doctor users can read and send messages only for consultations assigned to their `DoctorProfile`.
-- Admin chat access is excluded in Phase 6A.
+- Admin chat and consultation history access is excluded in Phase 8B.
 - `POST /api/messages` performs server-side role and consultation ownership checks.
+- `POST /api/messages` rejects completed consultations with a safe `409` response.
 - Phase 6B polling refresh reuses the existing patient and doctor page ownership checks.
 - Phase 6B keeps authorized message reads server-rendered through Prisma.
 - File placeholders remain static and do not query attachments.
 - Consultation detail pages do not query or display attachments, storage paths, private notes, diagnosis, prescriptions, medical notes, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, or development seed password literals.
 - Message bodies are rendered as plain React text, and `dangerouslySetInnerHTML` is not used.
 - Doctor completion summary text is rendered as plain React text, and `dangerouslySetInnerHTML` is not used.
+- Completed consultation message history remains visible, but message records and consultation records are not deleted.
+- No secrets, cookies, session tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, service role keys, or development seed password literals should be printed or displayed.
 
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 

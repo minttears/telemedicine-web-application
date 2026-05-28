@@ -84,11 +84,19 @@ export async function POST(request: NextRequest) {
       },
       select: {
         id: true,
+        status: true,
       },
     });
 
     if (!consultation) {
       return notFound();
+    }
+
+    if (consultation.status === "COMPLETED") {
+      return Response.json(
+        { error: "Completed consultations are read-only." },
+        { status: 409 },
+      );
     }
 
     const message = await prisma.message.create({

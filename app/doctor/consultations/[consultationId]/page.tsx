@@ -145,6 +145,7 @@ export default async function DoctorConsultationPage({
           <ConsultationMessagesPanel
             consultationId={consultation.id}
             messages={consultation.messages}
+            readOnly={consultation.status === "COMPLETED"}
           />
           <PlaceholderPanel
             body="Uploads will be added in a later phase."

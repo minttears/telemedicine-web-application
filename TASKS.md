@@ -82,6 +82,7 @@
 | T703 | TODO | Implement file attachment metadata and storage flow | Store blobs in Supabase Storage and metadata in PostgreSQL. |
 | T704 | TODO | Add future call-ready message types | `CALL_STARTED`, `CALL_ENDED` should be supported in the enum. |
 | T705 | DONE | Implement first-version doctor consultation completion summary | Assigned doctors can complete `SCHEDULED` and `IN_PROGRESS` consultations and save one plain-text `doctorNotes` summary for patient read-only viewing. Legal prescription workflow, structured diagnosis/recommendation/follow-up fields, uploads, Storage, Realtime, video calls, payment, admin management, admin message access, and time-based chat restrictions remain TODO/deferred. |
+| T706 | DONE | Implement consultation history and archive rules | Patient and doctor consultation lists now support Upcoming, Completed, and All filters. Completed consultations stay visible and accessible, chat history is preserved, and completed chat is read-only with `POST /api/messages` returning a safe `409`. File uploads, Storage, Realtime, video calls, payment, legal prescription workflow, structured diagnosis fields, admin message access, admin management, and hard deletion remain TODO/deferred. |
 
 ## Milestone 8: Admin And Audit
 
