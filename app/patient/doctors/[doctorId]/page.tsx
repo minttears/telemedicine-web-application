@@ -10,6 +10,8 @@ type PatientDoctorProfilePageProps = {
   }>;
 };
 
+const MIN_BOOKING_LEAD_TIME_MS = 30 * 60 * 1000;
+
 function formatExperience(years: number | null) {
   if (!years) {
     return "Not specified";
@@ -37,6 +39,9 @@ export default async function PatientDoctorProfilePage({
   params,
 }: PatientDoctorProfilePageProps) {
   const { doctorId } = await params;
+  const minimumStartsAt = new Date(
+    new Date().getTime() + MIN_BOOKING_LEAD_TIME_MS,
+  );
 
   const doctor = await prisma.doctorProfile.findFirst({
     where: {
@@ -51,7 +56,7 @@ export default async function PatientDoctorProfilePage({
       scheduleSlots: {
         where: {
           startsAt: {
-            gt: new Date(),
+            gte: minimumStartsAt,
           },
           status: "AVAILABLE",
         },
@@ -181,7 +186,8 @@ export default async function PatientDoctorProfilePage({
 
           <p className="mt-4 text-sm leading-6 text-slate-600">
             Booking creates a scheduled consultation for the selected time. Chat
-            and file uploads will be added in later phases.
+            is available after booking. File uploads will be added in a later
+            phase.
           </p>
         </div>
 
@@ -191,11 +197,12 @@ export default async function PatientDoctorProfilePage({
           </h2>
           <p className="mt-3 text-sm leading-6 text-slate-600">
             Choose an available time from the schedule preview. The selected
-            slot will be reserved when the booking is confirmed.
+            slot will be reserved when the booking is confirmed. Only times at
+            least 30 minutes from now are shown.
           </p>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Consultation chat, messages, and file uploads are not available in
-            this phase.
+            Consultation chat is available after booking. File uploads are not
+            available in this phase.
           </p>
         </aside>
       </section>

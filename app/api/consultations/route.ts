@@ -3,6 +3,7 @@ import { forbidden, unauthorized } from "@/lib/auth/responses";
 import { prisma } from "@/lib/prisma";
 
 const slotUnavailableMessage = "This time is no longer available. Please choose another slot.";
+const MIN_BOOKING_LEAD_TIME_MS = 30 * 60 * 1000;
 
 function isBookingBody(value: unknown): value is {
   doctorId: string;
@@ -68,6 +69,7 @@ export async function POST(request: Request) {
 
   try {
     const consultation = await prisma.$transaction(async (tx) => {
+      const minimumStartsAt = new Date(Date.now() + MIN_BOOKING_LEAD_TIME_MS);
       const patientProfile = await tx.patientProfile.findUnique({
         where: {
           userId: user.id,
@@ -86,7 +88,7 @@ export async function POST(request: Request) {
           id: scheduleSlotId,
           doctorId,
           startsAt: {
-            gt: new Date(),
+            gte: minimumStartsAt,
           },
           status: "AVAILABLE",
           doctor: {

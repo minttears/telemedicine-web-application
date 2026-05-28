@@ -1,0 +1,155 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+
+const MIN_SLOT_DURATION_MS = 15 * 60 * 1000;
+const MAX_SLOT_DURATION_MS = 4 * 60 * 60 * 1000;
+const MIN_BOOKING_LEAD_TIME_MS = 30 * 60 * 1000;
+
+function toIsoFromLocalDateTime(value: string) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return date.toISOString();
+}
+
+export function ScheduleSlotForm() {
+  const router = useRouter();
+  const [startsAt, setStartsAt] = useState("");
+  const [endsAt, setEndsAt] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const startsAtIso = toIsoFromLocalDateTime(startsAt);
+    const endsAtIso = toIsoFromLocalDateTime(endsAt);
+
+    if (!startsAtIso || !endsAtIso) {
+      setError("Start and end times are required.");
+      return;
+    }
+
+    const startDate = new Date(startsAtIso);
+    const endDate = new Date(endsAtIso);
+    const durationMs = endDate.getTime() - startDate.getTime();
+
+    if (startDate < new Date(Date.now() + MIN_BOOKING_LEAD_TIME_MS)) {
+      setError("Schedule slots must start at least 30 minutes from now.");
+      return;
+    }
+
+    if (endDate <= startDate) {
+      setError("End time must be after start time.");
+      return;
+    }
+
+    if (durationMs < MIN_SLOT_DURATION_MS) {
+      setError("Schedule slots must be at least 15 minutes long.");
+      return;
+    }
+
+    if (durationMs > MAX_SLOT_DURATION_MS) {
+      setError("Schedule slots cannot be longer than 4 hours.");
+      return;
+    }
+
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/doctor/schedule-slots", {
+        body: JSON.stringify({
+          endsAt: endsAtIso,
+          startsAt: startsAtIso,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      });
+
+      const payload = (await response.json().catch(() => null)) as {
+        error?: string;
+      } | null;
+
+      if (!response.ok) {
+        setError(payload?.error ?? "Unable to create schedule slot.");
+        return;
+      }
+
+      setStartsAt("");
+      setEndsAt("");
+      router.refresh();
+    } catch {
+      setError("Unable to create schedule slot.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  return (
+    <form className="space-y-4" onSubmit={handleSubmit}>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label
+            className="text-sm font-medium text-slate-700"
+            htmlFor="startsAt"
+          >
+            Start time
+          </label>
+          <input
+            className="mt-2 min-h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
+            disabled={isSubmitting}
+            id="startsAt"
+            name="startsAt"
+            onChange={(event) => setStartsAt(event.target.value)}
+            type="datetime-local"
+            value={startsAt}
+          />
+        </div>
+        <div>
+          <label
+            className="text-sm font-medium text-slate-700"
+            htmlFor="endsAt"
+          >
+            End time
+          </label>
+          <input
+            className="mt-2 min-h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
+            disabled={isSubmitting}
+            id="endsAt"
+            name="endsAt"
+            onChange={(event) => setEndsAt(event.target.value)}
+            type="datetime-local"
+            value={endsAt}
+          />
+        </div>
+      </div>
+
+      <p className="text-sm leading-6 text-slate-600">
+        Create available slots at least 30 minutes from now, between 15 minutes
+        and 4 hours long.
+      </p>
+
+      {error ? (
+        <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </p>
+      ) : null}
+
+      <button
+        className="inline-flex min-h-10 items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+        disabled={isSubmitting}
+        type="submit"
+      >
+        {isSubmitting ? "Creating" : "Create available slot"}
+      </button>
+    </form>
+  );
+}

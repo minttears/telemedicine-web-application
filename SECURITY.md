@@ -72,6 +72,7 @@ Doctor directory boundaries:
 - Patient doctor profile detail pages use server-side Prisma reads.
 - Patient doctor profile detail pages display only directory-safe doctor fields: name, title, specialty, bio, education, experience years, and availability status.
 - The doctor profile schedule preview shows only future `AVAILABLE` slots and is read-only.
+- Patient doctor profile detail pages show only bookable `AVAILABLE` slots that start at least 30 minutes from now.
 - Doctor profile detail pages do not display consultations, booking controls, chat content, files, session tokens, cookies, passwords, password hashes, environment values, storage paths, or private account data.
 
 Consultation booking boundaries:
@@ -80,9 +81,19 @@ Consultation booking boundaries:
 - The booking API performs server-side role checks with `requireRole("PATIENT")`.
 - Patients can create consultations only for their own `PatientProfile`.
 - Patients cannot book past, unavailable, booked, or wrong-doctor schedule slots.
+- Patients cannot book schedule slots that start less than 30 minutes from now.
+- Expired `AVAILABLE` slots are hidden and not bookable, but are not auto-cleaned in Phase 7A.
 - Double-booking is prevented with a Prisma transaction, a conditional slot update from `AVAILABLE` to `BOOKED`, and `Consultation.scheduleSlotId` uniqueness.
 - Patient consultation list and detail pages show only consultations owned by the current patient.
 - Booking and consultation pages must not print or display secrets, passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, development seed password literals, storage paths, private messages, or file contents.
+
+Doctor schedule boundaries:
+
+- Doctor schedule management is scoped to the current doctor's `DoctorProfile`.
+- Doctors can create schedule slots only for their own profile.
+- Doctors cannot create schedule slots that start less than 30 minutes from now.
+- Doctors can cancel only future `AVAILABLE` slots in Phase 7A.
+- `BOOKED` slot cancellation, consultation cancellation, and automatic expiration cleanup are not implemented in Phase 7A.
 
 Doctor consultation boundaries:
 

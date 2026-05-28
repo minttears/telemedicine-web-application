@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 6B safe chat polling refresh is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 7A doctor schedule management is in progress. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -755,6 +755,21 @@ Smoke test:
 - Codex browser/runtime smoke testing was not completed because temporary dev server startup timed out again in the Windows sandbox.
 - The user manually verified in the browser that messages are sent and displayed successfully.
 - No secrets, credentials, tokens, cookies, environment values, or development seed password literals were printed.
+
+### Phase 7A: Doctor Schedule Management
+
+Status: In progress
+
+Planned and implemented scope:
+
+- Doctor schedule management uses a 30-minute minimum lead time for schedule slot creation and patient booking.
+- Doctors cannot create schedule slots that start less than 30 minutes from now.
+- Patients cannot book schedule slots that start less than 30 minutes from now.
+- Patient-facing doctor profiles show only bookable `AVAILABLE` slots that start at least 30 minutes from now.
+- Expired `AVAILABLE` slots are hidden from patient booking and rejected by the booking API, but are not auto-cleaned in this phase.
+- No `EXPIRED` status was added.
+- No old schedule records are changed automatically.
+- No Prisma schema changes, migrations, or dependency changes were made.
 
 ## Phase 5: Admin And Operational Views
 
