@@ -20,7 +20,7 @@ If files conflict, stop and ask the user before changing code.
 
 The repository has a working authenticated MVP workflow for doctor schedule management, patient booking, consultation views, PostgreSQL/Prisma text chat persistence, and safe polling-based chat refresh.
 
-For faster continuation, read `CURRENT_STATE.md` before broad planning or implementation work.
+For faster continuation, read `AGENTS.md` and `CURRENT_STATE.md` as the main continuation context before broad planning or implementation work. Prefer these files over asking the user to repeat long project prompts.
 
 Do not implement application code, install dependencies, create commits, push branches, or open pull requests until the user explicitly approves.
 
@@ -66,6 +66,8 @@ Example backend routes:
 - Do not expose `SUPABASE_SERVICE_ROLE_KEY` to client-side code.
 - Do not implement Supabase Realtime without a separate security plan.
 - If browser or dev-server smoke testing fails because of the Windows sandbox, record the limitation honestly and do not fake results.
+- For routine phases, attempt full browser/dev-server smoke tests only when practical and not repeatedly timing out. If browser or dev-server smoke testing fails because of Windows sandbox issues, record the limitation honestly and do not fake results.
+- Manual user QA results can be documented when the user reports them.
 
 ## Project Context Rule
 
@@ -264,6 +266,12 @@ Important:
 Do not update these files automatically unless the user has already approved the specific update.
 First show the proposed update and ask for confirmation.
 
+## Response Style
+
+- Prefer concise final summaries.
+- Do not restate the full plan unless the user asks for it.
+- Summaries after implementation should focus on changed files, validation results, smoke-test limitations, and follow-up risks.
+
 ## Git And PR Rules
 
 Before suggesting a commit:
@@ -275,6 +283,23 @@ Before suggesting a commit:
 5. Ask whether to commit.
 
 Keep final summaries concise and include validation results, changed files, and any honest smoke-test limitations.
+
+If the user explicitly approves an implementation phase and includes documentation, validation, commit, and push instructions with a commit message, Codex may update documentation, run validation, commit with the provided commit message, and push to GitHub without asking for a second confirmation.
+
+Stop and ask before committing or pushing if any of these happen:
+
+- validation fails
+- unexpected files changed
+- `.env.local` appears in Git status
+- secrets or credentials appear in output
+- Prisma schema changes are needed
+- migrations are needed
+- new dependencies are needed but were not explicitly approved
+- auth/security boundaries change beyond the approved scope
+- destructive data actions are needed
+- hard deletion is introduced
+- external/network-sensitive setup is required beyond the approved task
+- the requested commit/push instruction is ambiguous
 
 After a meaningful feature, fix, or milestone, suggest opening a pull request, but do not open it without explicit approval.
 
