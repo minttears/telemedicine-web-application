@@ -41,8 +41,8 @@ export default async function PatientConsultationsPage() {
           Your consultations
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          View your scheduled consultations. Chat and file uploads will be added
-          in later phases.
+          View your scheduled consultations and continue text chat. File
+          uploads will be added in a later phase.
         </p>
       </section>
 

@@ -55,9 +55,9 @@ export default async function DoctorConsultationsPage() {
           Assigned consultations
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Review consultations assigned to your doctor profile. Chat, file
-          uploads, and additional consultation tools will be added in later
-          phases.
+          Review consultations assigned to your doctor profile and reply in
+          text chat. File uploads and additional consultation tools will be
+          added in later phases.
         </p>
         <p className="mt-4 text-sm font-medium text-slate-700">
           {consultations.length}{" "}

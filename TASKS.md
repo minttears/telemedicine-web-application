@@ -58,8 +58,8 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T501 | DONE | Create patient workspace route structure | Patient workspace routes exist with a responsive dashboard shell and navigation. Doctor directory, booking, chat, and file workflows remain TODO. |
-| T502 | DONE | Create doctor workspace route structure | Doctor workspace routes exist with a responsive dashboard shell and navigation. Doctor consultation list/detail views are completed. Chat, messages, uploads, Realtime, Storage, video calls, diagnosis, prescriptions, medical notes, status changes, admin management, and doctor schedule management remain TODO. |
+| T501 | DONE | Create patient workspace route structure | Patient workspace routes exist with a responsive dashboard shell and navigation. Doctor directory, booking, consultation detail, and PostgreSQL/Prisma text chat workflows are completed. File uploads, Storage, true Realtime, video calls, diagnosis, prescriptions, medical notes, status changes, and admin management remain TODO. |
+| T502 | DONE | Create doctor workspace route structure | Doctor workspace routes exist with a responsive dashboard shell and navigation. Doctor schedule management, consultation list/detail views, and PostgreSQL/Prisma text chat workflows are completed. Uploads, true Realtime, Storage, video calls, diagnosis, prescriptions, medical notes, status changes, admin management, recurring schedules, and booked slot cancellation remain TODO. |
 | T503 | DONE | Create admin workspace route structure | Admin workspace routes exist with a responsive aggregate dashboard shell and navigation. Admin management actions remain TODO. |
 | T504 | DONE | Add responsive layout patterns | Workspace shell and role dashboards use responsive desktop/mobile layout patterns. Further page-specific responsive checks remain part of quality work. |
 
@@ -71,7 +71,7 @@
 | T602 | DONE | Implement doctor list and filters | Patient doctor directory supports doctor name search and specialty filtering. Availability is shown on cards, but availability filtering remains deferred. |
 | T603 | DONE | Implement doctor profile page | Patient-only doctor profile details and a read-only upcoming slot preview are completed. Booking, consultation creation, and schedule selection remain TODO. |
 | T604 | DONE | Implement basic schedule slots | First-version doctor schedule management is completed: doctor schedule page, schedule slot creation, soft cancellation of future `AVAILABLE` slots, 30-minute minimum lead time for doctor slot creation, 30-minute minimum lead time for patient booking, and patient booking integration with newly created `AVAILABLE` slots. Recurring schedules, admin schedule management, `BOOKED` slot cancellation, consultation cancellation, payments, video calls, file uploads, Storage, Realtime, diagnosis, prescriptions, medical notes, and status changes remain TODO. |
-| T605 | DONE | Implement consultation booking | First-version patient booking is completed: selecting a future available slot creates a scheduled consultation and books the slot. Chat, messages, uploads, Realtime, Storage, video calls, payment, doctor schedule management, and admin management remain TODO. |
+| T605 | DONE | Implement consultation booking | First-version patient booking is completed: selecting a future available slot creates a scheduled consultation and books the slot. PostgreSQL/Prisma text chat and doctor schedule management are completed. Uploads, true Realtime, Storage, video calls, payment, admin management, booked slot cancellation, consultation cancellation, diagnosis, prescriptions, medical notes, and status changes remain TODO. |
 
 ## Milestone 7: Consultation Chat And Files
 
@@ -93,7 +93,7 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T901 | TODO | Add responsive and state coverage checks | Loading, empty, error, unauthorized, forbidden, and not found. |
+| T901 | TODO | Add responsive and state coverage checks | Phase 7B completed a code-level MVP workflow QA and small copy polish pass. Broader authenticated browser, responsive, loading, empty, error, unauthorized, forbidden, and not-found coverage remains TODO. |
 | T902 | TODO | Add deployment configuration guidance for Vercel | Ensure environment variables are documented. |
 | T903 | TODO | Add basic quality gates | Lint, typecheck, build, and Prisma validation scripts when app setup exists. |
 | T904 | TODO | Use Playwright MCP to verify key UI flows when available | Login, dashboards, booking, chat. |

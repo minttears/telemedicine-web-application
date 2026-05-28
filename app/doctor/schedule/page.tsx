@@ -96,8 +96,9 @@ export default async function DoctorSchedulePage() {
           Manage available times
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Create future consultation slots patients can book from your doctor
-          profile. Booked slots are read-only in this phase.
+          Create consultation slots at least 30 minutes ahead for patients to
+          book from your doctor profile. Booked slots are read-only in this
+          phase.
         </p>
         {doctorProfile?.specialty ? (
           <p className="mt-4 text-sm font-medium text-slate-700">
@@ -129,7 +130,7 @@ export default async function DoctorSchedulePage() {
                 </h2>
               </div>
               <span className="inline-flex w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
-                15 minutes to 4 hours
+                30 min lead time
               </span>
             </div>
             <div className="mt-5">

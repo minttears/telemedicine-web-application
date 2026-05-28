@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 7A doctor schedule management is in progress. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 7B end-to-end MVP QA and workflow polish is in progress. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -758,18 +758,62 @@ Smoke test:
 
 ### Phase 7A: Doctor Schedule Management
 
-Status: In progress
+Status: Completed
 
-Planned and implemented scope:
+Completed:
 
 - Doctor schedule management uses a 30-minute minimum lead time for schedule slot creation and patient booking.
 - Doctors cannot create schedule slots that start less than 30 minutes from now.
 - Patients cannot book schedule slots that start less than 30 minutes from now.
 - Patient-facing doctor profiles show only bookable `AVAILABLE` slots that start at least 30 minutes from now.
 - Expired `AVAILABLE` slots are hidden from patient booking and rejected by the booking API, but are not auto-cleaned in this phase.
+- Doctors can cancel only future `AVAILABLE` slots by soft-updating them to `CANCELLED`.
+- `BOOKED` slots cannot be cancelled or deleted in this phase.
 - No `EXPIRED` status was added.
 - No old schedule records are changed automatically.
 - No Prisma schema changes, migrations, or dependency changes were made.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
+### Phase 7B: End-to-End MVP QA And Workflow Polish
+
+Status: Completed
+
+Completed:
+
+- Performed a code-level QA pass over the doctor schedule, patient booking, patient consultation, doctor consultation, and text chat workflow.
+- Confirmed by inspection that doctor schedule creation enforces doctor-only access, future starts, 30-minute lead time, 15-minute minimum duration, 4-hour maximum duration, and same-doctor overlap checks against `AVAILABLE`, `BOOKED`, and `BLOCKED` slots.
+- Confirmed by inspection that future `AVAILABLE` doctor slots at least 30 minutes away are shown to patients and that past or too-soon `AVAILABLE` slots are hidden from patient booking.
+- Confirmed by inspection that patient booking uses a Prisma transaction, conditionally changes slots from `AVAILABLE` to `BOOKED`, rejects too-soon or unavailable slots, and creates scheduled consultations for the current patient only.
+- Confirmed by inspection that patient and doctor consultation pages remain server-rendered and scoped to the current patient or assigned doctor.
+- Confirmed by inspection that message creation stays patient/doctor only, uses server-side consultation ownership checks, and excludes admin chat access.
+- Updated stale workspace and consultation copy now that schedule management, booking, and text chat persistence are available.
+
+Changed files:
+
+- `TASKS.md`
+- `PLANS.md`
+- `app/doctor/dashboard/page.tsx`
+- `app/doctor/schedule/page.tsx`
+- `app/doctor/consultations/page.tsx`
+- `app/patient/consultations/page.tsx`
+
+Smoke test limitations:
+
+- Authenticated browser workflow testing was not completed in Codex because the Windows sandbox blocked normal process startup and previous temporary dev server attempts timed out.
+- No credentials, passwords, password hashes, cookies, session tokens, environment values, database URLs, or development seed password literals were printed.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
 
 ## Phase 5: Admin And Operational Views
 

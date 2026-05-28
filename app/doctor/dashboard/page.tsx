@@ -78,8 +78,8 @@ export default async function DoctorDashboardPage() {
           Welcome{user.name ? `, ${user.name}` : ""}
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Review your schedule and consultation status. Booking and consultation
-          tools will be connected in later phases.
+          Review your schedule availability and consultation status. Manage
+          future slots and open assigned consultations from your workspace.
         </p>
       </section>
 
