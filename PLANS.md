@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 4B patient doctor directory is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 4C patient doctor profile details are completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -476,6 +476,61 @@ Smoke test:
 - `View profile` route opens.
 - Doctor and admin users are redirected away from `/patient/doctors`.
 - Mobile browser visual check was not completed because browser automation is unavailable.
+
+### Phase 4C: Doctor Profile Details
+
+Status: Completed
+
+Completed:
+
+- Improved the patient-only doctor profile detail page at `/patient/doctors/[doctorId]`.
+- Updated changed file:
+  - `app/patient/doctors/[doctorId]/page.tsx`
+- The page remains server-rendered and patient-only through the existing patient workspace layout.
+- The page loads active `DOCTOR` profiles by `DoctorProfile.id`.
+- The page includes linked `User` and `Specialty` data.
+- The page displays safe doctor fields only:
+  - name
+  - title
+  - specialty
+  - bio
+  - education
+  - experience years
+  - availability status
+- The page shows up to 3 future `AVAILABLE` schedule slots with exact date, start time, and end time.
+- The schedule preview is read-only.
+- `notFound()` is used for missing, inactive, or non-doctor records.
+- A clear note explains that booking will be implemented later.
+
+Deferred:
+
+- No booking was implemented.
+- No consultation creation was implemented.
+- No schedule selection was implemented.
+- No chat was implemented.
+- No uploads were implemented.
+- No Supabase Realtime was implemented.
+- No Supabase Storage was implemented.
+- No 2FA was implemented.
+- No admin management was implemented.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
+Smoke test:
+
+- Patient login, `/patient/doctors`, profile navigation, profile details rendering, read-only schedule preview, booking-later notice, invalid doctor safe not-found behavior, doctor/admin redirects away from patient routes, and logged-out redirect to `/login` were checked with local HTTP smoke tests.
+- No credentials, cookies, session tokens, password hashes, environment values, or database URLs should be printed in smoke-test output.
+- Browser/mobile visual verification could not run because the in-app browser runtime failed in the Windows sandbox.
+
+Security note:
+
+- Development seed password literals were accidentally exposed during Phase 4C smoke-test setup and must not be printed again.
+- Development seed credentials are development-only and must never be used in production.
 
 ## Phase 5: Admin And Operational Views
 

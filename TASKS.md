@@ -69,7 +69,7 @@
 | --- | --- | --- | --- |
 | T601 | TODO | Implement doctor specialty and profile management | Admin creates doctors; doctors edit profile details. |
 | T602 | DONE | Implement doctor list and filters | Patient doctor directory supports doctor name search and specialty filtering. Availability is shown on cards, but availability filtering remains deferred. |
-| T603 | TODO | Implement doctor profile page | A safe patient doctor profile placeholder exists. Full profile details, schedule display, and booking CTA remain TODO. |
+| T603 | DONE | Implement doctor profile page | Patient-only doctor profile details and a read-only upcoming slot preview are completed. Booking, consultation creation, and schedule selection remain TODO. |
 | T604 | TODO | Implement basic schedule slots | Keep scheduling simple for MVP. |
 | T605 | TODO | Implement consultation booking | Selecting a slot creates a consultation and reserves the slot. |
 

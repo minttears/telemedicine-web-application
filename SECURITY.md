@@ -68,6 +68,11 @@ Doctor directory boundaries:
 - Doctor and admin users are redirected away from `/patient/doctors`.
 - Only directory-safe doctor profile fields are displayed.
 - The doctor directory does not display private messages, files, passwords, hashes, cookies, tokens, or environment secrets.
+- `/patient/doctors/[doctorId]` is protected by the existing patient workspace layout.
+- Patient doctor profile detail pages use server-side Prisma reads.
+- Patient doctor profile detail pages display only directory-safe doctor fields: name, title, specialty, bio, education, experience years, and availability status.
+- The doctor profile schedule preview shows only future `AVAILABLE` slots and is read-only.
+- Doctor profile detail pages do not display consultations, booking controls, chat content, files, session tokens, cookies, passwords, password hashes, environment values, storage paths, or private account data.
 
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
@@ -154,6 +159,7 @@ Required variables are listed in `.env.example`.
 Secrets must be configured locally in `.env.local` and in Vercel environment variables. Do not commit real values.
 
 Development seed credentials are development-only placeholders and must never be used in production.
+Development seed credentials must not be printed in logs, terminal output, documentation, or chat summaries.
 
 ## MVP Security Checklist
 

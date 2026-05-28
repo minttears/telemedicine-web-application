@@ -17,6 +17,21 @@ function formatExperience(years: number | null) {
   return `${years} ${years === 1 ? "year" : "years"}`;
 }
 
+function formatSlotDate(value: Date) {
+  return new Intl.DateTimeFormat("en", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  }).format(value);
+}
+
+function formatSlotTime(value: Date) {
+  return new Intl.DateTimeFormat("en", {
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(value);
+}
+
 export default async function PatientDoctorProfilePage({
   params,
 }: PatientDoctorProfilePageProps) {
@@ -32,6 +47,18 @@ export default async function PatientDoctorProfilePage({
     },
     include: {
       specialty: true,
+      scheduleSlots: {
+        where: {
+          startsAt: {
+            gt: new Date(),
+          },
+          status: "AVAILABLE",
+        },
+        orderBy: {
+          startsAt: "asc",
+        },
+        take: 3,
+      },
       user: true,
     },
   });
@@ -74,11 +101,11 @@ export default async function PatientDoctorProfilePage({
         </div>
 
         <p className="mt-5 max-w-3xl text-sm leading-6 text-slate-600">
-          {doctor.bio ?? "Detailed doctor profile content will be added later."}
+          {doctor.bio ?? "Profile details have not been added yet."}
         </p>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid gap-4 md:grid-cols-4">
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm font-medium text-slate-600">Experience</p>
           <p className="mt-2 text-lg font-semibold text-slate-950">
@@ -97,17 +124,75 @@ export default async function PatientDoctorProfilePage({
             {doctor.specialty?.name ?? "Not assigned"}
           </p>
         </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm font-medium text-slate-600">Availability</p>
+          <p className="mt-2 text-lg font-semibold text-slate-950">
+            {doctor.isAvailable ? "Available" : "Unavailable"}
+          </p>
+        </div>
       </section>
 
-      <section className="rounded-lg border border-dashed border-slate-300 bg-white p-6">
-        <h2 className="text-lg font-semibold text-slate-950">
-          Booking is not available yet
-        </h2>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Schedule viewing, booking, and consultation creation will be
-          implemented in later phases. This page currently shows safe basic
-          doctor profile information only.
-        </p>
+      <section className="grid gap-4 lg:grid-cols-[1fr_320px]">
+        <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-teal-700">
+                Schedule preview
+              </p>
+              <h2 className="mt-2 text-xl font-semibold text-slate-950">
+                Upcoming available slots
+              </h2>
+            </div>
+            <span className="inline-flex w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+              Read-only
+            </span>
+          </div>
+
+          {doctor.scheduleSlots.length > 0 ? (
+            <ul className="mt-5 grid gap-3">
+              {doctor.scheduleSlots.map((slot) => (
+                <li
+                  className="rounded-md border border-slate-200 bg-slate-50 p-4"
+                  key={slot.id}
+                >
+                  <p className="text-sm font-semibold text-slate-950">
+                    {formatSlotDate(slot.startsAt)}
+                  </p>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {formatSlotTime(slot.startsAt)} -{" "}
+                    {formatSlotTime(slot.endsAt)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="mt-5 rounded-md border border-dashed border-slate-300 bg-slate-50 p-5">
+              <p className="text-sm font-medium text-slate-950">
+                No upcoming available slots are listed yet.
+              </p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                New availability will appear here after schedule management is
+                implemented.
+              </p>
+            </div>
+          )}
+
+          <p className="mt-4 text-sm leading-6 text-slate-600">
+            These times are shown for preview only. Slot selection and booking
+            will be implemented in a later phase.
+          </p>
+        </div>
+
+        <aside className="rounded-lg border border-dashed border-slate-300 bg-white p-6">
+          <h2 className="text-lg font-semibold text-slate-950">
+            Booking is not available yet
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            Consultation booking, schedule selection, chat, and file uploads
+            will be added in later phases. This page currently shows safe
+            read-only doctor profile information.
+          </p>
+        </aside>
       </section>
     </div>
   );
