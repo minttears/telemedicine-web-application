@@ -34,6 +34,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 10A first-version admin doctor management MVP
 - Phase 10B first-version admin specialty management MVP
 - Phase 10C MVP UI copy and workflow polish
+- Phase 11A access token schema and backend foundation for future doctor invite and password reset flows
 
 ## Current MVP Behavior
 
@@ -65,11 +66,12 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Admin has no attachment content access in this phase.
 - Admin doctor management is implemented for the MVP, while broader operational management remains deferred.
 - Login and patient-facing workflow copy now reflects current MVP behavior for patient registration, doctor discovery, booking, chat, file attachments, consultation history, and admin-created doctor/specialty management.
+- The schema now includes hashed, expiring, one-time account access tokens for future doctor invite and password reset flows. Raw invite/reset tokens are not stored.
 
 ## Deferred Features
 
 - True Supabase Realtime subscriptions and the required custom auth/RLS/JWT security design
-- Admin invite/password reset flow, 2FA enforcement, admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
+- Admin invite UI, set-password page, password reset pages, email provider, 2FA enforcement, admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
 - Broader admin management screens and audit-log workflows beyond Phase 10A doctor management and Phase 10B specialty management
 - Virus scanning, advanced file previews, and production file-handling hardening
 - Doctor profile/specialty management beyond seeded data
@@ -93,11 +95,11 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 10C: MVP UI Copy And Workflow Polish.
+Phase 11A: Access Token Schema And Backend Foundation.
 
 Latest known commit:
 
-- See `git log --oneline` for the latest committed Phase 10C hash after commit.
+- See `git log --oneline` for the latest committed Phase 11A hash after commit.
 
 ## Next Recommended Phase
 

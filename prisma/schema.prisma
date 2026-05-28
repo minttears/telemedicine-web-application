@@ -12,6 +12,11 @@ enum UserRole {
   ADMIN
 }
 
+enum AccountAccessTokenType {
+  DOCTOR_INVITE
+  PASSWORD_RESET
+}
+
 enum ConsultationStatus {
   REQUESTED
   SCHEDULED
@@ -42,6 +47,10 @@ enum AuditAction {
   LOGIN_FAILED
   DOCTOR_CREATED
   DOCTOR_UPDATED
+  DOCTOR_INVITE_CREATED
+  ACCOUNT_PASSWORD_SET
+  PASSWORD_RESET_CREATED
+  PASSWORD_RESET_COMPLETED
   SPECIALTY_CREATED
   SPECIALTY_UPDATED
   CONSULTATION_CREATED
@@ -54,6 +63,7 @@ model User {
   id                     String                  @id @default(cuid())
   email                  String                  @unique
   passwordHash           String
+  passwordChangedAt      DateTime?
   role                   UserRole                @default(PATIENT)
   name                   String?
   phone                  String?
@@ -66,6 +76,8 @@ model User {
   messages               Message[]               @relation("MessageSender")
   attachments            Attachment[]            @relation("AttachmentUploader")
   auditLogs              AuditLog[]              @relation("AuditActor")
+  accountAccessTokens    AccountAccessToken[]    @relation("AccessTokenUser")
+  createdAccessTokens    AccountAccessToken[]    @relation("AccessTokenCreator")
   twoFactorSecret        TwoFactorSecret?
   twoFactorRecoveryCodes TwoFactorRecoveryCode[]
 
@@ -85,6 +97,24 @@ model Session {
 
   @@index([userId])
   @@index([expiresAt])
+}
+
+model AccountAccessToken {
+  id          String                 @id @default(cuid())
+  userId      String
+  type        AccountAccessTokenType
+  tokenHash   String                 @unique
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdById String?
+  createdAt   DateTime               @default(now())
+  user        User                   @relation("AccessTokenUser", fields: [userId], references: [id], onDelete: Cascade)
+  createdBy   User?                  @relation("AccessTokenCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([userId, type])
+  @@index([expiresAt])
+  @@index([usedAt])
+  @@index([createdById])
 }
 
 model PatientProfile {

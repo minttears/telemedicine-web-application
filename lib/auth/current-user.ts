@@ -26,6 +26,7 @@ function toSafeUser(user: User): SafeUser {
     role: user.role,
     name: user.name,
     phone: user.phone,
+    passwordChangedAt: user.passwordChangedAt,
     isActive: user.isActive,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,

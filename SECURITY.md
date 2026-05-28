@@ -31,6 +31,9 @@ Requirements:
 - Duplicate registration email handling returns a safe conflict error.
 - Registration must not log passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, or `.env.local` contents.
 - Login and registration UI must not display development seed account emails or password hints.
+- Account access tokens for future invite/reset flows store only SHA-256 token hashes, never raw tokens.
+- Account access tokens are one-time-use and expire.
+- Raw invite/reset tokens must be shown only once in future phases and must never be logged, audited, stored, or printed.
 
 ## Authorization
 
@@ -188,10 +191,25 @@ Pending decision:
 - Attachment metadata must include owner and consultation context.
 - Never expose Supabase service role keys to the browser.
 - `SUPABASE_SERVICE_ROLE_KEY` is server-only and must not be imported into client components.
+- Account access token helpers are server-only and must not be imported into client components.
 - Direct browser upload to Supabase Storage is not implemented.
 - Public buckets and public file URLs are not used for consultation attachments.
 - Do not commit `.env.local` or real secrets.
 - Do not log passwords, session tokens, 2FA secrets, or private file contents.
+
+## Account Access Tokens
+
+Phase 11A adds the shared token foundation for future doctor invite and password reset flows.
+
+Rules:
+
+- Store only SHA-256 token hashes in `AccountAccessToken.tokenHash`.
+- Generate raw tokens with at least 32 bytes of secure randomness and `base64url` encoding.
+- Use expiration timestamps and `usedAt` for one-time-use behavior.
+- Treat missing, invalid, expired, and used tokens with generic errors in future public routes.
+- Do not store, log, audit, print, or re-display raw invite/reset tokens.
+- Do not expose token hashes, password hashes, cookies, session tokens, environment values, service role keys, or development seed password literals.
+- Email provider, invite UI, set-password page, reset pages, and 2FA remain deferred.
 
 ## Chat Privacy
 

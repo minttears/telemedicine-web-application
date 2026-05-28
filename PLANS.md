@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 10C MVP UI copy and workflow polish is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 11A access token schema and backend foundation is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -1154,6 +1154,50 @@ Not implemented:
 - No migrations.
 - No dependencies.
 - No route, authorization, booking, chat, attachment, or admin behavior changes.
+
+### Phase 11A: Access Token Schema And Backend Foundation
+
+Status: Completed
+
+Completed:
+
+- Added the shared token foundation for future doctor invite and password reset flows.
+- Added `AccountAccessTokenType` with `DOCTOR_INVITE` and `PASSWORD_RESET`.
+- Added `AccountAccessToken` records linked to users, optional creator users, token type, token hash, expiration, use time, and creation time.
+- Added `User.passwordChangedAt` for future account access hardening.
+- Added audit actions for doctor invite creation, password set, password reset creation, and password reset completion.
+- Added server-only helper functions to generate 32-byte secure random raw tokens, hash tokens with SHA-256, create token records, find valid unused unexpired tokens, and mark tokens used.
+- Created and applied Prisma migration `20260528233106_add_account_access_tokens`.
+
+Changed files:
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260528233106_add_account_access_tokens/migration.sql`
+- `lib/auth/access-tokens.ts`
+- `TASKS.md`
+- `PLANS.md`
+- `CURRENT_STATE.md`
+- `SECURITY.md`
+- `DECISIONS.md`
+
+Security notes:
+
+- Raw invite/reset tokens are intended to be shown only once in future phases and are never stored.
+- Only SHA-256 token hashes are stored.
+- Tokens are designed for one-time use and expiration.
+- Token helpers are server-only and do not expose tokens to client components.
+- Public registration remains patient-only.
+
+Not implemented:
+
+- No doctor invite UI.
+- No admin generate-invite action.
+- No doctor set-password page.
+- No forgot-password or reset-password pages.
+- No email provider or email templates.
+- No 2FA.
+- No doctor self-registration or public role selector.
+- No change to current admin temporary-password doctor creation behavior.
 
 ## Phase 5: Admin And Operational Views
 

@@ -138,6 +138,14 @@ Failed login attempts return generic errors, but `AuditLog.LOGIN_FAILED` records
 
 Reason: The auth foundation should establish secure login/logout mechanics first. Audit logging needs a broader policy for rate limiting, metadata, retention, and alerting.
 
+### D018: Store Invite And Reset Tokens As Hashes Only
+
+Status: Accepted
+
+Doctor invite and password reset flows will use `AccountAccessToken` records that store SHA-256 hashes of secure random raw tokens, plus token type, expiration, one-time-use state, target user, and optional creator user.
+
+Reason: Raw invite/reset tokens are bearer credentials. Storing only hashes follows the existing session-token pattern and limits damage if database records are exposed. Email delivery, invite UI, set-password pages, reset pages, and 2FA remain separate approved phases.
+
 ## Pending Decisions
 
 - Exact application name and public branding.
