@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 5A patient consultation booking is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 6A consultation chat persistence is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -667,6 +667,50 @@ Smoke test:
 
 - Patient and doctor consultation detail rendering, safe summary fields, static chat placeholder, static files placeholder, fake consultation safe not-found behavior, and protected-route redirects were checked with local HTTP smoke tests.
 - Smoke-test output did not print credentials, cookies, session tokens, password hashes, environment values, database URLs, or development seed password literals.
+
+### Phase 6A: Chat Message Persistence
+
+Status: Completed
+
+Completed:
+
+- Added first-version text chat persistence using PostgreSQL and Prisma.
+- Updated changed files:
+  - `app/api/messages/route.ts`
+  - `app/patient/consultations/[consultationId]/page.tsx`
+  - `app/doctor/consultations/[consultationId]/page.tsx`
+  - `components/consultations/consultation-display.tsx`
+  - `components/consultations/message-form.tsx`
+- `POST /api/messages` creates `MessageType.TEXT` messages.
+- Message reads are server-rendered in patient and doctor consultation detail pages.
+- Patient and doctor ownership checks are enforced server-side before message reads and writes.
+- Message text is trimmed and limited to 2000 characters.
+- Sending a message refreshes the current page.
+- `GET /api/messages` remains non-implemented.
+
+Deferred:
+
+- No Supabase Realtime was implemented.
+- No WebSockets were implemented.
+- No uploads were implemented.
+- No Supabase Storage was implemented.
+- No video calls were implemented.
+- No diagnosis was implemented.
+- No prescriptions were implemented.
+- No medical notes were implemented.
+- No status changes were implemented.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
+Smoke test:
+
+- Full browser/login smoke testing was not completed because temporary dev server startup timed out.
+- No credentials, cookies, tokens, environment values, or development seed password literals were printed.
 
 ## Phase 5: Admin And Operational Views
 

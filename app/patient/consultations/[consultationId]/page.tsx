@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { MessageType } from "@prisma/client";
 
 import {
   ConsultationStatusBadge,
+  ConsultationMessagesPanel,
   PlaceholderPanel,
 } from "@/components/consultations/consultation-display";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
@@ -59,6 +61,25 @@ export default async function PatientConsultationPage({
         },
       },
       scheduleSlot: true,
+      messages: {
+        where: {
+          type: MessageType.TEXT,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+        select: {
+          body: true,
+          createdAt: true,
+          id: true,
+          sender: {
+            select: {
+              name: true,
+              role: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -96,9 +117,9 @@ export default async function PatientConsultationPage({
 
       <section className="grid gap-4 lg:grid-cols-[1fr_320px]">
         <div className="space-y-4">
-          <PlaceholderPanel
-            body="Messages will be added in a later phase."
-            title="Chat is not available yet"
+          <ConsultationMessagesPanel
+            consultationId={consultation.id}
+            messages={consultation.messages}
           />
           <PlaceholderPanel
             body="Uploads will be added in a later phase."

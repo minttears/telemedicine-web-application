@@ -97,8 +97,13 @@ Consultation detail shell boundaries:
 - Consultation detail shells remain scoped by patient or doctor ownership.
 - Patient consultation detail pages show only consultations owned by the current patient.
 - Doctor consultation detail pages show only consultations assigned to the current doctor.
-- Chat and file placeholders are static and do not query messages or attachments.
-- Consultation detail shells do not display or print private messages, attachments, storage paths, medical notes, diagnosis, prescriptions, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, or development seed password literals.
+- Patient users can read and send messages only for consultations owned by their `PatientProfile`.
+- Doctor users can read and send messages only for consultations assigned to their `DoctorProfile`.
+- Admin chat access is excluded in Phase 6A.
+- `POST /api/messages` performs server-side role and consultation ownership checks.
+- File placeholders remain static and do not query attachments.
+- Consultation detail pages do not query or display attachments, storage paths, private notes, diagnosis, prescriptions, medical notes, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, or development seed password literals.
+- Message bodies are rendered as plain React text, and `dangerouslySetInnerHTML` is not used.
 
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
@@ -131,7 +136,7 @@ Pending decision:
 
 - Patients see only their own consultation chats.
 - Doctors see only chats for their own consultations.
-- Admin chat access should be exceptional and auditable if implemented.
+- Admin chat access is not implemented in Phase 6A and should be exceptional and auditable if implemented later.
 - Supabase Realtime should update the UI, while backend APIs remain responsible for authorization and persistence.
 
 ## File Upload Security
