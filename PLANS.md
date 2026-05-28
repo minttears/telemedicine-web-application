@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 6A consultation chat persistence is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 6B safe chat polling refresh is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -711,6 +711,50 @@ Smoke test:
 
 - Full browser/login smoke testing was not completed because temporary dev server startup timed out.
 - No credentials, cookies, tokens, environment values, or development seed password literals were printed.
+
+### Phase 6B: Safe Realtime Chat Planning
+
+Status: Completed
+
+Completed:
+
+- Added polling-based chat auto-refresh.
+- Updated changed files:
+  - `components/consultations/message-refresh.tsx`
+  - `components/consultations/consultation-display.tsx`
+- `MessageRefresh` calls `router.refresh()` every 5 seconds only when `document.visibilityState === "visible"`.
+- Timers and visibility listeners are cleaned up on unmount.
+- Message reads remain server-rendered through the existing patient and doctor consultation detail pages.
+- Existing Prisma ownership checks remain the authorization boundary.
+- True Supabase Realtime remains deferred.
+
+Deferred:
+
+- No `@supabase/supabase-js` dependency was added.
+- No Supabase dashboard changes were made.
+- No environment changes were made.
+- No schema changes were made.
+- No migrations were run.
+- No API changes were made.
+- No Supabase Realtime was implemented.
+- No WebSockets were implemented.
+- No Broadcast/private channels were implemented.
+- No Supabase Storage was implemented.
+- No uploads were implemented.
+- No service-role usage was added.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed.
+
+Smoke test:
+
+- Codex browser/runtime smoke testing was not completed because temporary dev server startup timed out again in the Windows sandbox.
+- The user manually verified in the browser that messages are sent and displayed successfully.
+- No secrets, credentials, tokens, cookies, environment values, or development seed password literals were printed.
 
 ## Phase 5: Admin And Operational Views
 

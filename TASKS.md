@@ -78,7 +78,7 @@
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
 | T701 | DONE | Implement consultation chat persistence | PostgreSQL/Prisma text message persistence is completed for patient and doctor consultation detail pages. Realtime, Supabase Realtime subscriptions, files/uploads, Storage, video calls, diagnosis, prescriptions, medical notes, status changes, admin chat access, and admin management remain TODO. |
-| T702 | TODO | Add Supabase Realtime chat UI updates | PostgreSQL remains the source of truth. |
+| T702 | TODO | Add Supabase Realtime chat UI updates | Safe polling auto-refresh is completed. True Supabase Realtime subscriptions and Supabase Realtime/RLS/JWT architecture remain TODO for a later security-planned phase. Files/uploads, Storage, video calls, diagnosis, prescriptions, medical notes, status changes, admin chat access, and admin management remain TODO. |
 | T703 | TODO | Implement file attachment metadata and storage flow | Store blobs in Supabase Storage and metadata in PostgreSQL. |
 | T704 | TODO | Add future call-ready message types | `CALL_STARTED`, `CALL_ENDED` should be supported in the enum. |
 

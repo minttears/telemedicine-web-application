@@ -101,6 +101,8 @@ Consultation detail shell boundaries:
 - Doctor users can read and send messages only for consultations assigned to their `DoctorProfile`.
 - Admin chat access is excluded in Phase 6A.
 - `POST /api/messages` performs server-side role and consultation ownership checks.
+- Phase 6B polling refresh reuses the existing patient and doctor page ownership checks.
+- Phase 6B keeps authorized message reads server-rendered through Prisma.
 - File placeholders remain static and do not query attachments.
 - Consultation detail pages do not query or display attachments, storage paths, private notes, diagnosis, prescriptions, medical notes, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, or development seed password literals.
 - Message bodies are rendered as plain React text, and `dangerouslySetInnerHTML` is not used.
@@ -137,7 +139,12 @@ Pending decision:
 - Patients see only their own consultation chats.
 - Doctors see only chats for their own consultations.
 - Admin chat access is not implemented in Phase 6A and should be exceptional and auditable if implemented later.
+- Phase 6B does not expose messages through Supabase Realtime or anon/publishable clients.
+- `SUPABASE_SERVICE_ROLE_KEY` is not used in client code.
+- `Message` was not added to `supabase_realtime`.
+- Direct client Postgres Changes remain deferred until custom auth plus RLS/JWT security design is approved.
 - Supabase Realtime should update the UI, while backend APIs remain responsible for authorization and persistence.
+- No passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, or development seed password literals should be printed or displayed.
 
 ## File Upload Security
 

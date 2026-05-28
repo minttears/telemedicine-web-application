@@ -1,4 +1,5 @@
 import { MessageForm } from "@/components/consultations/message-form";
+import { MessageRefresh } from "@/components/consultations/message-refresh";
 
 type ConsultationStatusBadgeProps = {
   status: string;
@@ -84,6 +85,7 @@ export function ConsultationMessagesPanel({
 }: ConsultationMessagesPanelProps) {
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <MessageRefresh />
       <div>
         <p className="text-sm font-medium text-teal-700">Consultation chat</p>
         <h2 className="mt-2 text-lg font-semibold text-slate-950">
