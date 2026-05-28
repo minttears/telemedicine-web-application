@@ -81,6 +81,7 @@
 | T702 | TODO | Add Supabase Realtime chat UI updates | Safe polling auto-refresh is completed. True Supabase Realtime subscriptions and Supabase Realtime/RLS/JWT architecture remain TODO for a later security-planned phase. Files/uploads, Storage, video calls, diagnosis, prescriptions, medical notes, status changes, admin chat access, and admin management remain TODO. |
 | T703 | TODO | Implement file attachment metadata and storage flow | Store blobs in Supabase Storage and metadata in PostgreSQL. |
 | T704 | TODO | Add future call-ready message types | `CALL_STARTED`, `CALL_ENDED` should be supported in the enum. |
+| T705 | DONE | Implement first-version doctor consultation completion summary | Assigned doctors can complete `SCHEDULED` and `IN_PROGRESS` consultations and save one plain-text `doctorNotes` summary for patient read-only viewing. Legal prescription workflow, structured diagnosis/recommendation/follow-up fields, uploads, Storage, Realtime, video calls, payment, admin management, admin message access, and time-based chat restrictions remain TODO/deferred. |
 
 ## Milestone 8: Admin And Audit
 

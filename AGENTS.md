@@ -18,7 +18,9 @@ If files conflict, stop and ask the user before changing code.
 
 ## Current Project State
 
-The repository is at the documentation/bootstrap stage.
+The repository has a working authenticated MVP workflow for doctor schedule management, patient booking, consultation views, PostgreSQL/Prisma text chat persistence, and safe polling-based chat refresh.
+
+For faster continuation, read `CURRENT_STATE.md` before broad planning or implementation work.
 
 Do not implement application code, install dependencies, create commits, push branches, or open pull requests until the user explicitly approves.
 
@@ -52,13 +54,18 @@ Example backend routes:
 - Do not use Auth.js unless the user explicitly asks for it.
 - Do not add an Express backend for the MVP.
 - Do not use emoji in UI requirements or UI copy.
+- Plan before implementation for major phases.
 - Do not commit changes unless the user explicitly confirms.
 - Do not push changes unless the user explicitly confirms.
 - Do not open pull requests unless the user explicitly confirms.
 - Do not add dependencies unless the user approves dependency setup or implementation.
+- Do not change Prisma schema or run migrations unless the user explicitly approves.
 - Do not store real secrets in the repository.
 - Do not edit `.env.local` or any file containing real secrets.
+- Never print `.env.local`, `DATABASE_URL`, `DIRECT_URL`, passwords, password hashes, cookies, session tokens, development seed password literals, or service role keys.
 - Do not expose `SUPABASE_SERVICE_ROLE_KEY` to client-side code.
+- Do not implement Supabase Realtime without a separate security plan.
+- If browser or dev-server smoke testing fails because of the Windows sandbox, record the limitation honestly and do not fake results.
 
 ## Project Context Rule
 
@@ -70,6 +77,7 @@ Before starting a meaningful task, re-check these files when they exist:
 - `DECISIONS.md`
 - `SECURITY.md`
 - `PLANS.md`
+- `CURRENT_STATE.md`
 - `.env.example`
 
 Use them as the source of truth for scope, architecture, security, tasks, and workflow.
@@ -187,6 +195,7 @@ Rules:
 - Use responsive layouts for desktop, tablet, and mobile.
 - Include loading, empty, error, unauthorized, forbidden, and not-found states for primary screens.
 - Use smooth and restrained animations only when they improve clarity.
+- Use Tailwind CSS only unless the user explicitly approves another UI dependency.
 
 Allowed UI tools after dependency approval:
 
@@ -247,6 +256,7 @@ Update candidates:
 - `DECISIONS.md` when an architectural or product decision is made.
 - `PLANS.md` when a large plan changes.
 - `SECURITY.md` when security posture, auth, file handling, or access rules change.
+- `CURRENT_STATE.md` when completed phases or the recommended next phase changes.
 - `.env.example` when environment variables are added or changed.
 
 Important:
@@ -263,6 +273,8 @@ Before suggesting a commit:
 3. Show a short diff summary.
 4. Suggest a commit message.
 5. Ask whether to commit.
+
+Keep final summaries concise and include validation results, changed files, and any honest smoke-test limitations.
 
 After a meaningful feature, fix, or milestone, suggest opening a pull request, but do not open it without explicit approval.
 

@@ -3,10 +3,12 @@ import { notFound } from "next/navigation";
 import { MessageType } from "@prisma/client";
 
 import {
+  ConsultationSummaryPanel,
   ConsultationStatusBadge,
   ConsultationMessagesPanel,
   PlaceholderPanel,
 } from "@/components/consultations/consultation-display";
+import { ConsultationCompletionForm } from "@/components/consultations/consultation-completion-form";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
 import { prisma } from "@/lib/prisma";
 
@@ -101,6 +103,8 @@ export default async function DoctorConsultationPage({
     notFound();
   }
 
+  const completedDoctorNotes = consultation.doctorNotes?.trim() ?? "";
+
   return (
     <div className="space-y-6">
       <Link
@@ -129,6 +133,15 @@ export default async function DoctorConsultationPage({
 
       <section className="grid gap-4 lg:grid-cols-[1fr_320px]">
         <div className="space-y-4">
+          {consultation.status === "COMPLETED" ? (
+            <ConsultationSummaryPanel
+              completedAt={consultation.completedAt}
+              doctorNotes={completedDoctorNotes || "No summary was recorded."}
+              title="Completed summary"
+            />
+          ) : (
+            <ConsultationCompletionForm consultationId={consultation.id} />
+          )}
           <ConsultationMessagesPanel
             consultationId={consultation.id}
             messages={consultation.messages}
@@ -152,6 +165,12 @@ export default async function DoctorConsultationPage({
               label="Consultation status"
               value={consultation.status}
             />
+            {consultation.completedAt ? (
+              <DetailItem
+                label="Completed time"
+                value={formatDateTime(consultation.completedAt)}
+              />
+            ) : null}
             <DetailItem
               label="Slot status"
               value={consultation.scheduleSlot?.status ?? "Not linked"}

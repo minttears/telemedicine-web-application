@@ -99,9 +99,16 @@ Doctor consultation boundaries:
 
 - Doctor consultation pages are scoped by the current doctor profile.
 - Doctors can see only consultations assigned to their own `DoctorProfile`.
+- Only the assigned doctor can complete a consultation in Phase 8A.
+- The completion endpoint scopes by consultation id and `doctor.userId` for the current user.
+- Patients, admins, and wrong doctors cannot complete consultations.
+- Completion stores plain text in `Consultation.doctorNotes`, sets `Consultation.status` to `COMPLETED`, and sets `Consultation.completedAt`.
+- `doctorNotes` is rendered as React text with preserved whitespace and without `dangerouslySetInnerHTML`.
+- No legal prescription workflow is implemented in Phase 8A.
+- Chat and message history are not deleted on consultation completion.
 - Missing, fake, or unassigned doctor consultation detail routes use safe not-found behavior.
 - Patient, admin, and logged-out users are redirected away by the existing doctor workspace protection.
-- Doctor consultation pages do not display or print patient email, patient phone, messages, attachments, storage paths, doctor notes, diagnosis, prescriptions, medical notes, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, or development seed password literals.
+- Doctor consultation pages do not display or print patient email, patient phone, attachments, storage paths, diagnosis, prescriptions, medical notes, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, service role keys, or development seed password literals.
 
 Consultation detail shell boundaries:
 
@@ -117,6 +124,7 @@ Consultation detail shell boundaries:
 - File placeholders remain static and do not query attachments.
 - Consultation detail pages do not query or display attachments, storage paths, private notes, diagnosis, prescriptions, medical notes, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, or development seed password literals.
 - Message bodies are rendered as plain React text, and `dangerouslySetInnerHTML` is not used.
+- Doctor completion summary text is rendered as plain React text, and `dangerouslySetInnerHTML` is not used.
 
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 

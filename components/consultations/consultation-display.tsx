@@ -41,6 +41,49 @@ export function PlaceholderPanel({ body, title }: PlaceholderPanelProps) {
   );
 }
 
+type ConsultationSummaryPanelProps = {
+  completedAt: Date | null;
+  doctorNotes: string;
+  title: string;
+};
+
+function formatSummaryDate(value: Date) {
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(value);
+}
+
+export function ConsultationSummaryPanel({
+  completedAt,
+  doctorNotes,
+  title,
+}: ConsultationSummaryPanelProps) {
+  return (
+    <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <p className="text-sm font-medium text-teal-700">{title}</p>
+          <h2 className="mt-2 text-lg font-semibold text-slate-950">
+            Conclusion and recommendations
+          </h2>
+        </div>
+        {completedAt ? (
+          <time
+            className="text-sm text-slate-500"
+            dateTime={completedAt.toISOString()}
+          >
+            {formatSummaryDate(completedAt)}
+          </time>
+        ) : null}
+      </div>
+      <p className="mt-5 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+        {doctorNotes}
+      </p>
+    </section>
+  );
+}
+
 type ConsultationMessage = {
   body: string | null;
   createdAt: Date;

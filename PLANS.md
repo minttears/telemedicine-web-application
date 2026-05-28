@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 7B end-to-end MVP QA and workflow polish is in progress. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 8A consultation completion and doctor summary is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -814,6 +814,53 @@ Validation:
 - `npm.cmd run typecheck` passed.
 - `npm.cmd run build` passed.
 - `npx.cmd prisma validate` passed.
+
+### Phase 8A: Consultation Completion And Doctor Summary
+
+Status: Completed
+
+Completed:
+
+- Added first-version doctor-only consultation completion.
+- Added `POST /api/consultations/[consultationId]/complete`.
+- Completion is scoped by consultation id and the assigned doctor's `doctor.userId`.
+- Completion is allowed from `SCHEDULED` and `IN_PROGRESS`.
+- Already `COMPLETED` consultations and `CANCELLED` consultations return safe `409` responses.
+- Completion stores the trimmed plain-text doctor summary in existing `Consultation.doctorNotes`.
+- Completion sets `Consultation.status` to `COMPLETED`.
+- Completion sets `Consultation.completedAt`.
+- Patient consultation detail shows a read-only `Doctor summary` after completion.
+- Doctor consultation detail shows the completion form before completion and a read-only completed summary after completion.
+- Chat behavior was not changed.
+- Chat history remains visible after completion.
+- No Prisma schema changes or migrations were needed.
+
+Changed files:
+
+- `app/api/consultations/[consultationId]/complete/route.ts`
+- `components/consultations/consultation-completion-form.tsx`
+- `components/consultations/consultation-display.tsx`
+- `app/doctor/consultations/[consultationId]/page.tsx`
+- `app/patient/consultations/[consultationId]/page.tsx`
+
+Deferred:
+
+- Legal prescription workflow.
+- Structured diagnosis, recommendation, prescription, and follow-up fields.
+- File uploads, Supabase Storage, true Supabase Realtime, video calls, payment, admin management, admin message access, and time-based chat restrictions.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed after `DATABASE_URL` was loaded silently into the process from `.env.local`; the first plain run could not resolve the environment variable.
+
+Smoke test:
+
+- Full authenticated browser/API smoke testing was not completed because the temporary-record harness failed before producing useful diagnostics.
+- Limited route smoke passed: unauthenticated completion API requests return `401`, and the new completion route is served by Next.js.
+- No credentials, passwords, password hashes, cookies, session tokens, environment values, database URLs, service role keys, or development seed password literals were printed.
 
 ## Phase 5: Admin And Operational Views
 
