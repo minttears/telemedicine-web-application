@@ -46,6 +46,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Patients can upload/download attachments only for consultations owned by their `PatientProfile`.
 - Doctors can upload/download attachments only for consultations assigned to their `DoctorProfile`.
 - Allowed attachment types are PDF, JPG/JPEG, PNG, and DOCX, with a 10 MB maximum file size.
+- Secure consultation file attachments were manually verified in the browser for patient upload/download, assigned-doctor download, completed read-only upload behavior, logged-out rejection, admin rejection, other-patient rejection, server-mediated download links, hidden `storagePath`, no public Storage URLs, and no visible browser secrets.
 - Chat auto-refresh uses polling with `router.refresh()` every 5 seconds only while the document is visible.
 - Consultation completion uses existing `Consultation.doctorNotes` for the MVP doctor summary, sets `Consultation.status` to `COMPLETED`, and sets `Consultation.completedAt`.
 - Completed consultations show preserved chat history in read-only mode.

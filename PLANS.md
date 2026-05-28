@@ -968,8 +968,22 @@ Dependency/audit note:
 Smoke test:
 
 - Automated local HTTP smoke testing did not complete because temporary dev-server startup timed out in the Windows environment.
+- Manual browser QA later passed for secure consultation file attachments.
 - The temporary dev-server process tree was stopped after the timeout.
 - No credentials, cookies, tokens, passwords, password hashes, database URLs, service role keys, environment values, or development seed password literals were printed.
+
+Manual QA:
+
+- Patient upload/download works for allowed attachment files.
+- Assigned doctor can see and download a patient file.
+- Completed consultation is read-only for uploads.
+- Logged-out download is rejected.
+- Admin download is rejected.
+- Other patient download is rejected.
+- Download links use `/api/files/[attachmentId]`, not direct Supabase Storage URLs.
+- `storagePath` is not visible in the UI or Network responses.
+- No Supabase Storage public URL is exposed.
+- No secrets were visible in the browser.
 
 ## Phase 5: Admin And Operational Views
 
