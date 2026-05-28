@@ -26,6 +26,7 @@ Requirements:
 - 2FA remains deferred until a later approved phase.
 - Public registration is patient-only.
 - Public doctor and admin registration are not allowed.
+- Public registration cannot create `DOCTOR` or `ADMIN` users.
 - Registration hashes passwords with `bcryptjs`.
 - Duplicate registration email handling returns a safe conflict error.
 - Registration must not log passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, or `.env.local` contents.
@@ -43,6 +44,8 @@ Role rules:
 - `/doctor/*` workspace pages require the `DOCTOR` role.
 - `/admin/*` workspace pages require the `ADMIN` role.
 - Wrong-role users are redirected to their own dashboard.
+- Admin doctor management pages are protected by the admin workspace layout.
+- Admin doctor management APIs also require server-side `ADMIN` role checks with `requireRole("ADMIN")`; UI-only checks are not sufficient.
 
 Expected helpers:
 
@@ -74,6 +77,16 @@ Doctor directory boundaries:
 - The doctor profile schedule preview shows only future `AVAILABLE` slots and is read-only.
 - Patient doctor profile detail pages show only bookable `AVAILABLE` slots that start at least 30 minutes from now.
 - Doctor profile detail pages do not display consultations, booking controls, chat content, files, session tokens, cookies, passwords, password hashes, environment values, storage paths, or private account data.
+
+Admin doctor management boundaries:
+
+- Admins can create `DOCTOR` users with linked `DoctorProfile` records and assign existing active specialties.
+- Admins can edit basic doctor account/profile fields, deactivate doctor accounts through `User.isActive`, and control patient-facing booking visibility through `DoctorProfile.isAvailable`.
+- Temporary passwords are hashed with the existing password hashing helper, never returned after creation, never audited, never stored as plaintext, and never printed.
+- `passwordHash` is never exposed in admin doctor pages or API responses.
+- Admin doctor pages do not expose patient private data, chat content, message text, attachment contents, storage paths, cookies, tokens, environment values, service role keys, or other secrets.
+- Doctor create/update/deactivation audit logs use safe identifiers and changed field names only.
+- Hard deletion of doctors is not implemented.
 
 Consultation booking boundaries:
 

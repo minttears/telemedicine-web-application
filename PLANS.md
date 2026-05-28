@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 9B secure consultation file attachments is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 10A admin doctor management MVP is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -985,9 +985,78 @@ Manual QA:
 - No Supabase Storage public URL is exposed.
 - No secrets were visible in the browser.
 
+### Phase 10A: Admin Doctor Management MVP
+
+Status: Completed
+
+Completed:
+
+- Added first-version admin doctor management.
+- Public registration remains patient-only; doctors cannot self-register publicly.
+- Admins can create `DOCTOR` users and linked `DoctorProfile` records.
+- Admins can select an existing active `Specialty` during doctor creation and editing.
+- Temporary passwords are hashed with `hashPassword()` and are not returned, printed, audited, or stored as plaintext.
+- Admins can edit basic doctor profile fields: name, email, title, specialty, bio, education, and experience years.
+- `User.isActive` controls doctor account access.
+- `DoctorProfile.isAvailable` controls patient-facing booking visibility.
+- Inactive or unavailable doctors are hidden from the patient doctor directory and patient booking views.
+- The booking API rejects inactive or unavailable doctor slot booking.
+- Safe audit logs are created for doctor create/update/deactivation with safe identifiers and changed field names only.
+
+Changed files:
+
+- `app/admin/doctors/page.tsx`
+- `app/admin/doctors/new/page.tsx`
+- `app/admin/doctors/[doctorId]/page.tsx`
+- `components/admin/doctor-form.tsx`
+- `app/api/admin/doctors/route.ts`
+- `app/api/admin/doctors/[doctorId]/route.ts`
+- `app/api/consultations/route.ts`
+- `app/patient/doctors/page.tsx`
+- `app/patient/doctors/[doctorId]/page.tsx`
+- `app/admin/dashboard/page.tsx`
+
+Not implemented:
+
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+- No email invite flow.
+- No password reset.
+- No forced password change.
+- No 2FA.
+- No specialty CRUD.
+- No admin schedule management.
+- No admin chat/message/file access.
+- No hard deletion.
+- No billing/payment.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed after `DATABASE_URL` was loaded privately into the process from `.env.local`.
+
+Smoke test:
+
+- Admin doctor list opens.
+- Admin can create a doctor.
+- Created user has role `DOCTOR` and a linked `DoctorProfile`.
+- Password is hashed and not shown after submit.
+- Duplicate email and invalid specialty return safe errors.
+- Admin can edit and deactivate a doctor.
+- Inactive and unavailable doctors disappear from the patient directory.
+- Booking API rejects inactive or unavailable doctor slot booking.
+- New active and available doctor can log in with the temporary password.
+- Admin API auth checks return `401` when logged out and `403` for patient/doctor users.
+- Raw App Router page fetches return redirect markers for wrong-role/logged-out access, consistent with prior project notes.
+- Temporary smoke doctor was left deactivated and unavailable; no hard delete was performed.
+- No credentials, passwords, password hashes, cookies, session tokens, database URLs, service role keys, environment values, or development seed password literals were printed.
+
 ## Phase 5: Admin And Operational Views
 
-Status: Not started
+Status: In progress
 
 Goals:
 

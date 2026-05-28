@@ -92,6 +92,7 @@ export async function POST(request: Request) {
           },
           status: "AVAILABLE",
           doctor: {
+            isAvailable: true,
             user: {
               isActive: true,
               role: "DOCTOR",

@@ -60,6 +60,7 @@ async function getDoctors({
 }) {
   return prisma.doctorProfile.findMany({
     where: {
+      isAvailable: true,
       user: {
         isActive: true,
         role: "DOCTOR",
@@ -162,6 +163,7 @@ export default async function PatientDoctorsPage({
     }),
     prisma.doctorProfile.count({
       where: {
+        isAvailable: true,
         user: {
           isActive: true,
           role: "DOCTOR",

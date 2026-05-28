@@ -67,7 +67,7 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T601 | TODO | Implement doctor specialty and profile management | Admin creates doctors; doctors edit profile details. |
+| T601 | DONE | Implement doctor specialty and profile management | Phase 10A Admin Doctor Management MVP is completed: admins can create `DOCTOR` users with linked `DoctorProfile` records, assign existing active specialties, edit basic doctor fields, deactivate accounts, and control booking visibility. Specialty CRUD, admin schedule management, invite/password reset flow, 2FA, and doctor self-service profile editing remain TODO/deferred. |
 | T602 | DONE | Implement doctor list and filters | Patient doctor directory supports doctor name search and specialty filtering. Availability is shown on cards, but availability filtering remains deferred. |
 | T603 | DONE | Implement doctor profile page | Patient-only doctor profile details and a read-only upcoming slot preview are completed. Booking, consultation creation, and schedule selection remain TODO. |
 | T604 | DONE | Implement basic schedule slots | First-version doctor schedule management is completed: doctor schedule page, schedule slot creation, soft cancellation of future `AVAILABLE` slots, 30-minute minimum lead time for doctor slot creation, 30-minute minimum lead time for patient booking, and patient booking integration with newly created `AVAILABLE` slots. Recurring schedules, admin schedule management, `BOOKED` slot cancellation, consultation cancellation, payments, video calls, file uploads, Storage, Realtime, diagnosis, prescriptions, medical notes, and status changes remain TODO. |
@@ -88,7 +88,7 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T801 | TODO | Implement minimal admin management screens | Users, doctors, specialties, consultations, and audit logs. |
+| T801 | TODO | Implement minimal admin management screens | Phase 10A Admin Doctor Management MVP is completed. Remaining admin scope includes specialty CRUD, admin schedule management, admin patient management, admin consultation management, admin chat/message/file access, break-glass audited access, invite/password reset flow, 2FA, billing/payment, and broader audit-log workflows. |
 | T802 | TODO | Add audit log creation for important actions | Login failure if practical, admin changes, consultation status, file uploads. |
 
 ## Milestone 9: Quality And Deployment

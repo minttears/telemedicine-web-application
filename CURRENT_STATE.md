@@ -31,6 +31,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 8A first-version doctor-only consultation completion summary
 - Phase 8B consultation history filters and read-only completed chat
 - Phase 9B first-version secure consultation file attachments
+- Phase 10A first-version admin doctor management MVP
 
 ## Current MVP Behavior
 
@@ -47,19 +48,23 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Doctors can upload/download attachments only for consultations assigned to their `DoctorProfile`.
 - Allowed attachment types are PDF, JPG/JPEG, PNG, and DOCX, with a 10 MB maximum file size.
 - Secure consultation file attachments were manually verified in the browser for patient upload/download, assigned-doctor download, completed read-only upload behavior, logged-out rejection, admin rejection, other-patient rejection, server-mediated download links, hidden `storagePath`, no public Storage URLs, and no visible browser secrets.
+- Public registration remains patient-only; doctors are created by admins and cannot self-register publicly.
+- Admin can list doctors, create `DOCTOR` users with linked `DoctorProfile` records, assign existing active specialties, edit basic doctor account/profile fields, deactivate doctor accounts, and control patient-facing booking availability.
+- `User.isActive` controls doctor account access, while `DoctorProfile.isAvailable` controls patient-facing directory and booking visibility.
+- Inactive or unavailable doctors are hidden from the patient doctor directory and patient booking views, and the booking API rejects inactive or unavailable doctor slot booking.
 - Chat auto-refresh uses polling with `router.refresh()` every 5 seconds only while the document is visible.
 - Consultation completion uses existing `Consultation.doctorNotes` for the MVP doctor summary, sets `Consultation.status` to `COMPLETED`, and sets `Consultation.completedAt`.
 - Completed consultations show preserved chat history in read-only mode.
 - Completed consultations show existing file messages read-only and reject new file uploads.
 - `POST /api/messages` rejects completed consultations with a safe `409`, while non-completed consultation chat remains writable.
 - Admin has no attachment content access in this phase.
-- Admin has protected workspace routes but operational management is still mostly placeholder/deferred.
+- Admin doctor management is implemented for the MVP, while broader operational management remains deferred.
 
 ## Deferred Features
 
 - True Supabase Realtime subscriptions and the required custom auth/RLS/JWT security design
-- Admin management screens and audit-log workflows
-- Admin break-glass/private consultation access
+- Admin invite/password reset flow, 2FA enforcement, specialty CRUD, admin schedule management, admin patient/consultation management, and admin break-glass/private consultation access
+- Broader admin management screens and audit-log workflows beyond Phase 10A doctor management
 - Virus scanning, advanced file previews, and production file-handling hardening
 - Doctor profile/specialty management beyond seeded data
 - Recurring schedules, booked slot cancellation, consultation cancellation, and status changes
@@ -82,12 +87,12 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 9B: File Attachments Implementation.
+Phase 10A: Admin Doctor Management MVP.
 
 Latest known commit:
 
-- `b9205a2 feat: add consultation history archive rules`
+- See `git log --oneline` for the latest committed Phase 10A hash after commit.
 
 ## Next Recommended Phase
 
-Choose the next MVP gap deliberately. Strong candidates are admin management foundations, public SEO/deployment readiness, broader authenticated browser QA, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.
+Choose the next MVP gap deliberately. Strong candidates are remaining admin management, public SEO/deployment readiness, broader authenticated browser QA, invite/password reset flow, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.

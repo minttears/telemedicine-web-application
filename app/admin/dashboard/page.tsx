@@ -122,7 +122,7 @@ export default async function AdminDashboardPage() {
             label="Users"
           />
           <AdminLink
-            description="Doctor creation and editing will be implemented later."
+            description="Create doctor accounts and manage doctor profile visibility."
             href="/admin/doctors"
             label="Doctors"
           />

@@ -46,6 +46,7 @@ export default async function PatientDoctorProfilePage({
   const doctor = await prisma.doctorProfile.findFirst({
     where: {
       id: doctorId,
+      isAvailable: true,
       user: {
         isActive: true,
         role: "DOCTOR",
