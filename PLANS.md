@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 10A admin doctor management MVP is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 10B admin specialty management MVP is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -1052,6 +1052,73 @@ Smoke test:
 - Admin API auth checks return `401` when logged out and `403` for patient/doctor users.
 - Raw App Router page fetches return redirect markers for wrong-role/logged-out access, consistent with prior project notes.
 - Temporary smoke doctor was left deactivated and unavailable; no hard delete was performed.
+- No credentials, passwords, password hashes, cookies, session tokens, database URLs, service role keys, environment values, or development seed password literals were printed.
+
+### Phase 10B: Admin Specialty Management MVP
+
+Status: Completed
+
+Completed:
+
+- Added first-version admin specialty management.
+- Admins can list, create, edit, deactivate, and reactivate specialties.
+- `Specialty.isActive` controls whether specialties appear in doctor creation and patient filters.
+- Existing doctors linked to inactive specialties remain intact.
+- Doctors linked to inactive specialties may remain visible to patients if the doctor account is active and `DoctorProfile.isAvailable` is true.
+- Doctor edit can retain the current inactive specialty.
+- Doctor edit rejects assigning a different inactive specialty.
+- Patient filter options show only active specialties.
+- Safe audit logs are created for specialty create/update/deactivation/reactivation with safe identifiers and changed field names only.
+
+Changed files:
+
+- `app/admin/specialties/page.tsx`
+- `app/admin/specialties/new/page.tsx`
+- `app/admin/specialties/[specialtyId]/page.tsx`
+- `components/admin/specialty-form.tsx`
+- `app/api/admin/specialties/route.ts`
+- `app/api/admin/specialties/[specialtyId]/route.ts`
+- `app/admin/dashboard/page.tsx`
+- `app/admin/doctors/[doctorId]/page.tsx`
+- `app/api/admin/doctors/[doctorId]/route.ts`
+
+Not implemented:
+
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+- No hard deletion.
+- No admin chat/message/file access.
+- No admin schedule management.
+- No billing/payment.
+- No invite flow.
+- No password reset.
+- No 2FA.
+
+Validation:
+
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+- `npx.cmd prisma validate` passed after `DATABASE_URL` was loaded privately into the process from `.env.local`.
+
+Smoke test:
+
+- Admin can open specialty list.
+- Admin can create a specialty.
+- Duplicate name/slug return safe errors.
+- Invalid slug returns safe error.
+- Admin can edit, deactivate, and reactivate specialty.
+- Deactivated specialty remains linked to existing doctors.
+- Doctor creation only lists active specialties.
+- Doctor edit can retain current inactive specialty.
+- Doctor edit rejects assigning a different inactive specialty.
+- Patient filter only lists active specialties.
+- Doctor linked to inactive specialty remains visible when active/available.
+- Admin specialty APIs return `401` when logged out and `403` for patient/doctor users.
+- Raw App Router page fetches return redirect markers for logged-out/wrong-role access, consistent with prior project notes.
+- No private internals appeared in new admin specialty pages.
+- Temporary smoke records were left non-public/inactive where applicable; no hard delete was performed.
 - No credentials, passwords, password hashes, cookies, session tokens, database URLs, service role keys, environment values, or development seed password literals were printed.
 
 ## Phase 5: Admin And Operational Views

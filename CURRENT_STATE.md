@@ -32,6 +32,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 8B consultation history filters and read-only completed chat
 - Phase 9B first-version secure consultation file attachments
 - Phase 10A first-version admin doctor management MVP
+- Phase 10B first-version admin specialty management MVP
 
 ## Current MVP Behavior
 
@@ -50,7 +51,10 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Secure consultation file attachments were manually verified in the browser for patient upload/download, assigned-doctor download, completed read-only upload behavior, logged-out rejection, admin rejection, other-patient rejection, server-mediated download links, hidden `storagePath`, no public Storage URLs, and no visible browser secrets.
 - Public registration remains patient-only; doctors are created by admins and cannot self-register publicly.
 - Admin can list doctors, create `DOCTOR` users with linked `DoctorProfile` records, assign existing active specialties, edit basic doctor account/profile fields, deactivate doctor accounts, and control patient-facing booking availability.
+- Admin can list, create, edit, deactivate, and reactivate specialties used by doctor profiles and patient directory filters.
 - `User.isActive` controls doctor account access, while `DoctorProfile.isAvailable` controls patient-facing directory and booking visibility.
+- `Specialty.isActive` controls whether specialties appear in doctor creation and patient filter options.
+- Existing doctors linked to inactive specialties remain intact and may remain visible to patients when the doctor account is active and `DoctorProfile.isAvailable` is true.
 - Inactive or unavailable doctors are hidden from the patient doctor directory and patient booking views, and the booking API rejects inactive or unavailable doctor slot booking.
 - Chat auto-refresh uses polling with `router.refresh()` every 5 seconds only while the document is visible.
 - Consultation completion uses existing `Consultation.doctorNotes` for the MVP doctor summary, sets `Consultation.status` to `COMPLETED`, and sets `Consultation.completedAt`.
@@ -63,8 +67,8 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 ## Deferred Features
 
 - True Supabase Realtime subscriptions and the required custom auth/RLS/JWT security design
-- Admin invite/password reset flow, 2FA enforcement, specialty CRUD, admin schedule management, admin patient/consultation management, and admin break-glass/private consultation access
-- Broader admin management screens and audit-log workflows beyond Phase 10A doctor management
+- Admin invite/password reset flow, 2FA enforcement, admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
+- Broader admin management screens and audit-log workflows beyond Phase 10A doctor management and Phase 10B specialty management
 - Virus scanning, advanced file previews, and production file-handling hardening
 - Doctor profile/specialty management beyond seeded data
 - Recurring schedules, booked slot cancellation, consultation cancellation, and status changes
@@ -87,7 +91,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 10A: Admin Doctor Management MVP.
+Phase 10B: Admin Specialty Management MVP.
 
 Latest known commit:
 
@@ -95,4 +99,4 @@ Latest known commit:
 
 ## Next Recommended Phase
 
-Choose the next MVP gap deliberately. Strong candidates are remaining admin management, public SEO/deployment readiness, broader authenticated browser QA, invite/password reset flow, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.
+Choose the next MVP gap deliberately. Strong candidates are remaining admin patient/consultation/schedule management, public SEO/deployment readiness, broader authenticated browser QA, invite/password reset flow, billing/payment, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.

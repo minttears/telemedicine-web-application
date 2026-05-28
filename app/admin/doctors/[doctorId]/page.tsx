@@ -34,7 +34,7 @@ export default async function AdminDoctorDetailPage({
   const { doctorId } = await params;
   const { created, updated } = await searchParams;
 
-  const [doctor, specialties] = await Promise.all([
+  const [doctor, activeSpecialties] = await Promise.all([
     prisma.doctorProfile.findFirst({
       where: {
         id: doctorId,
@@ -78,6 +78,17 @@ export default async function AdminDoctorDetailPage({
   if (!doctor) {
     notFound();
   }
+
+  const currentInactiveSpecialty =
+    doctor.specialty && !activeSpecialties.some((item) => item.id === doctor.specialtyId)
+      ? {
+          id: doctor.specialtyId ?? "",
+          name: `${doctor.specialty.name} (inactive)`,
+        }
+      : null;
+  const specialties = currentInactiveSpecialty
+    ? [currentInactiveSpecialty, ...activeSpecialties]
+    : activeSpecialties;
 
   return (
     <div className="space-y-6">

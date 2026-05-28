@@ -127,7 +127,7 @@ export default async function AdminDashboardPage() {
             label="Doctors"
           />
           <AdminLink
-            description="Specialty management will be implemented later."
+            description="Create specialties and control patient filter visibility."
             href="/admin/specialties"
             label="Specialties"
           />

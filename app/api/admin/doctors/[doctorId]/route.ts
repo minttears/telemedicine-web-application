@@ -220,46 +220,49 @@ export async function PATCH(
   const isActive = body.isActive;
   const isAvailable = body.isAvailable;
 
-  const [currentDoctor, specialty] = await Promise.all([
-    prisma.doctorProfile.findFirst({
-      where: {
-        id: doctorId,
-        user: {
-          role: "DOCTOR",
+  const currentDoctor = await prisma.doctorProfile.findFirst({
+    where: {
+      id: doctorId,
+      user: {
+        role: "DOCTOR",
+      },
+    },
+    select: {
+      bio: true,
+      education: true,
+      experienceYears: true,
+      id: true,
+      isAvailable: true,
+      specialtyId: true,
+      title: true,
+      user: {
+        select: {
+          email: true,
+          id: true,
+          isActive: true,
+          name: true,
         },
       },
-      select: {
-        bio: true,
-        education: true,
-        experienceYears: true,
-        id: true,
-        isAvailable: true,
-        specialtyId: true,
-        title: true,
-        user: {
-          select: {
-            email: true,
-            id: true,
-            isActive: true,
-            name: true,
-          },
-        },
-      },
-    }),
-    prisma.specialty.findFirst({
-      where: {
-        id: specialtyId,
-        isActive: true,
-      },
-      select: {
-        id: true,
-      },
-    }),
-  ]);
+    },
+  });
 
   if (!currentDoctor) {
     return Response.json({ error: invalidDoctorMessage }, { status: 404 });
   }
+
+  const specialty = await prisma.specialty.findFirst({
+    where: {
+      id: specialtyId,
+      ...(specialtyId === currentDoctor.specialtyId
+        ? {}
+        : {
+            isActive: true,
+          }),
+    },
+    select: {
+      id: true,
+    },
+  });
 
   if (!specialty) {
     return Response.json({ error: invalidSpecialtyMessage }, { status: 400 });

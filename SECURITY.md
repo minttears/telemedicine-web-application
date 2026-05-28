@@ -46,6 +46,8 @@ Role rules:
 - Wrong-role users are redirected to their own dashboard.
 - Admin doctor management pages are protected by the admin workspace layout.
 - Admin doctor management APIs also require server-side `ADMIN` role checks with `requireRole("ADMIN")`; UI-only checks are not sufficient.
+- Admin specialty management pages are protected by the admin workspace layout.
+- Admin specialty management APIs also require server-side `ADMIN` role checks with `requireRole("ADMIN")`; UI-only checks are not sufficient.
 
 Expected helpers:
 
@@ -87,6 +89,15 @@ Admin doctor management boundaries:
 - Admin doctor pages do not expose patient private data, chat content, message text, attachment contents, storage paths, cookies, tokens, environment values, service role keys, or other secrets.
 - Doctor create/update/deactivation audit logs use safe identifiers and changed field names only.
 - Hard deletion of doctors is not implemented.
+
+Admin specialty management boundaries:
+
+- Admins can create, update, deactivate, and reactivate specialties.
+- `Specialty.isActive` controls whether specialties appear in doctor creation and patient filter options.
+- Inactive specialties are hidden from patient filter options.
+- Specialty management does not expose patient private data, chat content, message text, attachment contents, storage paths, password hashes, cookies, tokens, environment values, service role keys, or other secrets.
+- Specialty create/update/deactivation/reactivation audit logs use safe identifiers and changed field names only.
+- Hard deletion of specialties is not implemented.
 
 Consultation booking boundaries:
 
