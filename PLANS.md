@@ -1211,6 +1211,12 @@ Completed:
 - Invite-created doctors start with `User.isActive=false` and `DoctorProfile.isAvailable=false`.
 - Successful `/set-password` activates `User.isActive` and keeps `DoctorProfile.isAvailable=false` until an admin enables booking availability.
 - Invite links are shown once in the admin UI immediately after invite creation or regeneration.
+- Doctor invite links are now restricted to onboarding-only accounts.
+- Invite generation is allowed only when `User.passwordChangedAt` is null and `User.isActive` is false.
+- Completed/setup doctors must use password reset instead of invite.
+- `POST /api/admin/doctors/[doctorId]/invite` enforces the onboarding-only rule server-side; UI-only hiding is not the only protection.
+- Completed/setup doctor invite attempts return a safe `409` and do not generate a new invite token.
+- The invite endpoint invalidates unused, unexpired invite tokens for that doctor before returning `409`.
 - Raw invite tokens are never stored, logged, audited, printed, or re-displayed.
 - Only SHA-256 token hashes are stored.
 - Doctor invite tokens expire after 7 days and are one-time-use.
@@ -1252,6 +1258,9 @@ Not implemented:
 - No Prisma schema changes.
 - No migrations.
 - No dependencies.
+- No email provider.
+- No public forgot-password flow.
+- No 2FA.
 
 Validation:
 

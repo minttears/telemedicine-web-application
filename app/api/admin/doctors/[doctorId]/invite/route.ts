@@ -12,6 +12,8 @@ import { prisma } from "@/lib/prisma";
 
 const DOCTOR_INVITE_EXPIRATION_DAYS = 7;
 const invalidDoctorMessage = "Doctor not found.";
+const setupCompletedMessage =
+  "Doctor account setup is already complete. Use password reset instead.";
 
 type DoctorInviteRouteContext = {
   params: Promise<{
@@ -27,6 +29,15 @@ function buildInviteUrl(request: Request, rawToken: string) {
   const url = new URL("/set-password", request.url);
   url.searchParams.set("token", rawToken);
   return url.toString();
+}
+
+function canGenerateOnboardingInvite(doctor: {
+  user: {
+    isActive: boolean;
+    passwordChangedAt: Date | null;
+  };
+}) {
+  return doctor.user.passwordChangedAt === null && !doctor.user.isActive;
 }
 
 export async function POST(
@@ -64,12 +75,36 @@ export async function POST(
     },
     select: {
       id: true,
+      user: {
+        select: {
+          isActive: true,
+          passwordChangedAt: true,
+        },
+      },
       userId: true,
     },
   });
 
   if (!doctor) {
     return Response.json({ error: invalidDoctorMessage }, { status: 404 });
+  }
+
+  if (!canGenerateOnboardingInvite(doctor)) {
+    await prisma.accountAccessToken.updateMany({
+      where: {
+        expiresAt: {
+          gt: new Date(),
+        },
+        type: "DOCTOR_INVITE",
+        usedAt: null,
+        userId: doctor.userId,
+      },
+      data: {
+        usedAt: new Date(),
+      },
+    });
+
+    return Response.json({ error: setupCompletedMessage }, { status: 409 });
   }
 
   const rawToken = createRawAccountAccessToken();

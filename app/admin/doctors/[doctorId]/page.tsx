@@ -57,6 +57,7 @@ export default async function AdminDoctorDetailPage({
             id: true,
             isActive: true,
             name: true,
+            passwordChangedAt: true,
             role: true,
             updatedAt: true,
           },
@@ -91,6 +92,8 @@ export default async function AdminDoctorDetailPage({
   const specialties = currentInactiveSpecialty
     ? [currentInactiveSpecialty, ...activeSpecialties]
     : activeSpecialties;
+  const canGenerateInvite =
+    doctor.user.passwordChangedAt === null && !doctor.user.isActive;
 
   return (
     <div className="space-y-6">
@@ -200,10 +203,11 @@ export default async function AdminDoctorDetailPage({
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-2">
+      {canGenerateInvite ? (
         <DoctorInviteAction doctorId={doctor.id} />
+      ) : (
         <DoctorPasswordResetAction doctorId={doctor.id} />
-      </section>
+      )}
     </div>
   );
 }

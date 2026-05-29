@@ -99,6 +99,10 @@ Admin doctor management boundaries:
 - Invite-created doctors start with `User.isActive=false` and `DoctorProfile.isAvailable=false`.
 - Successful invite password setup sets `User.isActive=true` and leaves `DoctorProfile.isAvailable=false` until an admin enables booking.
 - Admin-generated doctor invite links are shown once in the admin UI and are not returned again later.
+- Doctor invite links are restricted to onboarding-only accounts where `User.passwordChangedAt` is null and `User.isActive` is false.
+- Completed/setup doctors must use password reset instead of invite.
+- `POST /api/admin/doctors/[doctorId]/invite` enforces the onboarding-only rule server-side; UI-only hiding is not the only protection.
+- Completed/setup doctor invite attempts return a safe `409`, do not generate a new invite token, and invalidate that doctor's unused, unexpired invite tokens before returning.
 - Admin-generated doctor password reset links are shown once in the admin UI and are not returned again later.
 - `passwordHash` is never exposed in admin doctor pages or API responses.
 - `tokenHash` is never exposed in admin doctor pages or API responses.
@@ -226,6 +230,7 @@ Rules:
 - Doctor invite tokens expire after 7 days and are one-time-use.
 - Admin invite regeneration invalidates prior unused doctor invite tokens for that doctor.
 - Doctor set-password supports inactive invited doctors only through a valid `DOCTOR_INVITE` token and requires the linked user role to be `DOCTOR`.
+- Completed/setup doctor accounts cannot receive new onboarding invite tokens and must use password reset.
 - Doctor password reset tokens expire after 1 hour and are one-time-use.
 - Admin password reset generation invalidates prior unused password reset tokens for that doctor.
 - Doctor password reset requires a valid `PASSWORD_RESET` token and the linked user role to be `DOCTOR`.

@@ -57,9 +57,10 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Admin can list doctors, create `DOCTOR` users with linked `DoctorProfile` records, assign existing active specialties, edit basic doctor account/profile fields, deactivate doctor accounts, and control patient-facing booking availability.
 - Admin doctor creation now defaults to invite mode. Temporary-password doctor creation remains available as a fallback.
 - Invite-created doctors start inactive and unavailable for booking. After successful password setup, `User.isActive` becomes true while `DoctorProfile.isAvailable` remains false until an admin enables booking.
-- Doctor invite links are shown once in the admin UI, expire after 7 days, and are one-time-use. Only token hashes are stored.
+- Doctor invite links are restricted to onboarding-only accounts where `User.passwordChangedAt` is null and `User.isActive` is false. They are shown once in the admin UI, expire after 7 days, and are one-time-use. Only token hashes are stored.
 - The doctor set-password flow redirects doctors to login after password setup and revokes existing doctor sessions.
 - Admins can generate one-time password reset links for existing doctor accounts without an email provider or public forgot-password flow.
+- Completed/setup doctors must use password reset instead of invite. The invite API enforces this server-side, returns a safe `409`, does not generate a new invite token, and invalidates that doctor's unused, unexpired invite tokens before returning.
 - Doctor password reset links are shown once in the admin UI, expire after 1 hour, and are one-time-use. Only token hashes are stored.
 - Doctor password reset revokes existing doctor sessions, updates `User.passwordChangedAt`, and preserves the doctor's current account active state and booking availability state.
 - Admin can list, create, edit, deactivate, and reactivate specialties used by doctor profiles and patient directory filters.
