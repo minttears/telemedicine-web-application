@@ -51,6 +51,18 @@ export async function destroySession(sessionToken: string) {
   });
 }
 
+export async function revokeUserSessions(userId: string) {
+  await prisma.session.updateMany({
+    where: {
+      userId,
+      revokedAt: null,
+    },
+    data: {
+      revokedAt: new Date(),
+    },
+  });
+}
+
 export async function getSessionCookie() {
   const cookieStore = await cookies();
 

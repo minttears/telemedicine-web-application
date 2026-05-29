@@ -29,8 +29,13 @@ type DoctorFormProps = {
 
 type DoctorFormResponse = {
   error?: string;
+  doctorId?: string;
+  inviteExpiresAt?: string;
+  inviteUrl?: string;
   redirectTo?: string;
 };
+
+type SetupMethod = "invite" | "temporaryPassword";
 
 const defaultValues: DoctorFormInitialValues = {
   bio: "",
@@ -56,6 +61,7 @@ export function DoctorForm({
 }: DoctorFormProps) {
   const router = useRouter();
   const values = initialValues ?? defaultValues;
+  const [setupMethod, setSetupMethod] = useState<SetupMethod>("invite");
   const [name, setName] = useState(values.name);
   const [email, setEmail] = useState(values.email);
   const [temporaryPassword, setTemporaryPassword] = useState("");
@@ -70,6 +76,11 @@ export function DoctorForm({
   const [isAvailable, setIsAvailable] = useState(values.isAvailable);
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [inviteDetails, setInviteDetails] = useState<{
+    doctorId: string;
+    expiresAt: string;
+    url: string;
+  } | null>(null);
   const [isPending, setIsPending] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -102,7 +113,11 @@ export function DoctorForm({
       return;
     }
 
-    if (mode === "create" && temporaryPassword.length < 8) {
+    if (
+      mode === "create" &&
+      setupMethod === "temporaryPassword" &&
+      temporaryPassword.length < 8
+    ) {
       setFieldError("Temporary password must be at least 8 characters.");
       return;
     }
@@ -139,6 +154,8 @@ export function DoctorForm({
     setIsPending(true);
 
     try {
+      setInviteDetails(null);
+
       const response = await fetch(
         mode === "create"
           ? "/api/admin/doctors"
@@ -156,9 +173,12 @@ export function DoctorForm({
             isActive,
             isAvailable,
             name: normalizedName,
+            setupMethod: mode === "create" ? setupMethod : undefined,
             specialtyId,
             temporaryPassword:
-              mode === "create" ? temporaryPassword : undefined,
+              mode === "create" && setupMethod === "temporaryPassword"
+                ? temporaryPassword
+                : undefined,
             title: title.trim(),
           }),
         },
@@ -168,6 +188,15 @@ export function DoctorForm({
 
       if (!response.ok) {
         setSubmitError(result.error ?? "Unable to save doctor details.");
+        return;
+      }
+
+      if (mode === "create" && result.inviteUrl && result.inviteExpiresAt) {
+        setInviteDetails({
+          doctorId: result.doctorId ?? "",
+          expiresAt: result.inviteExpiresAt,
+          url: result.inviteUrl,
+        });
         return;
       }
 
@@ -192,6 +221,50 @@ export function DoctorForm({
           Add or reactivate a specialty before creating or editing doctor
           assignments. Specialty management is outside this phase.
         </div>
+      ) : null}
+
+      {mode === "create" ? (
+        <fieldset className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <legend className="text-sm font-semibold text-slate-950">
+            Account setup
+          </legend>
+          <div className="mt-3 grid gap-3 lg:grid-cols-2">
+            <label className="flex items-start gap-3 rounded-md border border-teal-200 bg-white p-4">
+              <input
+                checked={setupMethod === "invite"}
+                className="mt-1 h-4 w-4 accent-teal-700"
+                onChange={() => setSetupMethod("invite")}
+                type="radio"
+              />
+              <span>
+                <span className="block text-sm font-medium text-slate-900">
+                  Invite link
+                </span>
+                <span className="mt-1 block text-sm leading-6 text-slate-600">
+                  Create an inactive doctor account and show a one-time setup
+                  link for the doctor to set a password.
+                </span>
+              </span>
+            </label>
+            <label className="flex items-start gap-3 rounded-md border border-slate-200 bg-white p-4">
+              <input
+                checked={setupMethod === "temporaryPassword"}
+                className="mt-1 h-4 w-4 accent-teal-700"
+                onChange={() => setSetupMethod("temporaryPassword")}
+                type="radio"
+              />
+              <span>
+                <span className="block text-sm font-medium text-slate-900">
+                  Temporary password
+                </span>
+                <span className="mt-1 block text-sm leading-6 text-slate-600">
+                  Keep the existing fallback flow for manually coordinated
+                  temporary passwords.
+                </span>
+              </span>
+            </label>
+          </div>
+        </fieldset>
       ) : null}
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -221,7 +294,7 @@ export function DoctorForm({
           />
         </label>
 
-        {mode === "create" ? (
+        {mode === "create" && setupMethod === "temporaryPassword" ? (
           <label className="block">
             <span className="text-sm font-medium text-slate-800">
               Temporary password
@@ -310,8 +383,9 @@ export function DoctorForm({
       <fieldset className="mt-5 grid gap-4 lg:grid-cols-2">
         <label className="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
           <input
-            checked={isActive}
+            checked={mode === "create" && setupMethod === "invite" ? false : isActive}
             className="mt-1 h-4 w-4 accent-teal-700"
+            disabled={mode === "create" && setupMethod === "invite"}
             onChange={(event) => setIsActive(event.target.checked)}
             type="checkbox"
           />
@@ -320,16 +394,20 @@ export function DoctorForm({
               Account active
             </span>
             <span className="mt-1 block text-sm leading-6 text-slate-600">
-              Active doctors can sign in. Deactivated doctors cannot access the
-              doctor workspace.
+              {mode === "create" && setupMethod === "invite"
+                ? "Invite-created doctors start inactive until password setup is complete."
+                : "Active doctors can sign in. Deactivated doctors cannot access the doctor workspace."}
             </span>
           </span>
         </label>
 
         <label className="flex items-start gap-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
           <input
-            checked={isAvailable}
+            checked={
+              mode === "create" && setupMethod === "invite" ? false : isAvailable
+            }
             className="mt-1 h-4 w-4 accent-teal-700"
+            disabled={mode === "create" && setupMethod === "invite"}
             onChange={(event) => setIsAvailable(event.target.checked)}
             type="checkbox"
           />
@@ -338,12 +416,47 @@ export function DoctorForm({
               Available for booking
             </span>
             <span className="mt-1 block text-sm leading-6 text-slate-600">
-              Available doctors appear in the patient directory and can show
-              bookable slots.
+              {mode === "create" && setupMethod === "invite"
+                ? "Invite-created doctors stay unavailable for booking until an admin enables this later."
+                : "Available doctors appear in the patient directory and can show bookable slots."}
             </span>
           </span>
         </label>
       </fieldset>
+
+      {inviteDetails ? (
+        <div className="mt-5 rounded-lg border border-teal-200 bg-teal-50 p-4">
+          <h2 className="text-sm font-semibold text-teal-950">
+            One-time invite link
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-teal-900">
+            Copy this link now and share it through an approved secure process.
+            It will not be shown again after you leave this page.
+          </p>
+          <label className="mt-3 block">
+            <span className="text-xs font-medium uppercase tracking-normal text-teal-900">
+              Invite link
+            </span>
+            <input
+              className="mt-2 w-full rounded-md border border-teal-200 bg-white px-3 py-2 text-sm text-slate-950"
+              readOnly
+              value={inviteDetails.url}
+            />
+          </label>
+          <p className="mt-2 text-xs text-teal-900">
+            Expires {new Date(inviteDetails.expiresAt).toLocaleString()}.
+          </p>
+          {inviteDetails.doctorId ? (
+            <button
+              className="mt-4 inline-flex min-h-10 items-center justify-center rounded-md border border-teal-300 bg-white px-4 text-sm font-medium text-teal-800 transition hover:border-teal-700 hover:text-teal-900"
+              onClick={() => router.push(`/admin/doctors/${inviteDetails.doctorId}`)}
+              type="button"
+            >
+              Open doctor details
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       {(fieldError || submitError) && (
         <p
@@ -370,7 +483,9 @@ export function DoctorForm({
           {isPending
             ? "Saving..."
             : mode === "create"
-              ? "Create doctor"
+              ? setupMethod === "invite"
+                ? "Create doctor invite"
+                : "Create doctor"
               : "Save changes"}
         </button>
       </div>

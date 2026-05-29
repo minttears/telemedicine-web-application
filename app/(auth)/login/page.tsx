@@ -3,8 +3,17 @@ import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/auth/login-form";
 import { getCurrentUser, getRedirectPathForRole } from "@/lib/auth/current-user";
 
-export default async function LoginPage() {
-  const currentUser = await getCurrentUser();
+type LoginPageProps = {
+  searchParams: Promise<{
+    passwordSet?: string;
+  }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const [currentUser, { passwordSet }] = await Promise.all([
+    getCurrentUser(),
+    searchParams,
+  ]);
 
   if (currentUser) {
     redirect(getRedirectPathForRole(currentUser.role));
@@ -26,7 +35,14 @@ export default async function LoginPage() {
           </p>
         </div>
 
-        <LoginForm />
+        <div>
+          {passwordSet ? (
+            <p className="mb-4 rounded-md border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800">
+              Password set. Sign in with your new password.
+            </p>
+          ) : null}
+          <LoginForm />
+        </div>
       </section>
     </main>
   );

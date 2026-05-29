@@ -35,6 +35,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 10B first-version admin specialty management MVP
 - Phase 10C MVP UI copy and workflow polish
 - Phase 11A access token schema and backend foundation for future doctor invite and password reset flows
+- Phase 11B Admin Doctor Invite MVP
 
 ## Current MVP Behavior
 
@@ -53,6 +54,10 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Secure consultation file attachments were manually verified in the browser for patient upload/download, assigned-doctor download, completed read-only upload behavior, logged-out rejection, admin rejection, other-patient rejection, server-mediated download links, hidden `storagePath`, no public Storage URLs, and no visible browser secrets.
 - Public registration remains patient-only; doctors are created by admins and cannot self-register publicly.
 - Admin can list doctors, create `DOCTOR` users with linked `DoctorProfile` records, assign existing active specialties, edit basic doctor account/profile fields, deactivate doctor accounts, and control patient-facing booking availability.
+- Admin doctor creation now defaults to invite mode. Temporary-password doctor creation remains available as a fallback.
+- Invite-created doctors start inactive and unavailable for booking. After successful password setup, `User.isActive` becomes true while `DoctorProfile.isAvailable` remains false until an admin enables booking.
+- Doctor invite links are shown once in the admin UI, expire after 7 days, and are one-time-use. Only token hashes are stored.
+- The doctor set-password flow redirects doctors to login after password setup and revokes existing doctor sessions.
 - Admin can list, create, edit, deactivate, and reactivate specialties used by doctor profiles and patient directory filters.
 - `User.isActive` controls doctor account access, while `DoctorProfile.isAvailable` controls patient-facing directory and booking visibility.
 - `Specialty.isActive` controls whether specialties appear in doctor creation and patient filter options.
@@ -66,12 +71,12 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Admin has no attachment content access in this phase.
 - Admin doctor management is implemented for the MVP, while broader operational management remains deferred.
 - Login and patient-facing workflow copy now reflects current MVP behavior for patient registration, doctor discovery, booking, chat, file attachments, consultation history, and admin-created doctor/specialty management.
-- The schema now includes hashed, expiring, one-time account access tokens for future doctor invite and password reset flows. Raw invite/reset tokens are not stored.
+- The schema includes hashed, expiring, one-time account access tokens for doctor invites and future password reset flows. Raw invite/reset tokens are not stored.
 
 ## Deferred Features
 
 - True Supabase Realtime subscriptions and the required custom auth/RLS/JWT security design
-- Admin invite UI, set-password page, password reset pages, email provider, 2FA enforcement, admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
+- Public password reset pages, email provider, 2FA enforcement, admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
 - Broader admin management screens and audit-log workflows beyond Phase 10A doctor management and Phase 10B specialty management
 - Virus scanning, advanced file previews, and production file-handling hardening
 - Doctor profile/specialty management beyond seeded data
@@ -95,11 +100,11 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 11A: Access Token Schema And Backend Foundation.
+Phase 11B: Admin Doctor Invite MVP.
 
 Latest known commit:
 
-- See `git log --oneline` for the latest committed Phase 11A hash after commit.
+- See `git log --oneline` for the latest committed Phase 11B hash after commit.
 
 ## Next Recommended Phase
 

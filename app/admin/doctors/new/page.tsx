@@ -32,8 +32,8 @@ export default async function AdminNewDoctorPage() {
           Create a doctor account
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Enter account and profile details. The temporary password is hashed
-          immediately and is not shown again after creation.
+          Enter account and profile details. Invite link setup is recommended;
+          temporary passwords remain available as a fallback.
         </p>
       </section>
 

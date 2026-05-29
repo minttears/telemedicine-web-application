@@ -3,12 +3,17 @@ import {
   requireRole,
   UnauthorizedError,
 } from "@/lib/auth/current-user";
+import {
+  createRawAccountAccessToken,
+  hashAccountAccessToken,
+} from "@/lib/auth/access-tokens";
 import { hashPassword } from "@/lib/auth/password";
 import { forbidden, unauthorized } from "@/lib/auth/responses";
 import { prisma } from "@/lib/prisma";
 
 const duplicateEmailMessage = "A doctor account with this email cannot be created.";
 const invalidSpecialtyMessage = "Select an active specialty.";
+const DOCTOR_INVITE_EXPIRATION_DAYS = 7;
 const MAX_TITLE_LENGTH = 120;
 const MAX_BIO_LENGTH = 2000;
 const MAX_EDUCATION_LENGTH = 1000;
@@ -24,6 +29,7 @@ type DoctorCreateBody = {
   experienceYears?: unknown;
   isActive?: unknown;
   isAvailable?: unknown;
+  setupMethod?: unknown;
 };
 
 function isValidEmail(value: string) {
@@ -68,6 +74,16 @@ function parseExperienceYears(value: unknown) {
   return null;
 }
 
+function getInviteExpiresAt() {
+  return new Date(Date.now() + DOCTOR_INVITE_EXPIRATION_DAYS * 24 * 60 * 60 * 1000);
+}
+
+function buildInviteUrl(request: Request, rawToken: string) {
+  const url = new URL("/set-password", request.url);
+  url.searchParams.set("token", rawToken);
+  return url.toString();
+}
+
 export async function POST(request: Request) {
   let admin;
 
@@ -102,6 +118,9 @@ export async function POST(request: Request) {
   const education =
     typeof body.education === "string" ? body.education.trim() : "";
   const experienceYears = parseExperienceYears(body.experienceYears);
+  const setupMethod = body.setupMethod === "temporaryPassword"
+    ? "temporaryPassword"
+    : "invite";
 
   if (!name) {
     return Response.json({ error: "Name is required." }, { status: 400 });
@@ -119,7 +138,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Email address is too long." }, { status: 400 });
   }
 
-  if (temporaryPassword.length < 8) {
+  if (setupMethod === "temporaryPassword" && temporaryPassword.length < 8) {
     return Response.json(
       { error: "Temporary password must be at least 8 characters." },
       { status: 400 },
@@ -161,21 +180,25 @@ export async function POST(request: Request) {
     );
   }
 
-  const activeError = validateBoolean(body.isActive, "Account active");
-  if (activeError) {
-    return Response.json({ error: activeError }, { status: 400 });
+  if (setupMethod === "temporaryPassword") {
+    const activeError = validateBoolean(body.isActive, "Account active");
+    if (activeError) {
+      return Response.json({ error: activeError }, { status: 400 });
+    }
+
+    const availableError = validateBoolean(
+      body.isAvailable,
+      "Available for booking",
+    );
+    if (availableError) {
+      return Response.json({ error: availableError }, { status: 400 });
+    }
   }
 
-  const availableError = validateBoolean(
-    body.isAvailable,
-    "Available for booking",
-  );
-  if (availableError) {
-    return Response.json({ error: availableError }, { status: 400 });
-  }
-
-  const isActive = body.isActive as boolean;
-  const isAvailable = body.isAvailable as boolean;
+  const isActive =
+    setupMethod === "invite" ? false : (body.isActive as boolean);
+  const isAvailable =
+    setupMethod === "invite" ? false : (body.isAvailable as boolean);
 
   const specialty = await prisma.specialty.findFirst({
     where: {
@@ -191,7 +214,24 @@ export async function POST(request: Request) {
     return Response.json({ error: invalidSpecialtyMessage }, { status: 400 });
   }
 
-  const passwordHash = await hashPassword(temporaryPassword);
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (existingUser) {
+    return Response.json({ error: duplicateEmailMessage }, { status: 409 });
+  }
+
+  const passwordSeed =
+    setupMethod === "invite"
+      ? createRawAccountAccessToken()
+      : temporaryPassword;
+  const passwordHash = await hashPassword(passwordSeed);
 
   try {
     const doctor = await prisma.$transaction(async (tx) => {
@@ -223,6 +263,49 @@ export async function POST(request: Request) {
         },
       });
 
+      let invite:
+        | {
+            expiresAt: Date;
+            rawToken: string;
+          }
+        | null = null;
+
+      if (setupMethod === "invite") {
+        const rawToken = createRawAccountAccessToken();
+        const expiresAt = getInviteExpiresAt();
+
+        await tx.accountAccessToken.create({
+          data: {
+            createdById: admin.id,
+            expiresAt,
+            tokenHash: hashAccountAccessToken(rawToken),
+            type: "DOCTOR_INVITE",
+            userId: user.id,
+          },
+        });
+
+        await tx.auditLog.create({
+          data: {
+            action: "DOCTOR_INVITE_CREATED",
+            actorId: admin.id,
+            entityId: doctorProfile.id,
+            entityType: "DoctorProfile",
+            metadata: {
+              changedFields: ["accountAccessToken"],
+              doctorProfileId: doctorProfile.id,
+              expiresAt: expiresAt.toISOString(),
+              tokenType: "DOCTOR_INVITE",
+              userId: user.id,
+            },
+          },
+        });
+
+        invite = {
+          expiresAt,
+          rawToken,
+        };
+      }
+
       await tx.auditLog.create({
         data: {
           action: "DOCTOR_CREATED",
@@ -242,18 +325,33 @@ export async function POST(request: Request) {
               "isAvailable",
             ],
             doctorProfileId: doctorProfile.id,
+            setupMethod,
             userId: user.id,
           },
         },
       });
 
-      return doctorProfile;
+      return {
+        doctorProfile,
+        invite,
+      };
     });
+
+    if (doctor.invite) {
+      return Response.json(
+        {
+          doctorId: doctor.doctorProfile.id,
+          inviteExpiresAt: doctor.invite.expiresAt.toISOString(),
+          inviteUrl: buildInviteUrl(request, doctor.invite.rawToken),
+        },
+        { status: 201 },
+      );
+    }
 
     return Response.json(
       {
-        doctorId: doctor.id,
-        redirectTo: `/admin/doctors/${doctor.id}?created=1`,
+        doctorId: doctor.doctorProfile.id,
+        redirectTo: `/admin/doctors/${doctor.doctorProfile.id}?created=1`,
       },
       { status: 201 },
     );

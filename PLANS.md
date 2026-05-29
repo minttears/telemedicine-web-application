@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 11A access token schema and backend foundation is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 11B Admin Doctor Invite MVP is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -1198,6 +1198,85 @@ Not implemented:
 - No 2FA.
 - No doctor self-registration or public role selector.
 - No change to current admin temporary-password doctor creation behavior.
+
+### Phase 11B: Admin Doctor Invite MVP
+
+Status: Completed
+
+Completed:
+
+- Added the Admin Doctor Invite MVP using the Phase 11A account access token foundation.
+- Admin doctor creation now defaults to invite mode.
+- Temporary-password doctor creation remains available as a fallback.
+- Invite-created doctors start with `User.isActive=false` and `DoctorProfile.isAvailable=false`.
+- Successful `/set-password` activates `User.isActive` and keeps `DoctorProfile.isAvailable=false` until an admin enables booking availability.
+- Invite links are shown once in the admin UI immediately after invite creation or regeneration.
+- Raw invite tokens are never stored, logged, audited, printed, or re-displayed.
+- Only SHA-256 token hashes are stored.
+- Doctor invite tokens expire after 7 days and are one-time-use.
+- Prior unused doctor invite tokens are invalidated when an admin regenerates an invite.
+- Existing doctor sessions are revoked after password setup.
+- Public registration remains patient-only, and doctors still cannot self-register publicly.
+- Invite-mode doctor creation previously returned a `500`; the root cause was fixed before commit.
+- Duplicate email now returns safe validation instead of a generic failure.
+- Invite-mode doctor creation now works with a unique email and active specialty.
+
+Changed files:
+
+- `app/(auth)/login/page.tsx`
+- `app/(auth)/set-password/page.tsx`
+- `app/admin/doctors/[doctorId]/page.tsx`
+- `app/admin/doctors/new/page.tsx`
+- `app/api/admin/doctors/route.ts`
+- `app/api/admin/doctors/[doctorId]/invite/route.ts`
+- `app/api/auth/set-password/route.ts`
+- `components/admin/doctor-form.tsx`
+- `components/admin/doctor-invite-action.tsx`
+- `components/auth/set-password-form.tsx`
+- `lib/auth/session.ts`
+- `lib/prisma.ts`
+- `TASKS.md`
+- `PLANS.md`
+- `CURRENT_STATE.md`
+- `SECURITY.md`
+
+Not implemented:
+
+- No email provider.
+- No public forgot-password flow.
+- No password reset flow.
+- No 2FA.
+- No doctor self-registration.
+- No public role selector.
+- No removal of temporary-password fallback.
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+
+Validation:
+
+- `npx.cmd prisma validate` passed after `DATABASE_URL` was loaded privately into the process from `.env.local`.
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+
+Manual QA:
+
+- Admin created a doctor using invite mode with a unique email.
+- Invite-created doctor starts inactive and unavailable for booking.
+- Invite link was shown once in the admin UI.
+- Doctor opened `/set-password` with the invite link and set a password successfully.
+- Doctor was redirected to login and could sign in with the new password.
+- Reusing the invite link shows a generic invalid, expired, or used state.
+- Temporary-password doctor creation remains available as fallback.
+- Public `/register` remains patient-only.
+- `DoctorProfile.isAvailable` remains false until admin enables booking.
+- No invite link or raw token was exposed in chat.
+
+Security notes:
+
+- The invite-mode `500` was caused by a stale cached Prisma client in the running development server after the Phase 11A generated client changed. `lib/prisma.ts` now discards an incompatible cached Prisma client when the expected account access token delegate is missing.
+- No raw invite tokens, invite URLs containing tokens, token hashes, password hashes, cookies, session tokens, environment values, service role keys, or development seed password literals were printed.
 
 ## Phase 5: Admin And Operational Views
 

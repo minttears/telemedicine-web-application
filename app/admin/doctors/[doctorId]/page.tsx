@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { DoctorForm } from "@/components/admin/doctor-form";
+import { DoctorInviteAction } from "@/components/admin/doctor-invite-action";
 import { prisma } from "@/lib/prisma";
 
 type AdminDoctorDetailPageProps = {
@@ -174,7 +175,7 @@ export default async function AdminDoctorDetailPage({
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-slate-950">Edit doctor</h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Update basic account and profile fields. Password reset, schedule
+          Update basic account and profile fields. Schedule
           management, consultation content, and file access are outside this
           phase.
         </p>
@@ -197,6 +198,8 @@ export default async function AdminDoctorDetailPage({
           />
         </div>
       </section>
+
+      <DoctorInviteAction doctorId={doctor.id} />
     </div>
   );
 }
