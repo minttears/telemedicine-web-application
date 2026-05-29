@@ -37,11 +37,15 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 11A access token schema and backend foundation for future doctor invite and password reset flows
 - Phase 11B Admin Doctor Invite MVP
 - Phase 11C Admin-Generated Doctor Password Reset Links
+- Phase 11D Patient And Doctor Profile Settings MVP
 
 ## Current MVP Behavior
 
 - Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, upload/download allowed consultation files, and view a read-only doctor summary after completion.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with one plain-text conclusion/recommendations summary.
+- Patients can open `/patient/profile`, view email/name/date of birth/gender/account status, and edit only name, date of birth, and gender.
+- Doctors can open `/doctor/profile`, view email/name/title/specialty/bio/education/experience/account status/booking availability, and edit only title, bio, and education.
+- Email, role, account status, specialty, experience years, and booking availability remain protected/admin-controlled where appropriate.
 - Booking creates a `SCHEDULED` consultation and changes the selected slot from `AVAILABLE` to `BOOKED` inside a Prisma transaction.
 - Patient and doctor consultation reads are server-rendered and scoped by current profile ownership.
 - Patient and doctor consultation lists support `Upcoming`, `Completed`, and `All` history filters.
@@ -105,7 +109,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 11C: Admin-Generated Doctor Password Reset Links.
+Phase 11D: Patient And Doctor Profile Settings MVP.
 
 Latest known commit:
 

@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 11C Admin-Generated Doctor Password Reset Links is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 11D Patient And Doctor Profile Settings MVP is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -1360,6 +1360,47 @@ Safe checks:
 - Password reset preserves `DoctorProfile.isAvailable`.
 - Existing invite flow and temporary-password fallback remain in place.
 - No raw reset tokens, reset URLs containing tokens, invite URLs containing tokens, token hashes, password hashes, cookies, session tokens, environment values, service role keys, or development seed password literals were printed.
+
+### Phase 11D: Patient And Doctor Profile Settings MVP
+
+Status: Completed
+
+Completed:
+
+- Replaced patient and doctor profile placeholders with protected profile/settings pages.
+- Added `PATCH /api/patient/profile` with server-side `PATIENT` role checks.
+- Added `PATCH /api/doctor/profile` with server-side `DOCTOR` role checks.
+- Patients can view email, name, date of birth, gender, role, and account status.
+- Patients can edit only safe personal profile fields: name, date of birth, and gender.
+- Doctors can view email, name, title, specialty, bio, education, experience years, account active status, and booking availability status.
+- Doctors can edit only limited public profile copy fields: title, bio, and education.
+- Email, role, account status, specialty, experience years, and booking availability remain protected/admin-controlled where appropriate.
+- Profile update APIs use current-user ownership scoping and narrow Prisma selects.
+
+Changed files:
+
+- `app/patient/profile/page.tsx`
+- `app/doctor/profile/page.tsx`
+- `app/api/patient/profile/route.ts`
+- `app/api/doctor/profile/route.ts`
+- `components/patient/patient-profile-form.tsx`
+- `components/doctor/doctor-profile-form.tsx`
+- `TASKS.md`
+- `PLANS.md`
+- `CURRENT_STATE.md`
+- `SECURITY.md`
+
+Not implemented:
+
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+- No email change.
+- No password change.
+- No public forgot-password.
+- No 2FA.
+- No invite/reset flow changes.
+- No admin profile/settings.
 
 ## Phase 5: Admin And Operational Views
 

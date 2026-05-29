@@ -76,6 +76,15 @@ Dashboard data boundaries:
 - Admin dashboard uses aggregate counts only.
 - Admin dashboard does not display audit log details, private messages, file contents, passwords, tokens, cookies, or environment secrets.
 
+Profile settings boundaries:
+
+- `/patient/profile` is protected by the patient workspace layout and reads only the current user's `User` and `PatientProfile` fields through narrow Prisma selects.
+- `PATCH /api/patient/profile` requires `PATIENT`, scopes updates to the current user's own `PatientProfile`, and can update only `User.name`, `PatientProfile.dateOfBirth`, and `PatientProfile.gender`.
+- `/doctor/profile` is protected by the doctor workspace layout and reads only the current user's `User` and `DoctorProfile` fields through narrow Prisma selects.
+- `PATCH /api/doctor/profile` requires `DOCTOR`, scopes updates to the current user's own `DoctorProfile`, and can update only `DoctorProfile.title`, `DoctorProfile.bio`, and `DoctorProfile.education`.
+- Email, role, account status, specialty, experience years, and booking availability are not editable through self-service profile endpoints.
+- Profile pages and APIs do not expose password hashes, token hashes, sessions, other users' patient data, chats, files, storage paths, cookies, tokens, environment values, service role keys, or other secrets.
+
 Doctor directory boundaries:
 
 - `/patient/doctors` is protected by the existing patient workspace layout.
