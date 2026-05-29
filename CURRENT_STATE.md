@@ -36,6 +36,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 10C MVP UI copy and workflow polish
 - Phase 11A access token schema and backend foundation for future doctor invite and password reset flows
 - Phase 11B Admin Doctor Invite MVP
+- Phase 11C Admin-Generated Doctor Password Reset Links
 
 ## Current MVP Behavior
 
@@ -58,6 +59,9 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Invite-created doctors start inactive and unavailable for booking. After successful password setup, `User.isActive` becomes true while `DoctorProfile.isAvailable` remains false until an admin enables booking.
 - Doctor invite links are shown once in the admin UI, expire after 7 days, and are one-time-use. Only token hashes are stored.
 - The doctor set-password flow redirects doctors to login after password setup and revokes existing doctor sessions.
+- Admins can generate one-time password reset links for existing doctor accounts without an email provider or public forgot-password flow.
+- Doctor password reset links are shown once in the admin UI, expire after 1 hour, and are one-time-use. Only token hashes are stored.
+- Doctor password reset revokes existing doctor sessions, updates `User.passwordChangedAt`, and preserves the doctor's current account active state and booking availability state.
 - Admin can list, create, edit, deactivate, and reactivate specialties used by doctor profiles and patient directory filters.
 - `User.isActive` controls doctor account access, while `DoctorProfile.isAvailable` controls patient-facing directory and booking visibility.
 - `Specialty.isActive` controls whether specialties appear in doctor creation and patient filter options.
@@ -76,7 +80,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 ## Deferred Features
 
 - True Supabase Realtime subscriptions and the required custom auth/RLS/JWT security design
-- Public password reset pages, email provider, 2FA enforcement, admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
+- Public forgot-password flow, patient self-service reset, email provider, 2FA enforcement, admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
 - Broader admin management screens and audit-log workflows beyond Phase 10A doctor management and Phase 10B specialty management
 - Virus scanning, advanced file previews, and production file-handling hardening
 - Doctor profile/specialty management beyond seeded data
@@ -100,11 +104,11 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 11B: Admin Doctor Invite MVP.
+Phase 11C: Admin-Generated Doctor Password Reset Links.
 
 Latest known commit:
 
-- See `git log --oneline` for the latest committed Phase 11B hash after commit.
+- See `git log --oneline` for the latest committed Phase 11C hash after commit.
 
 ## Next Recommended Phase
 

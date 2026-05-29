@@ -6,11 +6,12 @@ import { getCurrentUser, getRedirectPathForRole } from "@/lib/auth/current-user"
 type LoginPageProps = {
   searchParams: Promise<{
     passwordSet?: string;
+    passwordReset?: string;
   }>;
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const [currentUser, { passwordSet }] = await Promise.all([
+  const [currentUser, { passwordReset, passwordSet }] = await Promise.all([
     getCurrentUser(),
     searchParams,
   ]);
@@ -39,6 +40,11 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           {passwordSet ? (
             <p className="mb-4 rounded-md border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800">
               Password set. Sign in with your new password.
+            </p>
+          ) : null}
+          {passwordReset ? (
+            <p className="mb-4 rounded-md border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800">
+              Password reset. Sign in with your new password.
             </p>
           ) : null}
           <LoginForm />

@@ -51,8 +51,9 @@ export function DoctorInviteAction({ doctorId }: DoctorInviteActionProps) {
     <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
       <h2 className="text-xl font-semibold text-slate-950">Doctor invite</h2>
       <p className="mt-2 text-sm leading-6 text-slate-600">
-        Generate a one-time setup link for this doctor. Any unused active invite
-        link for this doctor will be invalidated.
+        Generate a one-time onboarding link so this doctor can set an initial
+        password. Any unused active invite link for this doctor will be
+        invalidated.
       </p>
 
       {invite ? (

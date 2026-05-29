@@ -35,8 +35,11 @@ Requirements:
 - Account access tokens are one-time-use and expire.
 - Doctor invite tokens store only SHA-256 token hashes, never raw tokens.
 - Doctor invite tokens are one-time-use and expire after 7 days.
+- Admin-generated doctor password reset tokens store only SHA-256 token hashes, never raw tokens.
+- Admin-generated doctor password reset tokens are one-time-use and expire after 1 hour.
 - Raw invite/reset tokens must be shown only once when explicitly required by a flow and must never be logged, audited, stored, printed, or re-displayed.
 - Doctor set-password activates the invited doctor account, updates `User.passwordChangedAt`, revokes existing sessions for that doctor, and does not auto-login the doctor.
+- Doctor password reset updates `User.passwordChangedAt`, revokes existing sessions for that doctor, preserves the current `User.isActive` value, preserves `DoctorProfile.isAvailable`, and does not auto-login the doctor.
 
 ## Authorization
 
@@ -96,11 +99,13 @@ Admin doctor management boundaries:
 - Invite-created doctors start with `User.isActive=false` and `DoctorProfile.isAvailable=false`.
 - Successful invite password setup sets `User.isActive=true` and leaves `DoctorProfile.isAvailable=false` until an admin enables booking.
 - Admin-generated doctor invite links are shown once in the admin UI and are not returned again later.
+- Admin-generated doctor password reset links are shown once in the admin UI and are not returned again later.
 - `passwordHash` is never exposed in admin doctor pages or API responses.
 - `tokenHash` is never exposed in admin doctor pages or API responses.
 - Admin doctor pages do not expose patient private data, chat content, message text, attachment contents, storage paths, cookies, tokens, environment values, service role keys, or other secrets.
 - Doctor create/update/deactivation audit logs use safe identifiers and changed field names only.
 - Doctor invite creation and account password set audit logs use safe identifiers and changed field names only. They do not include raw tokens, token hashes, passwords, password hashes, cookies, session tokens, or environment values.
+- Doctor password reset creation/completion audit logs use safe identifiers and changed field names only. They do not include raw tokens, token hashes, passwords, password hashes, cookies, session tokens, or environment values.
 - Hard deletion of doctors is not implemented.
 
 Admin specialty management boundaries:
@@ -208,7 +213,7 @@ Pending decision:
 
 ## Account Access Tokens
 
-Phase 11A added the shared token foundation for future doctor invite and password reset flows. Phase 11B uses that foundation for the Admin Doctor Invite MVP.
+Phase 11A added the shared token foundation for future doctor invite and password reset flows. Phase 11B uses that foundation for the Admin Doctor Invite MVP. Phase 11C uses it for admin-generated doctor password reset links.
 
 Rules:
 
@@ -221,7 +226,10 @@ Rules:
 - Doctor invite tokens expire after 7 days and are one-time-use.
 - Admin invite regeneration invalidates prior unused doctor invite tokens for that doctor.
 - Doctor set-password supports inactive invited doctors only through a valid `DOCTOR_INVITE` token and requires the linked user role to be `DOCTOR`.
-- Email provider, public forgot-password pages, reset pages, and 2FA remain deferred.
+- Doctor password reset tokens expire after 1 hour and are one-time-use.
+- Admin password reset generation invalidates prior unused password reset tokens for that doctor.
+- Doctor password reset requires a valid `PASSWORD_RESET` token and the linked user role to be `DOCTOR`.
+- Email provider, public forgot-password, patient self-service reset, and 2FA remain deferred.
 
 ## Chat Privacy
 

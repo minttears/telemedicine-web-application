@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 11B Admin Doctor Invite MVP is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 11C Admin-Generated Doctor Password Reset Links is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -1277,6 +1277,80 @@ Security notes:
 
 - The invite-mode `500` was caused by a stale cached Prisma client in the running development server after the Phase 11A generated client changed. `lib/prisma.ts` now discards an incompatible cached Prisma client when the expected account access token delegate is missing.
 - No raw invite tokens, invite URLs containing tokens, token hashes, password hashes, cookies, session tokens, environment values, service role keys, or development seed password literals were printed.
+
+### Phase 11C: Admin-Generated Doctor Password Reset Links
+
+Status: Completed
+
+Completed:
+
+- Added admin-generated password reset links for existing doctor accounts.
+- Added `POST /api/admin/doctors/[doctorId]/password-reset` with server-side `ADMIN` role checks.
+- Password reset generation works only for existing `DOCTOR` users with linked doctor profiles.
+- Reset links are shown once in the admin UI immediately after generation.
+- Raw reset tokens are never stored, logged, audited, printed, or re-displayed.
+- Only SHA-256 token hashes are stored.
+- Password reset tokens expire after 1 hour and are one-time-use.
+- Regenerating a reset link invalidates prior unused, unexpired `PASSWORD_RESET` tokens for that doctor.
+- Added public `/reset-password?token=...` and `POST /api/auth/reset-password`.
+- Reset password validates a `PASSWORD_RESET` token, requires the linked user role to be `DOCTOR`, hashes the new password with `hashPassword()`, sets `User.passwordChangedAt`, marks the token used, and revokes existing doctor sessions.
+- Password reset preserves the existing `User.isActive` value.
+- Password reset preserves the existing `DoctorProfile.isAvailable` value.
+- Password reset does not auto-login the doctor.
+- Existing invite flow continues to work.
+- Existing temporary-password doctor creation remains available as fallback.
+- Public `/register` remains patient-only.
+
+Changed files:
+
+- `app/(auth)/login/page.tsx`
+- `app/(auth)/reset-password/page.tsx`
+- `app/admin/doctors/[doctorId]/page.tsx`
+- `app/api/admin/doctors/[doctorId]/password-reset/route.ts`
+- `app/api/auth/reset-password/route.ts`
+- `components/admin/doctor-invite-action.tsx`
+- `components/admin/doctor-password-reset-action.tsx`
+- `components/auth/reset-password-form.tsx`
+- `TASKS.md`
+- `PLANS.md`
+- `CURRENT_STATE.md`
+- `SECURITY.md`
+
+Not implemented:
+
+- No public forgot-password flow.
+- No patient self-service reset.
+- No email provider or email templates.
+- No 2FA.
+- No doctor self-registration.
+- No public role selector.
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+- No removal of temporary-password fallback.
+
+Validation:
+
+- `npx.cmd prisma validate` passed after `DATABASE_URL` was loaded privately into the process from `.env.local`.
+- `npm.cmd run lint` passed.
+- `npm.cmd run typecheck` passed.
+- `npm.cmd run build` passed.
+
+Safe checks:
+
+- Public `/register` remains patient-only by inspection.
+- Doctor self-registration still does not exist.
+- Admin can generate a password reset link for an existing doctor.
+- Reset link is shown once in admin UI.
+- Reset token expires after 1 hour.
+- Reusing a reset link returns a generic invalid or expired state.
+- Password reset updates `passwordChangedAt`.
+- Password reset marks the token used.
+- Password reset revokes existing sessions for that doctor.
+- Password reset preserves `User.isActive`.
+- Password reset preserves `DoctorProfile.isAvailable`.
+- Existing invite flow and temporary-password fallback remain in place.
+- No raw reset tokens, reset URLs containing tokens, invite URLs containing tokens, token hashes, password hashes, cookies, session tokens, environment values, service role keys, or development seed password literals were printed.
 
 ## Phase 5: Admin And Operational Views
 

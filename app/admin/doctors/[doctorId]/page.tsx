@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { DoctorForm } from "@/components/admin/doctor-form";
 import { DoctorInviteAction } from "@/components/admin/doctor-invite-action";
+import { DoctorPasswordResetAction } from "@/components/admin/doctor-password-reset-action";
 import { prisma } from "@/lib/prisma";
 
 type AdminDoctorDetailPageProps = {
@@ -199,7 +200,10 @@ export default async function AdminDoctorDetailPage({
         </div>
       </section>
 
-      <DoctorInviteAction doctorId={doctor.id} />
+      <section className="grid gap-6 lg:grid-cols-2">
+        <DoctorInviteAction doctorId={doctor.id} />
+        <DoctorPasswordResetAction doctorId={doctor.id} />
+      </section>
     </div>
   );
 }

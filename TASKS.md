@@ -43,7 +43,7 @@
 | T302 | DONE | Implement registration, login, logout | Patient registration, login UI/API, logout API, and protected workspaces are implemented. Public doctor/admin registration is not allowed. |
 | T303 | DONE | Implement role-based access helpers | Includes `getCurrentUser`, `requireUser`, `requireRole`, and API response helpers. |
 | T304 | DONE | Add role-based redirects | Login redirects by role; protected workspace layouts enforce role access and wrong-role redirects. |
-| T306 | DONE | Add account access token and doctor invite foundation | Phase 11A added hashed, expiring, one-time token storage and helpers. Phase 11B added the Admin Doctor Invite MVP and doctor set-password flow. Public password reset pages, email provider, and 2FA remain deferred. |
+| T306 | DONE | Add account access token, doctor invite, and admin reset flows | Phase 11A added hashed, expiring, one-time token storage and helpers. Phase 11B added the Admin Doctor Invite MVP and doctor set-password flow. Phase 11C added admin-generated doctor password reset links. Public forgot-password, patient self-service reset, email provider, and 2FA remain deferred. |
 | T305 | TODO | Add basic auth validation states | Loading, error, forbidden, unauthorized. |
 
 ## Milestone 4: Public Pages And SEO
@@ -89,7 +89,7 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T801 | TODO | Implement minimal admin management screens | Phase 10A Admin Doctor Management MVP, Phase 10B Admin Specialty Management MVP, and Phase 11B Admin Doctor Invite MVP are completed. Remaining admin scope includes password reset actions, admin schedule management, admin patient management, admin consultation management, admin chat/message/file access, break-glass audited access, 2FA, billing/payment, hard deletion workflows, and broader audit-log workflows. |
+| T801 | TODO | Implement minimal admin management screens | Phase 10A Admin Doctor Management MVP, Phase 10B Admin Specialty Management MVP, Phase 11B Admin Doctor Invite MVP, and Phase 11C admin-generated doctor password reset links are completed. Remaining admin scope includes admin schedule management, admin patient management, admin consultation management, admin chat/message/file access, break-glass audited access, 2FA, billing/payment, hard deletion workflows, and broader audit-log workflows. |
 | T802 | TODO | Add audit log creation for important actions | Login failure if practical, admin changes, consultation status, file uploads. |
 
 ## Milestone 9: Quality And Deployment
