@@ -38,6 +38,8 @@ Requirements:
 - Admin-generated doctor password reset tokens store only SHA-256 token hashes, never raw tokens.
 - Admin-generated doctor password reset tokens are one-time-use and expire after 1 hour.
 - Raw invite/reset tokens must be shown only once when explicitly required by a flow and must never be logged, audited, stored, printed, or re-displayed.
+- Password reset URLs contain bearer tokens and must never be logged, audited, printed, or stored outside the intended one-time email or approved admin one-time display.
+- Email provider API keys are server-only and must never use a `NEXT_PUBLIC_` environment variable name.
 - Doctor set-password activates the invited doctor account, updates `User.passwordChangedAt`, revokes existing sessions for that doctor, and does not auto-login the doctor.
 - Doctor password reset updates `User.passwordChangedAt`, revokes existing sessions for that doctor, preserves the current `User.isActive` value, preserves `DoctorProfile.isAvailable`, and does not auto-login the doctor.
 
@@ -218,7 +220,9 @@ Pending decision:
 - Attachment metadata must include owner and consultation context.
 - Never expose Supabase service role keys to the browser.
 - `SUPABASE_SERVICE_ROLE_KEY` is server-only and must not be imported into client components.
+- `RESEND_API_KEY` is server-only and must not be imported into client components.
 - Account access token helpers are server-only and must not be imported into client components.
+- Email provider helpers are server-only and must not be imported into client components.
 - Direct browser upload to Supabase Storage is not implemented.
 - Public buckets and public file URLs are not used for consultation attachments.
 - Do not commit `.env.local` or real secrets.
@@ -243,7 +247,8 @@ Rules:
 - Doctor password reset tokens expire after 1 hour and are one-time-use.
 - Admin password reset generation invalidates prior unused password reset tokens for that doctor.
 - Doctor password reset requires a valid `PASSWORD_RESET` token and the linked user role to be `DOCTOR`.
-- Email provider, public forgot-password, patient self-service reset, and 2FA remain deferred.
+- Resend is selected as the MVP transactional email provider. The direct-fetch email helper is server-only, does not log provider secrets or email bodies, and is not wired to user-facing routes yet.
+- Public forgot-password, patient self-service reset, and 2FA remain deferred.
 
 ## Chat Privacy
 
@@ -325,6 +330,7 @@ Do not log:
 Required variables are listed in `.env.example`.
 
 Secrets must be configured locally in `.env.local` and in Vercel environment variables. Do not commit real values.
+Email provider secrets, including `RESEND_API_KEY`, must be configured only in `.env.local` and deployment environment variables.
 
 Development seed credentials are development-only placeholders and must never be used in production.
 Development seed credentials must not be printed in logs, terminal output, documentation, or chat summaries.

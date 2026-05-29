@@ -146,6 +146,14 @@ Doctor invite and password reset flows will use `AccountAccessToken` records tha
 
 Reason: Raw invite/reset tokens are bearer credentials. Storing only hashes follows the existing session-token pattern and limits damage if database records are exposed. Email delivery, invite UI, set-password pages, reset pages, and 2FA remain separate approved phases.
 
+### D019: Use Resend With Direct Fetch For MVP Transactional Email
+
+Status: Accepted
+
+Use Resend as the MVP transactional email provider and call its API with server-side `fetch` first, without installing the Resend SDK.
+
+Reason: Resend is simple for a Next.js/Vercel MVP, has a usable free transactional tier, and direct `fetch` avoids an extra dependency while the app only needs first-version password reset email delivery.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

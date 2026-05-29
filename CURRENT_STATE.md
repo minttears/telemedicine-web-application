@@ -38,6 +38,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 11B Admin Doctor Invite MVP
 - Phase 11C Admin-Generated Doctor Password Reset Links
 - Phase 11D Patient And Doctor Profile Settings MVP
+- Phase 11F Email Provider Foundation
 
 ## Current MVP Behavior
 
@@ -81,6 +82,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Admin doctor management is implemented for the MVP, while broader operational management remains deferred.
 - Login and patient-facing workflow copy now reflects current MVP behavior for patient registration, doctor discovery, booking, chat, file attachments, consultation history, and admin-created doctor/specialty management.
 - The schema includes hashed, expiring, one-time account access tokens for doctor invites and future password reset flows. Raw invite/reset tokens are not stored.
+- Resend is selected as the MVP transactional email provider. A server-only direct-fetch email foundation and password reset email template helper exist, but no user-facing route sends email yet.
 
 ## Deferred Features
 
@@ -109,7 +111,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 11D: Patient And Doctor Profile Settings MVP.
+Phase 11F: Email Provider Foundation.
 
 Latest known commit:
 

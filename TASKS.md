@@ -43,7 +43,7 @@
 | T302 | DONE | Implement registration, login, logout | Patient registration, login UI/API, logout API, and protected workspaces are implemented. Public doctor/admin registration is not allowed. |
 | T303 | DONE | Implement role-based access helpers | Includes `getCurrentUser`, `requireUser`, `requireRole`, and API response helpers. |
 | T304 | DONE | Add role-based redirects | Login redirects by role; protected workspace layouts enforce role access and wrong-role redirects. |
-| T306 | DONE | Add account access token, doctor invite, and admin reset flows | Phase 11A added hashed, expiring, one-time token storage and helpers. Phase 11B added the Admin Doctor Invite MVP and doctor set-password flow. Phase 11C added admin-generated doctor password reset links. Public forgot-password, patient self-service reset, email provider, and 2FA remain deferred. |
+| T306 | DONE | Add account access token, doctor invite, and admin reset flows | Phase 11A added hashed, expiring, one-time token storage and helpers. Phase 11B added the Admin Doctor Invite MVP and doctor set-password flow. Phase 11C added admin-generated doctor password reset links. Phase 11F added the server-only Resend email provider foundation without sending email from user-facing routes. Public forgot-password, patient self-service reset, and 2FA remain deferred. |
 | T305 | TODO | Add basic auth validation states | Loading, error, forbidden, unauthorized. |
 
 ## Milestone 4: Public Pages And SEO

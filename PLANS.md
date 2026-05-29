@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 11D Patient And Doctor Profile Settings MVP is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 11F Email Provider Foundation is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -1401,6 +1401,48 @@ Not implemented:
 - No 2FA.
 - No invite/reset flow changes.
 - No admin profile/settings.
+
+### Phase 11F: Email Provider Foundation
+
+Status: Completed
+
+Completed:
+
+- Selected Resend as the MVP transactional email provider.
+- Added server-only direct-fetch email provider helper without installing the Resend SDK.
+- Added a server-only password reset email template helper with HTML and plain text output.
+- Documented email environment variables in `.env.example`: `EMAIL_PROVIDER`, `RESEND_API_KEY`, `EMAIL_FROM`, `APP_URL`, and optional `EMAIL_REPLY_TO`.
+- Kept real secret values restricted to `.env.local` and deployment environment variables.
+- Kept public forgot-password and user-facing email sending deferred to Phase 11G.
+- Kept admin-generated doctor reset links in place.
+
+Changed files:
+
+- `.env.example`
+- `lib/email/resend.ts`
+- `lib/email/password-reset-email.ts`
+- `TASKS.md`
+- `PLANS.md`
+- `CURRENT_STATE.md`
+- `SECURITY.md`
+- `DECISIONS.md`
+
+Not implemented:
+
+- No public forgot-password flow.
+- No email sending from user-facing routes.
+- No Resend SDK or new npm dependency.
+- No Prisma schema changes.
+- No migrations.
+- No 2FA.
+- No email change.
+
+Security notes:
+
+- `RESEND_API_KEY` is server-only and must not use `NEXT_PUBLIC_`.
+- Raw reset tokens and reset URLs containing tokens must not be logged.
+- Email bodies for password reset messages contain reset URLs and must not be printed.
+- Public password reset remains deferred to Phase 11G.
 
 ## Phase 5: Admin And Operational Views
 
