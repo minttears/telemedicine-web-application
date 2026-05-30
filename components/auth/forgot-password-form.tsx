@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 
 const genericForgotPasswordMessage =
-  "If an account exists, reset instructions have been sent.";
+  "If an account exists for this email, reset instructions have been sent.";
 
 type ForgotPasswordResponse = {
   error?: string;

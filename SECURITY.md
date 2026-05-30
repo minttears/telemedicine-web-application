@@ -41,7 +41,10 @@ Requirements:
 - Password reset URLs contain bearer tokens and must never be logged, audited, printed, or stored outside the intended one-time email or approved admin one-time display.
 - Email provider API keys are server-only and must never use a `NEXT_PUBLIC_` environment variable name.
 - Public forgot-password returns a generic response and must not reveal whether an account exists, is eligible, is missing, or is rate-limited.
+- Public forgot-password accepts one account email only and must not accept or trust a separate recipient email, user id, account email, hidden target, or redirect identity.
+- Public forgot-password must send reset email only to the matched user's stored `User.email`.
 - Public forgot-password is available only for active `PATIENT` users and completed/setup `DOCTOR` users. `ADMIN` users and invite-only inactive onboarding doctors are excluded in this phase.
+- Public reset password must identify the target account only from a valid, unused, unexpired `PASSWORD_RESET` token relation.
 - Doctor set-password activates the invited doctor account, updates `User.passwordChangedAt`, revokes existing sessions for that doctor, and does not auto-login the doctor.
 - Doctor password reset updates `User.passwordChangedAt`, revokes existing sessions for that doctor, preserves the current `User.isActive` value, preserves `DoctorProfile.isAvailable`, and does not auto-login the doctor.
 
@@ -251,6 +254,8 @@ Rules:
 - Doctor password reset requires a valid `PASSWORD_RESET` token and the linked user role to be `DOCTOR`.
 - Resend is selected as the MVP transactional email provider. The direct-fetch email helper is server-only and does not log provider secrets or email bodies.
 - Public forgot-password sends reset instructions by email only for eligible users. Raw reset tokens appear only inside emailed reset links, and only token hashes are stored.
+- Public forgot-password now uses the submitted normalized email only for account lookup and rate limiting; delivery uses the matched database `User.email` only.
+- A `PASSWORD_RESET` token is tied to exactly one `userId`, and reset completion updates only that token's user.
 - Public forgot-password uses simple in-memory route-level rate limiting as MVP abuse protection. Persistent distributed rate limiting remains a production hardening TODO.
 - 2FA remains deferred.
 

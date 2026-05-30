@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 11G Public Forgot Password Flow is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 11G Public Forgot Password Flow is completed, including the critical account-targeting security fix that binds email delivery and password reset target to the matched token user. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -1490,9 +1490,18 @@ Not implemented:
 Security notes:
 
 - Public forgot-password never reveals whether an account exists or is eligible.
+- Public forgot-password accepts one email only; it does not accept a separate recipient email, account email, user id, hidden target, or redirect identity.
+- Public forgot-password sends reset email only to the matched user's stored `User.email`.
+- Password reset completion derives the target user only from the valid `PASSWORD_RESET` token relation.
 - Raw reset tokens and reset URLs are never stored, logged, audited, printed, or shown in UI.
 - Raw reset tokens appear only inside emailed reset links.
 - Email provider API keys remain server-only.
+
+Security fix:
+
+- Fixed a critical forgot-password account takeover bug where reset email delivery could diverge from the reset token target.
+- The public forgot-password API now uses the normalized submitted email for lookup and rate limiting only, sends only to the matched database `User.email`, and stores a token tied to that same `userId`.
+- The public reset API continues to accept token, password, and confirmation only; it does not trust any client-provided email or user identity.
 
 ## Phase 5: Admin And Operational Views
 

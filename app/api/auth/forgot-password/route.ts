@@ -10,7 +10,7 @@ const PASSWORD_RESET_EXPIRATION_HOURS = 1;
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT_MAX_ATTEMPTS = 5;
 const genericForgotPasswordMessage =
-  "If an account exists, reset instructions have been sent.";
+  "If an account exists for this email, reset instructions have been sent.";
 
 type ForgotPasswordBody = {
   email?: unknown;
@@ -90,6 +90,7 @@ function buildResetUrl(rawToken: string) {
 
 function isEligibleForPublicReset(user: {
   doctorProfile: { id: string } | null;
+  email: string;
   isActive: boolean;
   passwordChangedAt: Date | null;
   patientProfile: { id: string } | null;
@@ -113,16 +114,17 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+  const accountEmail =
+    typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
 
-  if (!email || !isValidEmail(email)) {
+  if (!accountEmail || !isValidEmail(accountEmail)) {
     return Response.json(
       { error: "Enter a valid email address." },
       { status: 400 },
     );
   }
 
-  const rateLimitKey = `${getRequestIp(request)}:${email}`;
+  const rateLimitKey = `${getRequestIp(request)}:${accountEmail}`;
 
   if (isRateLimited(rateLimitKey)) {
     return genericResponse();
@@ -130,7 +132,7 @@ export async function POST(request: Request) {
 
   const user = await prisma.user.findUnique({
     where: {
-      email,
+      email: accountEmail,
     },
     select: {
       doctorProfile: {
@@ -138,6 +140,7 @@ export async function POST(request: Request) {
           id: true,
         },
       },
+      email: true,
       id: true,
       isActive: true,
       passwordChangedAt: true,
@@ -207,7 +210,7 @@ export async function POST(request: Request) {
 
   const emailMessage = buildPasswordResetEmail({
     expiresInHours: PASSWORD_RESET_EXPIRATION_HOURS,
-    recipientEmail: email,
+    recipientEmail: user.email,
     resetUrl,
   });
 
