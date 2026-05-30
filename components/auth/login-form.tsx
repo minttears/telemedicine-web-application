@@ -103,12 +103,20 @@ export function LoginForm() {
         </div>
 
         <div className="space-y-2">
-          <label
-            className="text-sm font-medium text-slate-800"
-            htmlFor="password"
-          >
-            Password
-          </label>
+          <div className="flex items-center justify-between gap-3">
+            <label
+              className="text-sm font-medium text-slate-800"
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <Link
+              className="text-sm font-medium text-teal-700 hover:text-teal-800"
+              href="/forgot-password"
+            >
+              Forgot password?
+            </Link>
+          </div>
           <input
             autoComplete="current-password"
             className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"

@@ -74,13 +74,13 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       onSubmit={handleSubmit}
     >
       <div className="space-y-2">
-        <p className="text-sm font-medium text-teal-700">Doctor password reset</p>
+        <p className="text-sm font-medium text-teal-700">Password reset</p>
         <h1 className="text-2xl font-semibold tracking-normal text-slate-950">
           Reset your password
         </h1>
         <p className="text-sm leading-6 text-slate-600">
-          Create a new password for your doctor workspace. You will sign in
-          after the reset is complete.
+          Create a new password for your account. You will sign in after the
+          reset is complete.
         </p>
       </div>
 

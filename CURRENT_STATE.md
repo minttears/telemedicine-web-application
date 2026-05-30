@@ -39,6 +39,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 11C Admin-Generated Doctor Password Reset Links
 - Phase 11D Patient And Doctor Profile Settings MVP
 - Phase 11F Email Provider Foundation
+- Phase 11G Public Forgot Password Flow
 
 ## Current MVP Behavior
 
@@ -82,12 +83,15 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Admin doctor management is implemented for the MVP, while broader operational management remains deferred.
 - Login and patient-facing workflow copy now reflects current MVP behavior for patient registration, doctor discovery, booking, chat, file attachments, consultation history, and admin-created doctor/specialty management.
 - The schema includes hashed, expiring, one-time account access tokens for doctor invites and future password reset flows. Raw invite/reset tokens are not stored.
-- Resend is selected as the MVP transactional email provider. A server-only direct-fetch email foundation and password reset email template helper exist, but no user-facing route sends email yet.
+- Resend is selected as the MVP transactional email provider. Public forgot-password sends reset instructions by email for eligible active patients and completed/setup doctors without revealing whether an account exists.
+- Public forgot-password excludes admins and invite-only inactive onboarding doctors in this phase.
+- Public password reset tokens expire after 1 hour, are one-time-use, store only hashes, revoke existing sessions after success, and redirect to login without auto-login.
+- Raw public reset tokens appear only inside emailed reset links and are never stored, logged, audited, printed, or shown in the UI.
 
 ## Deferred Features
 
 - True Supabase Realtime subscriptions and the required custom auth/RLS/JWT security design
-- Public forgot-password flow, patient self-service reset, email provider, 2FA enforcement, admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
+- 2FA enforcement, admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
 - Broader admin management screens and audit-log workflows beyond Phase 10A doctor management and Phase 10B specialty management
 - Virus scanning, advanced file previews, and production file-handling hardening
 - Doctor profile/specialty management beyond seeded data
@@ -111,7 +115,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 11F: Email Provider Foundation.
+Phase 11G: Public Forgot Password Flow.
 
 Latest known commit:
 

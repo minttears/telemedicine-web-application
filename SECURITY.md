@@ -40,6 +40,8 @@ Requirements:
 - Raw invite/reset tokens must be shown only once when explicitly required by a flow and must never be logged, audited, stored, printed, or re-displayed.
 - Password reset URLs contain bearer tokens and must never be logged, audited, printed, or stored outside the intended one-time email or approved admin one-time display.
 - Email provider API keys are server-only and must never use a `NEXT_PUBLIC_` environment variable name.
+- Public forgot-password returns a generic response and must not reveal whether an account exists, is eligible, is missing, or is rate-limited.
+- Public forgot-password is available only for active `PATIENT` users and completed/setup `DOCTOR` users. `ADMIN` users and invite-only inactive onboarding doctors are excluded in this phase.
 - Doctor set-password activates the invited doctor account, updates `User.passwordChangedAt`, revokes existing sessions for that doctor, and does not auto-login the doctor.
 - Doctor password reset updates `User.passwordChangedAt`, revokes existing sessions for that doctor, preserves the current `User.isActive` value, preserves `DoctorProfile.isAvailable`, and does not auto-login the doctor.
 
@@ -247,8 +249,10 @@ Rules:
 - Doctor password reset tokens expire after 1 hour and are one-time-use.
 - Admin password reset generation invalidates prior unused password reset tokens for that doctor.
 - Doctor password reset requires a valid `PASSWORD_RESET` token and the linked user role to be `DOCTOR`.
-- Resend is selected as the MVP transactional email provider. The direct-fetch email helper is server-only, does not log provider secrets or email bodies, and is not wired to user-facing routes yet.
-- Public forgot-password, patient self-service reset, and 2FA remain deferred.
+- Resend is selected as the MVP transactional email provider. The direct-fetch email helper is server-only and does not log provider secrets or email bodies.
+- Public forgot-password sends reset instructions by email only for eligible users. Raw reset tokens appear only inside emailed reset links, and only token hashes are stored.
+- Public forgot-password uses simple in-memory route-level rate limiting as MVP abuse protection. Persistent distributed rate limiting remains a production hardening TODO.
+- 2FA remains deferred.
 
 ## Chat Privacy
 

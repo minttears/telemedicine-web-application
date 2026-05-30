@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 11F Email Provider Foundation is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 11G Public Forgot Password Flow is completed. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -1443,6 +1443,56 @@ Security notes:
 - Raw reset tokens and reset URLs containing tokens must not be logged.
 - Email bodies for password reset messages contain reset URLs and must not be printed.
 - Public password reset remains deferred to Phase 11G.
+
+### Phase 11G: Public Forgot Password Flow
+
+Status: Completed
+
+Completed:
+
+- Added public `/forgot-password` page and form.
+- Added `POST /api/auth/forgot-password` with a generic public response for valid-shaped email submissions.
+- Added a `Forgot password?` link to the login form.
+- Public forgot-password uses the existing `AccountAccessToken` foundation and Resend email helper.
+- Eligible active patients and completed/setup doctors can receive password reset instructions by email.
+- Admins and invite-only inactive onboarding doctors are ignored with the same generic response.
+- Prior unused, unexpired reset tokens are invalidated before creating a new `PASSWORD_RESET` token.
+- Public reset tokens expire after 1 hour, are one-time-use, and store only token hashes.
+- Reset completion now supports valid patient and doctor reset tokens, revokes existing sessions, updates `passwordChangedAt`, and redirects to login without auto-login.
+- Admin-generated doctor reset links remain supported.
+- Added simple in-memory route-level rate limiting with generic responses; persistent distributed rate limiting remains a production hardening TODO.
+
+Changed files:
+
+- `app/(auth)/forgot-password/page.tsx`
+- `app/api/auth/forgot-password/route.ts`
+- `app/api/auth/reset-password/route.ts`
+- `components/auth/forgot-password-form.tsx`
+- `components/auth/login-form.tsx`
+- `components/auth/reset-password-form.tsx`
+- `app/(auth)/reset-password/page.tsx`
+- `TASKS.md`
+- `PLANS.md`
+- `CURRENT_STATE.md`
+- `SECURITY.md`
+
+Not implemented:
+
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+- No email change.
+- No 2FA.
+- No doctor self-registration.
+- No removal of admin-generated reset links.
+- No removal of temporary-password fallback.
+
+Security notes:
+
+- Public forgot-password never reveals whether an account exists or is eligible.
+- Raw reset tokens and reset URLs are never stored, logged, audited, printed, or shown in UI.
+- Raw reset tokens appear only inside emailed reset links.
+- Email provider API keys remain server-only.
 
 ## Phase 5: Admin And Operational Views
 

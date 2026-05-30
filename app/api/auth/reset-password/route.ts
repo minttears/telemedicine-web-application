@@ -14,6 +14,10 @@ function isResetPasswordBody(value: unknown): value is ResetPasswordBody {
   return Boolean(value && typeof value === "object");
 }
 
+function isResetTokenRoleAllowed(role: "ADMIN" | "DOCTOR" | "PATIENT") {
+  return role === "DOCTOR" || role === "PATIENT";
+}
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
 
@@ -46,7 +50,7 @@ export async function POST(request: Request) {
     type: "PASSWORD_RESET",
   });
 
-  if (!resetToken || resetToken.user.role !== "DOCTOR") {
+  if (!resetToken || !isResetTokenRoleAllowed(resetToken.user.role)) {
     return Response.json({ error: invalidResetMessage }, { status: 400 });
   }
 
@@ -54,17 +58,47 @@ export async function POST(request: Request) {
   const passwordChangedAt = new Date();
 
   const result = await prisma.$transaction(async (tx) => {
-    const doctorProfile = await tx.doctorProfile.findUnique({
-      where: {
-        userId: resetToken.userId,
-      },
-      select: {
-        id: true,
-      },
-    });
+    let profileMetadata: {
+      doctorProfileId?: string;
+      patientProfileId?: string;
+    } = {};
 
-    if (!doctorProfile) {
-      return { success: false };
+    if (resetToken.user.role === "DOCTOR") {
+      const doctorProfile = await tx.doctorProfile.findUnique({
+        where: {
+          userId: resetToken.userId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!doctorProfile) {
+        return { success: false };
+      }
+
+      profileMetadata = {
+        doctorProfileId: doctorProfile.id,
+      };
+    }
+
+    if (resetToken.user.role === "PATIENT") {
+      const patientProfile = await tx.patientProfile.findUnique({
+        where: {
+          userId: resetToken.userId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!patientProfile || !resetToken.user.isActive) {
+        return { success: false };
+      }
+
+      profileMetadata = {
+        patientProfileId: patientProfile.id,
+      };
     }
 
     const tokenUpdate = await tx.accountAccessToken.updateMany({
@@ -113,9 +147,10 @@ export async function POST(request: Request) {
         entityType: "User",
         metadata: {
           changedFields: ["passwordChangedAt"],
-          doctorProfileId: doctorProfile.id,
+          ...profileMetadata,
           tokenType: "PASSWORD_RESET",
           userId: resetToken.userId,
+          userRole: resetToken.user.role,
         },
       },
     });
