@@ -3,29 +3,34 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 
-const genericForgotPasswordMessage =
-  "If an account exists for this email, reset instructions have been sent.";
-
 type ForgotPasswordResponse = {
   error?: string;
   message?: string;
+};
+
+type ForgotPasswordFormProps = {
+  email: string;
 };
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-export function ForgotPasswordForm() {
-  const [email, setEmail] = useState("");
+function buildGenericMessage(email: string) {
+  return `If an account exists for ${email}, reset instructions have been sent.`;
+}
+
+export function ForgotPasswordForm({ email }: ForgotPasswordFormProps) {
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
+  const normalizedEmail = email.trim().toLowerCase();
+  const canSubmit = Boolean(normalizedEmail && isValidEmail(normalizedEmail));
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    const normalizedEmail = email.trim().toLowerCase();
 
     setFieldError(null);
     setSubmitError(null);
@@ -58,7 +63,7 @@ export function ForgotPasswordForm() {
         return;
       }
 
-      setSuccessMessage(result?.message ?? genericForgotPasswordMessage);
+      setSuccessMessage(buildGenericMessage(normalizedEmail));
     } catch {
       setSubmitError("Unable to process this request right now.");
     } finally {
@@ -77,25 +82,18 @@ export function ForgotPasswordForm() {
           Forgot your password?
         </h1>
         <p className="text-sm leading-6 text-slate-600">
-          Enter your email address and check your inbox for reset instructions.
+          Reset instructions will be sent only to this account email if the
+          account exists and is eligible.
         </p>
       </div>
 
-      <div className="mt-6 space-y-2">
-        <label className="text-sm font-medium text-slate-800" htmlFor="email">
-          Email
-        </label>
-        <input
-          autoComplete="email"
-          className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-          id="email"
-          inputMode="email"
-          name="email"
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="name@example.com"
-          type="email"
-          value={email}
-        />
+      <div className="mt-6 rounded-md border border-slate-200 bg-slate-50 px-3 py-3">
+        <p className="text-xs font-medium uppercase tracking-normal text-slate-500">
+          Account email
+        </p>
+        <p className="mt-1 break-words text-sm font-medium text-slate-950">
+          {normalizedEmail || "No email selected"}
+        </p>
       </div>
 
       {(fieldError || submitError) && (
@@ -115,16 +113,16 @@ export function ForgotPasswordForm() {
 
       <button
         className="mt-6 h-11 w-full rounded-md bg-teal-700 px-4 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-        disabled={isPending}
+        disabled={isPending || !canSubmit}
         type="submit"
       >
         {isPending ? "Sending..." : "Send reset instructions"}
       </button>
 
       <p className="mt-4 text-sm leading-6 text-slate-600">
-        Remember your password?{" "}
+        Need to use a different email?{" "}
         <Link className="font-medium text-teal-700 hover:text-teal-800" href="/login">
-          Sign in
+          Return to sign in.
         </Link>
       </p>
     </form>

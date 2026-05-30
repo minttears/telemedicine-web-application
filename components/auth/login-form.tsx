@@ -68,6 +68,25 @@ export function LoginForm() {
     }
   }
 
+  function handleForgotPassword() {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    setFieldError(null);
+    setSubmitError(null);
+
+    if (!normalizedEmail) {
+      setFieldError("Please enter your email first.");
+      return;
+    }
+
+    if (!isValidEmail(normalizedEmail)) {
+      setFieldError("Enter a valid email address.");
+      return;
+    }
+
+    router.push(`/forgot-password?email=${encodeURIComponent(normalizedEmail)}`);
+  }
+
   return (
     <form
       className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
@@ -110,12 +129,13 @@ export function LoginForm() {
             >
               Password
             </label>
-            <Link
+            <button
               className="text-sm font-medium text-teal-700 hover:text-teal-800"
-              href="/forgot-password"
+              onClick={handleForgotPassword}
+              type="button"
             >
               Forgot password?
-            </Link>
+            </button>
           </div>
           <input
             autoComplete="current-password"

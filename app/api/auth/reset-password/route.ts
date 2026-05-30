@@ -14,6 +14,16 @@ function isResetPasswordBody(value: unknown): value is ResetPasswordBody {
   return Boolean(value && typeof value === "object");
 }
 
+function hasForbiddenIdentityFields(value: Record<string, unknown>) {
+  return [
+    "accountEmail",
+    "email",
+    "recipientEmail",
+    "targetEmail",
+    "userId",
+  ].some((field) => field in value);
+}
+
 function isResetTokenRoleAllowed(role: "ADMIN" | "DOCTOR" | "PATIENT") {
   return role === "DOCTOR" || role === "PATIENT";
 }
@@ -22,6 +32,10 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
 
   if (!isResetPasswordBody(body)) {
+    return Response.json({ error: invalidResetMessage }, { status: 400 });
+  }
+
+  if (hasForbiddenIdentityFields(body as Record<string, unknown>)) {
     return Response.json({ error: invalidResetMessage }, { status: 400 });
   }
 

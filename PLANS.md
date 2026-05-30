@@ -2,7 +2,7 @@
 
 ## Current Plan
 
-Phase 11G Public Forgot Password Flow is completed, including the critical account-targeting security fix that binds email delivery and password reset target to the matched token user. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 11G Public Forgot Password Flow is completed, including the critical account-targeting security fix that starts recovery from the login email, removes the editable recovery recipient field, and binds email delivery and password reset target to the matched token user. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
 
 ## Phase 0: Documentation And Alignment
 
@@ -1453,6 +1453,8 @@ Completed:
 - Added public `/forgot-password` page and form.
 - Added `POST /api/auth/forgot-password` with a generic public response for valid-shaped email submissions.
 - Added a `Forgot password?` link to the login form.
+- Forgot-password now starts from the login email field; the login page requires an email before navigating to recovery.
+- The `/forgot-password` page no longer shows an editable email input or lets the user choose a separate recipient.
 - Public forgot-password uses the existing `AccountAccessToken` foundation and Resend email helper.
 - Eligible active patients and completed/setup doctors can receive password reset instructions by email.
 - Admins and invite-only inactive onboarding doctors are ignored with the same generic response.
@@ -1490,18 +1492,21 @@ Not implemented:
 Security notes:
 
 - Public forgot-password never reveals whether an account exists or is eligible.
+- Public forgot-password recovery starts from the login email and the recovery page has no editable recipient email field.
 - Public forgot-password accepts one email only; it does not accept a separate recipient email, account email, user id, hidden target, or redirect identity.
 - Public forgot-password sends reset email only to the matched user's stored `User.email`.
 - Password reset completion derives the target user only from the valid `PASSWORD_RESET` token relation.
+- Public reset rejects client-provided identity fields such as email, account email, recipient email, target email, and user id.
 - Raw reset tokens and reset URLs are never stored, logged, audited, printed, or shown in UI.
 - Raw reset tokens appear only inside emailed reset links.
 - Email provider API keys remain server-only.
 
 Security fix:
 
-- Fixed a critical forgot-password account takeover bug where reset email delivery could diverge from the reset token target.
-- The public forgot-password API now uses the normalized submitted email for lookup and rate limiting only, sends only to the matched database `User.email`, and stores a token tied to that same `userId`.
-- The public reset API continues to accept token, password, and confirmation only; it does not trust any client-provided email or user identity.
+- Fixed a critical forgot-password account takeover bug where recovery could use a different recipient email after starting from the login email.
+- The login UI now requires the email field before recovery, and `/forgot-password` displays the selected email without an editable recipient field.
+- The public forgot-password API uses the normalized submitted email for lookup and rate limiting only, sends only to the matched database `User.email`, and stores a token tied to that same `userId`.
+- The public reset API accepts token, password, and confirmation only; client-provided email or user identity fields are rejected.
 
 ## Phase 5: Admin And Operational Views
 

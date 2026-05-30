@@ -87,7 +87,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Public forgot-password excludes admins and invite-only inactive onboarding doctors in this phase.
 - Public password reset tokens expire after 1 hour, are one-time-use, store only hashes, revoke existing sessions after success, and redirect to login without auto-login.
 - Raw public reset tokens appear only inside emailed reset links and are never stored, logged, audited, printed, or shown in the UI.
-- A critical forgot-password account-targeting bug was fixed: the public forgot-password endpoint now accepts one email only, looks up that account by the same normalized email, sends reset email only to the matched stored `User.email`, and reset completion derives the target user only from the `PASSWORD_RESET` token.
+- A critical forgot-password account-targeting bug was fixed: the login page now requires an email before starting recovery, `/forgot-password` no longer shows an editable email field, the public forgot-password endpoint accepts one email only, reset email is sent only to the matched stored `User.email`, and reset completion derives the target user only from the `PASSWORD_RESET` token.
 
 ## Deferred Features
 

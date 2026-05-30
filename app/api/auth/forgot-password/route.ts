@@ -41,6 +41,15 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function hasForbiddenIdentityFields(value: Record<string, unknown>) {
+  return [
+    "accountEmail",
+    "recipientEmail",
+    "targetEmail",
+    "userId",
+  ].some((field) => field in value);
+}
+
 function getResetExpiresAt() {
   return new Date(Date.now() + PASSWORD_RESET_EXPIRATION_HOURS * 60 * 60 * 1000);
 }
@@ -112,6 +121,10 @@ export async function POST(request: Request) {
 
   if (!body || typeof body !== "object") {
     return Response.json({ error: "Invalid request." }, { status: 400 });
+  }
+
+  if (hasForbiddenIdentityFields(body as Record<string, unknown>)) {
+    return genericResponse();
   }
 
   const accountEmail =

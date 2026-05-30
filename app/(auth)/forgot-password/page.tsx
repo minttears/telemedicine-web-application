@@ -3,12 +3,25 @@ import { redirect } from "next/navigation";
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 import { getCurrentUser, getRedirectPathForRole } from "@/lib/auth/current-user";
 
-export default async function ForgotPasswordPage() {
-  const currentUser = await getCurrentUser();
+type ForgotPasswordPageProps = {
+  searchParams: Promise<{
+    email?: string;
+  }>;
+};
+
+export default async function ForgotPasswordPage({
+  searchParams,
+}: ForgotPasswordPageProps) {
+  const [currentUser, { email }] = await Promise.all([
+    getCurrentUser(),
+    searchParams,
+  ]);
 
   if (currentUser) {
     redirect(getRedirectPathForRole(currentUser.role));
   }
+
+  const recoveryEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
@@ -21,12 +34,13 @@ export default async function ForgotPasswordPage() {
             Reset access securely
           </h1>
           <p className="mt-4 text-base leading-7 text-slate-600">
-            Enter your account email and, if it is eligible for password reset,
-            instructions will be sent by email.
+            Confirm the account email from the sign-in page. Reset instructions
+            are sent only to the matching account email when the account is
+            eligible.
           </p>
         </div>
 
-        <ForgotPasswordForm />
+        <ForgotPasswordForm email={recoveryEmail} />
       </section>
     </main>
   );

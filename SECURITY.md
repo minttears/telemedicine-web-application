@@ -41,6 +41,8 @@ Requirements:
 - Password reset URLs contain bearer tokens and must never be logged, audited, printed, or stored outside the intended one-time email or approved admin one-time display.
 - Email provider API keys are server-only and must never use a `NEXT_PUBLIC_` environment variable name.
 - Public forgot-password returns a generic response and must not reveal whether an account exists, is eligible, is missing, or is rate-limited.
+- Public forgot-password recovery starts from the login page email field; the login page must require an email before navigating to recovery.
+- The public `/forgot-password` page must not show an editable recipient email field.
 - Public forgot-password accepts one account email only and must not accept or trust a separate recipient email, user id, account email, hidden target, or redirect identity.
 - Public forgot-password must send reset email only to the matched user's stored `User.email`.
 - Public forgot-password is available only for active `PATIENT` users and completed/setup `DOCTOR` users. `ADMIN` users and invite-only inactive onboarding doctors are excluded in this phase.
@@ -256,6 +258,7 @@ Rules:
 - Public forgot-password sends reset instructions by email only for eligible users. Raw reset tokens appear only inside emailed reset links, and only token hashes are stored.
 - Public forgot-password now uses the submitted normalized email only for account lookup and rate limiting; delivery uses the matched database `User.email` only.
 - A `PASSWORD_RESET` token is tied to exactly one `userId`, and reset completion updates only that token's user.
+- Public reset password accepts only token, password, and confirmation; identity fields such as email, account email, recipient email, target email, and user id are rejected with a generic invalid-link error.
 - Public forgot-password uses simple in-memory route-level rate limiting as MVP abuse protection. Persistent distributed rate limiting remains a production hardening TODO.
 - 2FA remains deferred.
 
