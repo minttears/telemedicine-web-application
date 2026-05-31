@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BookingForm } from "@/components/patient/booking-form";
+import { ProfileImage } from "@/components/profile/profile-image";
 import { prisma } from "@/lib/prisma";
 
 type PatientDoctorProfilePageProps = {
@@ -18,6 +19,10 @@ function formatExperience(years: number | null) {
   }
 
   return `${years} ${years === 1 ? "year" : "years"}`;
+}
+
+function getInitials(name: string | null) {
+  return (name ?? "DR").slice(0, 2).toUpperCase();
 }
 
 function formatSlotDate(value: Date) {
@@ -89,16 +94,28 @@ export default async function PatientDoctorProfilePage({
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <p className="text-sm font-medium text-teal-700">
-              {doctor.specialty?.name ?? "Specialty not assigned"}
-            </p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-              {doctor.user.name ?? "Doctor profile"}
-            </h1>
-            {doctor.title ? (
-              <p className="mt-2 text-base text-slate-600">{doctor.title}</p>
-            ) : null}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+            <ProfileImage
+              alt={`${doctor.user.name ?? "Doctor profile"} photo`}
+              className="h-24 w-24 shrink-0"
+              initials={getInitials(doctor.user.name)}
+              src={
+                doctor.photoStoragePath
+                  ? `/api/profile-images/doctor/${doctor.id}`
+                  : undefined
+              }
+            />
+            <div>
+              <p className="text-sm font-medium text-teal-700">
+                {doctor.specialty?.name ?? "Specialty not assigned"}
+              </p>
+              <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
+                {doctor.user.name ?? "Doctor profile"}
+              </h1>
+              {doctor.title ? (
+                <p className="mt-2 text-base text-slate-600">{doctor.title}</p>
+              ) : null}
+            </div>
           </div>
           <span
             className={`inline-flex w-fit rounded-full border px-3 py-1 text-xs font-medium ${

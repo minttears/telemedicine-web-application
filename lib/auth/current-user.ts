@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionCookie, hashSessionToken } from "@/lib/auth/session";
 
 export type SafeUser = {
+  avatarStoragePath: string | null;
   createdAt: Date;
   email: string;
   id: string;
@@ -49,7 +50,8 @@ export async function getCurrentUser() {
     },
     select: {
       user: {
-        select: {
+          select: {
+          avatarStoragePath: true,
           createdAt: true,
           email: true,
           id: true,

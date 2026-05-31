@@ -1719,6 +1719,42 @@ Not implemented:
 - No future re-consent flow.
 - No production legal workflow; legal copy requires qualified legal review before real launch.
 
+### Phase 12D: Avatar And Doctor Photo Uploads
+
+Status: Completed
+
+Completed:
+
+- Added nullable private profile image storage-path fields: `User.avatarStoragePath` and `DoctorProfile.photoStoragePath`.
+- Kept existing `DoctorProfile.avatarUrl` unchanged and did not use it for new private profile image storage.
+- Added server-only helpers for the private `profile-images` Supabase Storage bucket.
+- Added JPEG, PNG, and WEBP profile image validation with a 2 MB maximum size; SVG and GIF remain rejected.
+- Added `POST /api/patient/avatar` for current-patient avatar upload/update.
+- Added `POST /api/doctor/photo` for current-doctor professional photo upload/update.
+- Added server-mediated image routes for self-only patient avatars and authorized doctor photos.
+- Added patient avatar UI to `/patient/profile` and patient dashboard.
+- Added doctor photo UI to `/doctor/profile`, patient doctor directory cards, patient doctor detail, and admin doctor list/detail views.
+- Replaced prior image objects on update with best-effort old-object cleanup after DB update.
+
+Migration:
+
+- `20260531154144_add_profile_image_paths`
+
+Manual setup:
+
+- Create a private Supabase Storage bucket named `profile-images` before browser upload QA.
+- Do not create public bucket policies for profile images.
+
+Not implemented:
+
+- No public profile image bucket.
+- No direct Supabase Storage URLs.
+- No image cropping or resizing.
+- No image processing dependencies.
+- No user-facing delete button.
+- No admin photo moderation/editing workflow.
+- No reviews, ratings, or full UI redesign.
+
 ## Phase 5: Admin And Operational Views
 
 Status: In progress

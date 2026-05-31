@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ProfileImage } from "@/components/profile/profile-image";
 import { prisma } from "@/lib/prisma";
 
 type PatientDoctorsPageProps = {
@@ -41,6 +42,10 @@ function buildDirectoryHref({
 
 function getDoctorDisplayName(doctor: DoctorWithDirectoryData) {
   return doctor.user.name ?? "Doctor profile";
+}
+
+function getInitials(name: string | null) {
+  return (name ?? "DR").slice(0, 2).toUpperCase();
 }
 
 function getShortBio(bio: string | null) {
@@ -97,8 +102,18 @@ async function getDoctors({
 function DoctorCard({ doctor }: { doctor: DoctorWithDirectoryData }) {
   return (
     <article className="flex h-full flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-      <div className="flex items-start justify-between gap-4">
-        <div>
+      <div className="flex items-start gap-4">
+        <ProfileImage
+          alt={`${getDoctorDisplayName(doctor)} photo`}
+          className="h-16 w-16 shrink-0"
+          initials={getInitials(doctor.user.name)}
+          src={
+            doctor.photoStoragePath
+              ? `/api/profile-images/doctor/${doctor.id}`
+              : undefined
+          }
+        />
+        <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-teal-700">
             {doctor.specialty?.name ?? "Specialty not assigned"}
           </p>
@@ -109,16 +124,16 @@ function DoctorCard({ doctor }: { doctor: DoctorWithDirectoryData }) {
             <p className="mt-1 text-sm text-slate-600">{doctor.title}</p>
           ) : null}
         </div>
-        <span
-          className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium ${
-            doctor.isAvailable
-              ? "border-teal-200 bg-teal-50 text-teal-700"
-              : "border-slate-200 bg-slate-100 text-slate-600"
-          }`}
-        >
-          {doctor.isAvailable ? "Available" : "Unavailable"}
-        </span>
       </div>
+      <span
+        className={`mt-4 inline-flex w-fit rounded-full border px-3 py-1 text-xs font-medium ${
+          doctor.isAvailable
+            ? "border-teal-200 bg-teal-50 text-teal-700"
+            : "border-slate-200 bg-slate-100 text-slate-600"
+        }`}
+      >
+        {doctor.isAvailable ? "Available" : "Unavailable"}
+      </span>
 
       <p className="mt-4 text-sm leading-6 text-slate-600">
         {getShortBio(doctor.bio)}

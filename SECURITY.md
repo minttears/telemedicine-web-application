@@ -99,6 +99,11 @@ Profile settings boundaries:
 - `PATCH /api/doctor/profile` requires `DOCTOR`, scopes updates to the current user's own `DoctorProfile`, and can update only `DoctorProfile.title`, `DoctorProfile.bio`, and `DoctorProfile.education`.
 - Email, role, account status, specialty, experience years, and booking availability are not editable through self-service profile endpoints.
 - Profile pages and APIs do not expose password hashes, token hashes, sessions, other users' patient data, chats, files, storage paths, cookies, tokens, environment values, service role keys, or other secrets.
+- Patient avatar upload requires `PATIENT`, updates only the current user's `User.avatarStoragePath`, and serves the avatar only back to that same patient in this phase.
+- Doctor photo upload requires `DOCTOR`, updates only the current doctor's `DoctorProfile.photoStoragePath`, and does not allow doctors to change specialty, experience, account status, booking availability, email, or role.
+- Profile images use the private `profile-images` Supabase Storage bucket and server-mediated upload/image routes. The bucket must be created manually as private before browser upload QA.
+- Profile image UI and API responses must not expose storage paths, private bucket paths, direct Supabase Storage URLs, or service role keys.
+- Profile image validation allows only JPEG, PNG, and WEBP up to 2 MB. SVG and GIF are rejected in this phase.
 
 Doctor directory boundaries:
 
@@ -238,6 +243,7 @@ Pending decision:
 - Email provider helpers are server-only and must not be imported into client components.
 - Direct browser upload to Supabase Storage is not implemented.
 - Public buckets and public file URLs are not used for consultation attachments.
+- Public buckets and public file URLs are not used for profile images.
 - Do not commit `.env.local` or real secrets.
 - Do not log passwords, session tokens, 2FA secrets, or private file contents.
 

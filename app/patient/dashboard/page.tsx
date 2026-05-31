@@ -1,7 +1,13 @@
 import Link from "next/link";
 
+import { ProfileImage } from "@/components/profile/profile-image";
 import { requireRole } from "@/lib/auth/current-user";
 import { prisma } from "@/lib/prisma";
+
+function getInitials(name: string | null, email: string) {
+  const source = name?.trim() || email;
+  return source.slice(0, 2).toUpperCase();
+}
 
 function formatDateTime(value: Date) {
   return new Intl.DateTimeFormat("en", {
@@ -125,14 +131,28 @@ export default async function PatientDashboardPage() {
   return (
     <div className="space-y-8">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">Patient dashboard</p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-          Welcome{user.name ? `, ${user.name}` : ""}
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Manage your consultations, messages, files, doctor access, and care
-          history from one protected workspace.
-        </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+          <ProfileImage
+            alt="Patient avatar"
+            className="h-20 w-20 shrink-0"
+            initials={getInitials(user.name, user.email)}
+            src={
+              user.avatarStoragePath
+                ? `/api/profile-images/patient/${user.id}`
+                : undefined
+            }
+          />
+          <div>
+            <p className="text-sm font-medium text-teal-700">Patient dashboard</p>
+            <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
+              Welcome{user.name ? `, ${user.name}` : ""}
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
+              Manage your consultations, messages, files, doctor access, and care
+              history from one protected workspace.
+            </p>
+          </div>
+        </div>
       </section>
 
       <section

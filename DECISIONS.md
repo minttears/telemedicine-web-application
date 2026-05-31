@@ -162,6 +162,14 @@ Patient registration consent is stored as nullable account-level fields on `User
 
 Reason: Consent is tied to the account created during public patient registration. Nullable fields preserve compatibility for existing seeded, development, and historical accounts. Future re-consent and production legal workflows remain deferred.
 
+### D021: Store Profile Images In Private Storage Paths
+
+Status: Accepted
+
+Patient avatars use nullable `User.avatarStoragePath`; doctor professional photos use nullable `DoctorProfile.photoStoragePath`. Image bytes are stored in a separate private Supabase Storage bucket named `profile-images` and served through backend routes after authorization.
+
+Reason: Profile images have different access rules from consultation attachments. Private storage paths preserve control over patient self-only avatars and patient-facing doctor photos without exposing direct Supabase Storage URLs or service role credentials.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

@@ -71,6 +71,7 @@ model User {
   role                          UserRole                @default(PATIENT)
   name                          String?
   phone                         String?
+  avatarStoragePath             String?
   isActive                      Boolean                 @default(true)
   createdAt                     DateTime                @default(now())
   updatedAt                     DateTime                @updatedAt
@@ -133,21 +134,22 @@ model PatientProfile {
 }
 
 model DoctorProfile {
-  id              String               @id @default(cuid())
-  userId          String               @unique
-  specialtyId     String?
-  title           String?
-  bio             String?
-  education       String?
-  experienceYears Int?
-  avatarUrl       String?
-  isAvailable     Boolean              @default(true)
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
-  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  specialty       Specialty?           @relation(fields: [specialtyId], references: [id], onDelete: SetNull)
-  scheduleSlots   DoctorScheduleSlot[]
-  consultations   Consultation[]       @relation("DoctorConsultations")
+  id               String               @id @default(cuid())
+  userId           String               @unique
+  specialtyId      String?
+  title            String?
+  bio              String?
+  education        String?
+  experienceYears  Int?
+  avatarUrl        String?
+  photoStoragePath String?
+  isAvailable      Boolean              @default(true)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialty        Specialty?           @relation(fields: [specialtyId], references: [id], onDelete: SetNull)
+  scheduleSlots    DoctorScheduleSlot[]
+  consultations    Consultation[]       @relation("DoctorConsultations")
 
   @@index([specialtyId])
   @@index([isAvailable])

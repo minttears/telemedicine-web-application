@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ProfileImage } from "@/components/profile/profile-image";
 import { prisma } from "@/lib/prisma";
 
 function getStatusClassName(isEnabled: boolean) {
@@ -12,6 +13,10 @@ function formatDate(value: Date) {
   return new Intl.DateTimeFormat("en", {
     dateStyle: "medium",
   }).format(value);
+}
+
+function getInitials(name: string | null) {
+  return (name ?? "DR").slice(0, 2).toUpperCase();
 }
 
 export default async function AdminDoctorsPage() {
@@ -104,13 +109,27 @@ export default async function AdminDoctorsPage() {
                 {doctors.map((doctor) => (
                   <tr key={doctor.id}>
                     <td className="px-4 py-4 align-top">
-                      <p className="font-medium text-slate-950">
-                        {doctor.user.name ?? "Doctor profile"}
-                      </p>
-                      <p className="mt-1 text-slate-600">{doctor.user.email}</p>
-                      {doctor.title ? (
-                        <p className="mt-1 text-slate-500">{doctor.title}</p>
-                      ) : null}
+                      <div className="flex items-start gap-3">
+                        <ProfileImage
+                          alt={`${doctor.user.name ?? "Doctor profile"} photo`}
+                          className="h-12 w-12 shrink-0"
+                          initials={getInitials(doctor.user.name)}
+                          src={
+                            doctor.photoStoragePath
+                              ? `/api/profile-images/doctor/${doctor.id}`
+                              : undefined
+                          }
+                        />
+                        <div>
+                          <p className="font-medium text-slate-950">
+                            {doctor.user.name ?? "Doctor profile"}
+                          </p>
+                          <p className="mt-1 text-slate-600">{doctor.user.email}</p>
+                          {doctor.title ? (
+                            <p className="mt-1 text-slate-500">{doctor.title}</p>
+                          ) : null}
+                        </div>
+                      </div>
                     </td>
                     <td className="px-4 py-4 align-top text-slate-700">
                       {doctor.specialty?.name ?? "Not assigned"}

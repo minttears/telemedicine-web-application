@@ -45,11 +45,14 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - MVP UX Polish And Small Auth UI Improvements
 - Phase 12B Files Page Completion
 - Phase 12C Legal Pages And Registration Consent
+- Phase 12D Avatar And Doctor Photo Uploads
 
 ## Current MVP Behavior
 
 - Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, upload/download allowed consultation files, use `/patient/files` as a secure consultation attachment archive, and view a read-only doctor summary after completion.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with one plain-text conclusion/recommendations summary.
+- Patients can upload/update a private self-only avatar from `/patient/profile`; the avatar is stored in the private `profile-images` Supabase bucket and served through a server-mediated route.
+- Doctors can upload/update their own professional photo from `/doctor/profile`; doctor photos are stored in the private `profile-images` bucket and shown through server-mediated routes on patient-facing doctor cards/profile pages.
 - Patients can open `/patient/profile`, view email/name/date of birth/gender/account status, and edit only name, date of birth, and gender.
 - Doctors can open `/doctor/profile`, view email/name/title/specialty/bio/education/experience/account status/booking availability, and edit only title, bio, and education.
 - Email, role, account status, specialty, experience years, and booking availability remain protected/admin-controlled where appropriate.
@@ -65,6 +68,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Patient and doctor Files pages are server-rendered archive/index pages for consultation attachments already shared inside consultation chats; they do not add free-standing uploads, previews, deletion, storage cleanup, or direct Supabase access.
 - Files pages show safe attachment metadata only and use `/api/files/[attachmentId]` download links, preserving existing download authorization.
 - Files pages do not expose `storagePath`, private bucket paths, or direct Supabase Storage URLs.
+- Profile images do not expose storage paths, private bucket paths, or direct Supabase Storage URLs. Manual Supabase setup requires a private `profile-images` bucket.
 - Allowed attachment types are PDF, JPG/JPEG, PNG, and DOCX, with a 10 MB maximum file size.
 - Secure consultation file attachments were manually verified in the browser for patient upload/download, assigned-doctor download, completed read-only upload behavior, logged-out rejection, admin rejection, other-patient rejection, server-mediated download links, hidden `storagePath`, no public Storage URLs, and no visible browser secrets.
 - Public registration remains patient-only; doctors are created by admins and cannot self-register publicly.
@@ -105,6 +109,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - MVP UX polish added accessible show/hide controls to auth and admin temporary-password fields, improved patient/doctor/admin dashboard summary cards, replaced the bare patient files placeholder with a workspace-style empty state, and preserved the email-first forgot-password flow.
 - Phase 12B completed patient and doctor Files pages as secure consultation attachment archives while keeping uploads inside consultation chats only and leaving admin file content access deferred.
 - Phase 12C added MVP legal pages and registration consent persistence/enforcement without adding doctor/admin public registration, email change, 2FA, deletion, retention, re-consent, or production legal workflows.
+- Phase 12D added patient avatar and doctor professional photo uploads with nullable private storage-path fields, server-side role checks, server-mediated image serving, 2 MB JPEG/PNG/WEBP validation, best-effort old-object cleanup, and no public bucket, direct Storage URLs, cropping/resizing, delete UI, reviews, or admin moderation workflow.
 
 ## Deferred Features
 
@@ -133,7 +138,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 12C: Legal Pages And Registration Consent.
+Phase 12D: Avatar And Doctor Photo Uploads.
 
 Latest known commit:
 

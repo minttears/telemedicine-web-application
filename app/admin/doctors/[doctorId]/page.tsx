@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { DoctorForm } from "@/components/admin/doctor-form";
 import { DoctorInviteAction } from "@/components/admin/doctor-invite-action";
 import { DoctorPasswordResetAction } from "@/components/admin/doctor-password-reset-action";
+import { ProfileImage } from "@/components/profile/profile-image";
 import { prisma } from "@/lib/prisma";
 
 type AdminDoctorDetailPageProps = {
@@ -27,6 +28,10 @@ function getStatusClassName(isEnabled: boolean) {
   return isEnabled
     ? "border-teal-200 bg-teal-50 text-teal-700"
     : "border-slate-200 bg-slate-100 text-slate-600";
+}
+
+function getInitials(name: string | null) {
+  return (name ?? "DR").slice(0, 2).toUpperCase();
 }
 
 export default async function AdminDoctorDetailPage({
@@ -118,17 +123,29 @@ export default async function AdminDoctorDetailPage({
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <p className="text-sm font-medium text-teal-700">
-              {doctor.specialty?.name ?? "Specialty not assigned"}
-            </p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-              {doctor.user.name ?? "Doctor profile"}
-            </h1>
-            <p className="mt-2 text-sm text-slate-600">{doctor.user.email}</p>
-            {doctor.title ? (
-              <p className="mt-2 text-sm text-slate-600">{doctor.title}</p>
-            ) : null}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+            <ProfileImage
+              alt={`${doctor.user.name ?? "Doctor profile"} photo`}
+              className="h-24 w-24 shrink-0"
+              initials={getInitials(doctor.user.name)}
+              src={
+                doctor.photoStoragePath
+                  ? `/api/profile-images/doctor/${doctor.id}`
+                  : undefined
+              }
+            />
+            <div>
+              <p className="text-sm font-medium text-teal-700">
+                {doctor.specialty?.name ?? "Specialty not assigned"}
+              </p>
+              <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
+                {doctor.user.name ?? "Doctor profile"}
+              </h1>
+              <p className="mt-2 text-sm text-slate-600">{doctor.user.email}</p>
+              {doctor.title ? (
+                <p className="mt-2 text-sm text-slate-600">{doctor.title}</p>
+              ) : null}
+            </div>
           </div>
           <div className="flex flex-wrap gap-2">
             <span
