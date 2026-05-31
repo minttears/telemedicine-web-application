@@ -1,4 +1,7 @@
-import type { ConsultationStatus } from "@prisma/client";
+import {
+  ConsultationDiagnosisStatus,
+  type ConsultationStatus,
+} from "@prisma/client";
 import type { NextRequest } from "next/server";
 
 import {
@@ -10,7 +13,12 @@ import { forbidden, unauthorized } from "@/lib/auth/responses";
 import { prisma } from "@/lib/prisma";
 
 const MAX_DOCTOR_NOTES_LENGTH = 4000;
+const MAX_LONG_OUTCOME_FIELD_LENGTH = 4000;
+const MAX_SHORT_OUTCOME_FIELD_LENGTH = 2000;
 const completableStatuses: ConsultationStatus[] = ["SCHEDULED", "IN_PROGRESS"];
+const diagnosisStatuses = new Set<string>(
+  Object.values(ConsultationDiagnosisStatus),
+);
 
 type CompleteConsultationRouteContext = {
   params: Promise<{
@@ -28,6 +36,28 @@ function conflict(message: string) {
 
 function notFound() {
   return Response.json({ error: "Consultation not found." }, { status: 404 });
+}
+
+function optionalTextField(
+  value: unknown,
+  fieldLabel: string,
+  maxLength: number,
+) {
+  if (value === undefined || value === null) {
+    return { value: null };
+  }
+
+  if (typeof value !== "string") {
+    return { error: `${fieldLabel} must be text.` };
+  }
+
+  const trimmedValue = value.trim();
+
+  if (trimmedValue.length > maxLength) {
+    return { error: `${fieldLabel} must be ${maxLength} characters or fewer.` };
+  }
+
+  return { value: trimmedValue.length > 0 ? trimmedValue : null };
 }
 
 export async function POST(
@@ -54,24 +84,83 @@ export async function POST(
       return badRequest("Invalid request body.");
     }
 
-    const { doctorNotes } = payload as {
+    const {
+      additionalNotes,
+      diagnosisDetails,
+      diagnosisStatus,
+      doctorNotes,
+      followUpInstructions,
+      medicationNotes,
+      recommendations,
+    } = payload as {
+      additionalNotes?: unknown;
+      diagnosisDetails?: unknown;
+      diagnosisStatus?: unknown;
       doctorNotes?: unknown;
+      followUpInstructions?: unknown;
+      medicationNotes?: unknown;
+      recommendations?: unknown;
     };
 
     if (typeof doctorNotes !== "string") {
-      return badRequest("Conclusion and recommendations are required.");
+      return badRequest("Conclusion / summary is required.");
     }
 
     const trimmedDoctorNotes = doctorNotes.trim();
 
     if (trimmedDoctorNotes.length === 0) {
-      return badRequest("Conclusion and recommendations are required.");
+      return badRequest("Conclusion / summary is required.");
     }
 
     if (trimmedDoctorNotes.length > MAX_DOCTOR_NOTES_LENGTH) {
       return badRequest(
-        `Conclusion and recommendations must be ${MAX_DOCTOR_NOTES_LENGTH} characters or fewer.`,
+        `Conclusion / summary must be ${MAX_DOCTOR_NOTES_LENGTH} characters or fewer.`,
       );
+    }
+
+    if (
+      typeof diagnosisStatus !== "string" ||
+      !diagnosisStatuses.has(diagnosisStatus)
+    ) {
+      return badRequest("Select a valid diagnosis status.");
+    }
+
+    const trimmedDiagnosisDetails = optionalTextField(
+      diagnosisDetails,
+      "Diagnosis details",
+      MAX_SHORT_OUTCOME_FIELD_LENGTH,
+    );
+    const trimmedRecommendations = optionalTextField(
+      recommendations,
+      "Doctor recommendations",
+      MAX_LONG_OUTCOME_FIELD_LENGTH,
+    );
+    const trimmedMedicationNotes = optionalTextField(
+      medicationNotes,
+      "Medication notes",
+      MAX_SHORT_OUTCOME_FIELD_LENGTH,
+    );
+    const trimmedFollowUpInstructions = optionalTextField(
+      followUpInstructions,
+      "Follow-up instructions",
+      MAX_SHORT_OUTCOME_FIELD_LENGTH,
+    );
+    const trimmedAdditionalNotes = optionalTextField(
+      additionalNotes,
+      "Additional notes",
+      MAX_SHORT_OUTCOME_FIELD_LENGTH,
+    );
+
+    for (const result of [
+      trimmedDiagnosisDetails,
+      trimmedRecommendations,
+      trimmedMedicationNotes,
+      trimmedFollowUpInstructions,
+      trimmedAdditionalNotes,
+    ]) {
+      if (result.error) {
+        return badRequest(result.error);
+      }
     }
 
     const consultation = await prisma.consultation.findFirst({
@@ -115,8 +204,14 @@ export async function POST(
         },
       },
       data: {
+        additionalNotes: trimmedAdditionalNotes.value,
         completedAt,
+        diagnosisDetails: trimmedDiagnosisDetails.value,
+        diagnosisStatus: diagnosisStatus as ConsultationDiagnosisStatus,
         doctorNotes: trimmedDoctorNotes,
+        followUpInstructions: trimmedFollowUpInstructions.value,
+        medicationNotes: trimmedMedicationNotes.value,
+        recommendations: trimmedRecommendations.value,
         status: "COMPLETED",
       },
     });

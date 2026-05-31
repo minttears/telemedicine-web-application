@@ -25,6 +25,14 @@ enum ConsultationStatus {
   CANCELLED
 }
 
+enum ConsultationDiagnosisStatus {
+  NOT_IDENTIFIED
+  PRELIMINARY
+  REQUIRES_FURTHER_EXAMINATION
+  REFERRED_TO_SPECIALIST
+  NOT_APPLICABLE
+}
+
 enum MessageType {
   TEXT
   FILE
@@ -188,25 +196,31 @@ model DoctorScheduleSlot {
 }
 
 model Consultation {
-  id             String              @id @default(cuid())
-  patientId      String
-  doctorId       String
-  scheduleSlotId String?             @unique
-  scheduledAt    DateTime
-  status         ConsultationStatus  @default(REQUESTED)
-  subject        String?
-  description    String?
-  doctorNotes    String?
-  completedAt    DateTime?
-  cancelledAt    DateTime?
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
-  patient        PatientProfile      @relation("PatientConsultations", fields: [patientId], references: [id], onDelete: Restrict)
-  doctor         DoctorProfile       @relation("DoctorConsultations", fields: [doctorId], references: [id], onDelete: Restrict)
-  scheduleSlot   DoctorScheduleSlot? @relation(fields: [scheduleSlotId], references: [id], onDelete: SetNull)
-  messages       Message[]
-  attachments    Attachment[]
-  doctorReview   DoctorReview?
+  id                   String                       @id @default(cuid())
+  patientId            String
+  doctorId             String
+  scheduleSlotId       String?                      @unique
+  scheduledAt          DateTime
+  status               ConsultationStatus           @default(REQUESTED)
+  subject              String?
+  description          String?
+  doctorNotes          String?
+  diagnosisStatus      ConsultationDiagnosisStatus?
+  diagnosisDetails     String?
+  recommendations      String?
+  medicationNotes      String?
+  followUpInstructions String?
+  additionalNotes      String?
+  completedAt          DateTime?
+  cancelledAt          DateTime?
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+  patient              PatientProfile               @relation("PatientConsultations", fields: [patientId], references: [id], onDelete: Restrict)
+  doctor               DoctorProfile                @relation("DoctorConsultations", fields: [doctorId], references: [id], onDelete: Restrict)
+  scheduleSlot         DoctorScheduleSlot?          @relation(fields: [scheduleSlotId], references: [id], onDelete: SetNull)
+  messages             Message[]
+  attachments          Attachment[]
+  doctorReview         DoctorReview?
 
   @@index([patientId])
   @@index([doctorId])

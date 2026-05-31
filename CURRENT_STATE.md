@@ -48,11 +48,15 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12D Avatar And Doctor Photo Uploads
 - Phase 12E Consultation Chat UI Polish
 - Phase 12F Doctor Reviews And Ratings
+- Phase 13A Consultation Treatment Plan / Doctor Recommendations
 
 ## Current MVP Behavior
 
-- Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, upload/download allowed consultation files, use `/patient/files` as a secure consultation attachment archive, and view a read-only doctor summary after completion.
-- Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with one plain-text conclusion/recommendations summary.
+- Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, upload/download allowed consultation files, use `/patient/files` as a secure consultation attachment archive, and view a read-only consultation outcome after completion.
+- Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with structured consultation outcome fields.
+- New structured consultation completion requires only a conclusion/summary in `Consultation.doctorNotes` and an active diagnosis-status selection; diagnosis details, doctor recommendations, medication notes, follow-up instructions, and additional notes are optional and stored as null when empty.
+- Diagnosis status supports no diagnosis identified, preliminary diagnosis, requires further examination, referred to specialist, and not applicable without forcing fake diagnosis text.
+- Consultation outcome is not an official prescription workflow; legal prescription workflows, medication databases, PDF generation, e-signatures, pharmacy integration, and diagnosis automation remain deferred.
 - Patients can submit one doctor review with a required 1-5 rating and optional comment only after their own consultation is completed.
 - Doctor rating summaries appear on patient doctor cards and patient doctor detail pages; patient doctor detail pages show recent reviews with the public author label `Verified patient`.
 - Patient completed consultation detail pages show the review form when eligible and no review exists, then show the submitted review after creation.
@@ -97,7 +101,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Existing doctors linked to inactive specialties remain intact and may remain visible to patients when the doctor account is active and `DoctorProfile.isAvailable` is true.
 - Inactive or unavailable doctors are hidden from the patient doctor directory and patient booking views, and the booking API rejects inactive or unavailable doctor slot booking.
 - Chat auto-refresh uses polling with `router.refresh()` every 5 seconds only while the document is visible.
-- Consultation completion uses existing `Consultation.doctorNotes` for the MVP doctor summary, sets `Consultation.status` to `COMPLETED`, and sets `Consultation.completedAt`.
+- Consultation completion uses existing `Consultation.doctorNotes` as the required conclusion/summary, stores nullable structured outcome fields when provided, sets `Consultation.status` to `COMPLETED`, and sets `Consultation.completedAt`.
 - Completed consultations show preserved chat history in read-only mode.
 - Completed consultations show existing file messages read-only and reject new file uploads.
 - `POST /api/messages` rejects completed consultations with a safe `409`, while non-completed consultation chat remains writable.
@@ -119,6 +123,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12D added patient avatar and doctor professional photo uploads with nullable private storage-path fields, server-side role checks, server-mediated image serving, 2 MB JPEG/PNG/WEBP validation, best-effort old-object cleanup, and no public bucket, direct Storage URLs, cropping/resizing, delete UI, reviews, or admin moderation workflow.
 - Phase 12E polished consultation chat UI with aligned text/file bubbles, safe participant avatars/photos, unchanged polling, unchanged completed-chat read-only behavior, and no realtime, video calls, message editing/deleting, reactions, read receipts, typing indicators, schema changes, migrations, dependencies, or admin chat access.
 - Phase 12F added `DoctorReview` with migration `20260531163859_add_doctor_reviews`, patient-only completed-consultation review creation, one-review-per-consultation enforcement, doctor rating aggregation, `Verified patient` review display, and no review editing/deletion, doctor replies, admin moderation, public placeholder `/doctors` changes, dependencies, or denormalized rating fields.
+- Phase 13A added nullable structured consultation outcome fields with migration `20260531215443_add_consultation_outcome_fields`, kept `Consultation.doctorNotes` for backward-compatible summaries, required diagnosis status only for new structured completion submissions, and did not add official prescriptions, doctor outcome editing after completion, admin medical content access, dependencies, or AI diagnosis automation.
 
 ## Deferred Features
 
@@ -128,7 +133,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Virus scanning, advanced file previews, and production file-handling hardening
 - Doctor profile/specialty management beyond seeded data
 - Recurring schedules, booked slot cancellation, consultation cancellation, and status changes
-- Legal prescription workflow, structured diagnosis/recommendation/follow-up fields, medical notes, and archives
+- Legal prescription workflow, official prescriptions, medication database, PDF generation, e-signature, pharmacy integration, diagnosis automation, medical archives, and doctor outcome editing after completion
 - Review editing/deletion, doctor replies, admin review moderation, and public placeholder `/doctors` review display
 - Time-based chat restrictions beyond completed-status read-only behavior
 - Video calls, payments, 2FA enforcement, public SEO polish, and full responsive/browser QA
@@ -148,7 +153,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 12F: Doctor Reviews And Ratings.
+Phase 13A: Consultation Treatment Plan / Doctor Recommendations.
 
 Latest known commit:
 

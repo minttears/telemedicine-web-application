@@ -48,9 +48,23 @@ export function PlaceholderPanel({ body, title }: PlaceholderPanelProps) {
 }
 
 type ConsultationSummaryPanelProps = {
+  additionalNotes?: string | null;
   completedAt: Date | null;
+  diagnosisDetails?: string | null;
+  diagnosisStatus?: string | null;
   doctorNotes: string;
+  followUpInstructions?: string | null;
+  medicationNotes?: string | null;
+  recommendations?: string | null;
   title: string;
+};
+
+const diagnosisStatusLabels: Record<string, string> = {
+  NOT_IDENTIFIED: "No diagnosis identified",
+  PRELIMINARY: "Preliminary diagnosis",
+  REQUIRES_FURTHER_EXAMINATION: "Requires further examination",
+  REFERRED_TO_SPECIALIST: "Referred to specialist",
+  NOT_APPLICABLE: "Not applicable",
 };
 
 function formatSummaryDate(value: Date) {
@@ -61,17 +75,31 @@ function formatSummaryDate(value: Date) {
 }
 
 export function ConsultationSummaryPanel({
+  additionalNotes,
   completedAt,
+  diagnosisDetails,
+  diagnosisStatus,
   doctorNotes,
+  followUpInstructions,
+  medicationNotes,
+  recommendations,
   title,
 }: ConsultationSummaryPanelProps) {
+  const outcomeSections = [
+    { body: diagnosisDetails, title: "Diagnosis details" },
+    { body: recommendations, title: "Doctor recommendations" },
+    { body: medicationNotes, title: "Medication notes" },
+    { body: followUpInstructions, title: "Follow-up instructions" },
+    { body: additionalNotes, title: "Additional notes" },
+  ].filter((section) => section.body?.trim());
+
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-sm font-medium text-teal-700">{title}</p>
           <h2 className="mt-2 text-lg font-semibold text-slate-950">
-            Conclusion and recommendations
+            Consultation outcome
           </h2>
         </div>
         {completedAt ? (
@@ -83,9 +111,39 @@ export function ConsultationSummaryPanel({
           </time>
         ) : null}
       </div>
-      <p className="mt-5 whitespace-pre-wrap text-sm leading-6 text-slate-700">
-        {doctorNotes}
-      </p>
+      <div className="mt-5 rounded-md border border-slate-200 bg-slate-50 p-4">
+        <p className="text-sm font-medium text-slate-950">
+          Conclusion / summary
+        </p>
+        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+          {doctorNotes}
+        </p>
+      </div>
+      {diagnosisStatus ? (
+        <div className="mt-3 rounded-md border border-teal-100 bg-teal-50 p-4">
+          <p className="text-sm font-medium text-slate-950">Diagnosis status</p>
+          <p className="mt-2 text-sm leading-6 text-teal-800">
+            {diagnosisStatusLabels[diagnosisStatus] ?? diagnosisStatus}
+          </p>
+        </div>
+      ) : null}
+      {outcomeSections.length > 0 ? (
+        <div className="mt-3 grid gap-3">
+          {outcomeSections.map((section) => (
+            <div
+              className="rounded-md border border-slate-200 bg-white p-4"
+              key={section.title}
+            >
+              <p className="text-sm font-medium text-slate-950">
+                {section.title}
+              </p>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                {section.body}
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }

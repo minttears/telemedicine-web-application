@@ -193,19 +193,23 @@ Doctor consultation boundaries:
 - The completion endpoint scopes by consultation id and `doctor.userId` for the current user.
 - Patients, admins, and wrong doctors cannot complete consultations.
 - Completion stores plain text in `Consultation.doctorNotes`, sets `Consultation.status` to `COMPLETED`, and sets `Consultation.completedAt`.
-- `doctorNotes` is rendered as React text with preserved whitespace and without `dangerouslySetInnerHTML`.
-- No legal prescription workflow is implemented in Phase 8A.
+- Phase 13A keeps `doctorNotes` as the required conclusion/summary and stores nullable structured outcome fields for diagnosis status, diagnosis details, doctor recommendations, medication notes, follow-up instructions, and additional notes.
+- Structured outcome fields are rendered as React text with preserved whitespace where applicable and without `dangerouslySetInnerHTML`.
+- No official prescription, legal prescription workflow, medication database, PDF generation, e-signature, pharmacy integration, or diagnosis automation is implemented in Phase 13A.
+- Doctors cannot edit consultation outcomes after completion in Phase 13A.
 - Chat and message history are not deleted on consultation completion.
 - Completed consultations are read-only for chat in Phase 8B.
 - Missing, fake, or unassigned doctor consultation detail routes use safe not-found behavior.
 - Patient, admin, and logged-out users are redirected away by the existing doctor workspace protection.
-- Doctor consultation pages do not display or print patient email, patient phone, attachments, storage paths, diagnosis, prescriptions, medical notes, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, service role keys, or development seed password literals.
+- Doctor consultation pages do not display or print patient email, patient phone, attachments, storage paths, official prescriptions, unrelated medical content, cookies, tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, service role keys, or development seed password literals.
+- Doctor consultation outcome access remains scoped to the assigned doctor only.
 
 Consultation detail shell boundaries:
 
 - Consultation detail shells remain scoped by patient or doctor ownership.
 - Patient consultation detail pages show only consultations owned by the current patient.
 - Doctor consultation detail pages show only consultations assigned to the current doctor.
+- Patient and doctor consultation outcome display reuses these consultation ownership/assignment checks and does not grant admins new medical content access.
 - Patient users can read and send messages only for consultations owned by their `PatientProfile`.
 - Doctor users can read and send messages only for consultations assigned to their `DoctorProfile`.
 - Admin chat and consultation history access is excluded in Phase 8B.

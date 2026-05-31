@@ -1818,6 +1818,36 @@ Privacy notes:
 
 - Review displays use `Verified patient` and do not expose patient first name, full name, email, phone, date of birth, gender, private profile data, chats, files, storage paths, doctor notes, password hashes, token hashes, sessions, raw invite/reset tokens, reset/invite URLs, cookies, environment values, service role keys, or secrets.
 
+### Phase 13A: Consultation Treatment Plan / Doctor Recommendations
+
+Status: Completed
+
+Completed:
+
+- Added Prisma enum `ConsultationDiagnosisStatus` and nullable structured outcome fields to `Consultation` with migration `20260531215443_add_consultation_outcome_fields`.
+- Kept `Consultation.doctorNotes` as the required conclusion/summary for compatibility with existing completed consultations.
+- Updated consultation completion to require an active diagnosis-status choice for new structured submissions.
+- Supported no diagnosis identified, preliminary diagnosis, requires further examination, referred to specialist, and not applicable without requiring diagnosis details.
+- Added optional diagnosis details, doctor recommendations, medication notes, follow-up instructions, and additional notes with empty values stored as null.
+- Updated patient and doctor completed consultation views to show a read-only consultation outcome panel and hide empty optional sections.
+
+Not implemented:
+
+- No official prescription workflow or legal prescription workflow.
+- No medication database.
+- No PDF generation.
+- No e-signature.
+- No pharmacy integration.
+- No diagnosis automation or AI.
+- No doctor outcome editing after completion.
+- No admin medical content access.
+- No dependencies or video calls.
+
+Security notes:
+
+- Outcome access remains scoped to the owning patient or assigned doctor through existing consultation detail queries.
+- Admins do not gain consultation outcome/medical content access in this phase.
+
 ## Phase 5: Admin And Operational Views
 
 Status: In progress

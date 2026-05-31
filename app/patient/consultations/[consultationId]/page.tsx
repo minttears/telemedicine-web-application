@@ -196,8 +196,14 @@ export default async function PatientConsultationPage({
         <div className="space-y-4">
           {completedDoctorNotes ? (
             <ConsultationSummaryPanel
+              additionalNotes={consultation.additionalNotes}
               completedAt={consultation.completedAt}
+              diagnosisDetails={consultation.diagnosisDetails}
+              diagnosisStatus={consultation.diagnosisStatus}
               doctorNotes={completedDoctorNotes}
+              followUpInstructions={consultation.followUpInstructions}
+              medicationNotes={consultation.medicationNotes}
+              recommendations={consultation.recommendations}
               title="Doctor summary"
             />
           ) : null}

@@ -178,6 +178,14 @@ Doctor reviews use a dedicated `DoctorReview` model linked to one consultation, 
 
 Reason: Reviews belong to verified care interactions and should not expose patient identity. A normalized review table keeps rating aggregation accurate without denormalized average fields in the MVP.
 
+### D023: Extend Consultation For Structured Outcomes
+
+Status: Accepted
+
+Structured consultation outcomes extend `Consultation` with nullable fields for diagnosis status, diagnosis details, doctor recommendations, medication notes, follow-up instructions, and additional notes. Existing `Consultation.doctorNotes` remains the required conclusion/summary and preserves compatibility with completed consultations created before structured outcomes.
+
+Reason: The MVP has exactly one outcome per consultation and already completes consultations through `Consultation`. Nullable fields avoid a separate model and keep old completed consultations readable while deferring official prescription workflows and outcome editing.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

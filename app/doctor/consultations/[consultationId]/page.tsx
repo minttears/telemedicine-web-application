@@ -164,8 +164,14 @@ export default async function DoctorConsultationPage({
         <div className="space-y-4">
           {consultation.status === "COMPLETED" ? (
             <ConsultationSummaryPanel
+              additionalNotes={consultation.additionalNotes}
               completedAt={consultation.completedAt}
+              diagnosisDetails={consultation.diagnosisDetails}
+              diagnosisStatus={consultation.diagnosisStatus}
               doctorNotes={completedDoctorNotes || "No summary was recorded."}
+              followUpInstructions={consultation.followUpInstructions}
+              medicationNotes={consultation.medicationNotes}
+              recommendations={consultation.recommendations}
               title="Completed summary"
             />
           ) : (
