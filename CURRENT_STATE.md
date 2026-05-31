@@ -41,6 +41,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 11F Email Provider Foundation
 - Phase 11G Public Forgot Password Flow
 - Phase 11H Auth Recovery Manual QA Record
+- Phase 12A MVP Technical Cleanup
 
 ## Current MVP Behavior
 
@@ -91,6 +92,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - A critical forgot-password account-targeting bug was fixed: the login page now requires an email before starting recovery, `/forgot-password` no longer shows an editable email field, the public forgot-password endpoint accepts one email only, reset email is sent only to the matched stored `User.email`, and reset completion derives the target user only from the `PASSWORD_RESET` token.
 - Phase 11H manual QA rechecked the corrected auth recovery UX: forgot-password requires the login email first, an empty login email shows a validation message before recovery starts, users can no longer choose a separate reset recipient email, reset email delivery works for the Resend account email test case, and the corrected UX was accepted.
 - The Phase 11H manual QA record confirms no reset URL, raw reset token, email API key, or secret was shared. Full testing to arbitrary recipient emails is deferred until a verified sender domain is configured in Resend; `onboarding@resend.dev` remains suitable only for limited local testing.
+- Phase 12A narrowed broad Prisma `user` relation reads in server pages/helpers to avoid unnecessary password-hash retrieval, refreshed stale unsupported GET endpoint wording, and updated clearly stale security/task documentation without changing product behavior.
 
 ## Deferred Features
 
@@ -119,7 +121,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 11H: Auth Recovery Manual QA Record for the Phase 11G forgot-password security fix.
+Phase 12A: MVP Technical Cleanup.
 
 Latest known commit:
 

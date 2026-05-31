@@ -57,7 +57,11 @@ export default async function PatientConsultationPage({
       doctor: {
         include: {
           specialty: true,
-          user: true,
+          user: {
+            select: {
+              name: true,
+            },
+          },
         },
       },
       scheduleSlot: true,

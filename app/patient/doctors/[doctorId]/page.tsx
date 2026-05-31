@@ -66,7 +66,11 @@ export default async function PatientDoctorProfilePage({
         },
         take: 5,
       },
-      user: true,
+      user: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 

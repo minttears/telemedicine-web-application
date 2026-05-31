@@ -356,17 +356,17 @@ Development seed account hints must not be displayed in the login UI.
 
 Before considering MVP complete:
 
-- [ ] Passwords are hashed.
+- [x] Passwords are hashed.
 - [x] Sessions are server-side and cookie-based.
 - [x] Cookies are HTTP-only.
-- [ ] Role checks exist for protected routes and API handlers.
-- [ ] Patients cannot access other patients' consultations.
-- [ ] Doctors cannot access unassigned consultations.
-- [ ] Admin routes require `ADMIN` role.
-- [ ] Supabase service role key is never used in client code.
-- [ ] `.env.local` is ignored by Git.
-- [ ] File upload validation exists.
-- [ ] Basic audit logging exists for admin/security actions.
+- [x] Role checks exist for protected routes and implemented API handlers.
+- [x] Patients cannot access other patients' consultations.
+- [x] Doctors cannot access unassigned consultations.
+- [x] Admin routes require `ADMIN` role.
+- [x] Supabase service role key is never used in client code.
+- [x] `.env.local` is ignored by Git.
+- [x] File upload validation exists.
+- [ ] Basic audit logging is partially implemented for admin/security actions; failed login and broader audit workflows remain TODO.
 
 ## Future Security Work
 

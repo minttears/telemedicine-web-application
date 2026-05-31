@@ -1557,6 +1557,43 @@ Limitations:
 - `onboarding@resend.dev` remains suitable only for limited local testing.
 - Domain/DNS sender verification remains a deployment and email production readiness task.
 
+### Phase 12A: MVP Technical Cleanup
+
+Status: Completed
+
+Completed:
+
+- Narrowed broad Prisma `user` relation reads in server helpers and role-scoped patient/doctor pages to select only UI-required fields.
+- Removed unnecessary server-side password-hash retrieval from those relation reads.
+- Updated unsupported `GET /api/messages` and `GET /api/consultations` responses to current safe `405 Method Not Allowed` wording.
+- Refreshed stale task/checklist documentation where implementation status was clearly outdated.
+
+Changed files:
+
+- `lib/auth/current-user.ts`
+- `app/patient/doctors/page.tsx`
+- `app/patient/doctors/[doctorId]/page.tsx`
+- `app/patient/consultations/page.tsx`
+- `app/patient/consultations/[consultationId]/page.tsx`
+- `app/doctor/consultations/page.tsx`
+- `app/doctor/consultations/[consultationId]/page.tsx`
+- `app/api/messages/route.ts`
+- `app/api/consultations/route.ts`
+- `TASKS.md`
+- `SECURITY.md`
+- `CURRENT_STATE.md`
+- `PLANS.md`
+
+Not implemented:
+
+- No new product functionality.
+- No auth behavior changes.
+- No route changes.
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+- No 2FA, deployment, or domain setup.
+
 ## Phase 5: Admin And Operational Views
 
 Status: In progress

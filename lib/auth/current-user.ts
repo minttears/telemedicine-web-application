@@ -1,9 +1,19 @@
-import type { User, UserRole } from "@prisma/client";
+import type { UserRole } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import { getSessionCookie, hashSessionToken } from "@/lib/auth/session";
 
-export type SafeUser = Omit<User, "passwordHash">;
+export type SafeUser = {
+  createdAt: Date;
+  email: string;
+  id: string;
+  isActive: boolean;
+  name: string | null;
+  passwordChangedAt: Date | null;
+  phone: string | null;
+  role: UserRole;
+  updatedAt: Date;
+};
 
 export class UnauthorizedError extends Error {
   constructor(message = "Unauthorized") {
@@ -17,20 +27,6 @@ export class ForbiddenError extends Error {
     super(message);
     this.name = "ForbiddenError";
   }
-}
-
-function toSafeUser(user: User): SafeUser {
-  return {
-    id: user.id,
-    email: user.email,
-    role: user.role,
-    name: user.name,
-    phone: user.phone,
-    passwordChangedAt: user.passwordChangedAt,
-    isActive: user.isActive,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-  };
 }
 
 export async function getCurrentUser() {
@@ -51,8 +47,20 @@ export async function getCurrentUser() {
         isActive: true,
       },
     },
-    include: {
-      user: true,
+    select: {
+      user: {
+        select: {
+          createdAt: true,
+          email: true,
+          id: true,
+          isActive: true,
+          name: true,
+          passwordChangedAt: true,
+          phone: true,
+          role: true,
+          updatedAt: true,
+        },
+      },
     },
   });
 
@@ -60,7 +68,7 @@ export async function getCurrentUser() {
     return null;
   }
 
-  return toSafeUser(session.user);
+  return session.user;
 }
 
 export async function requireUser() {

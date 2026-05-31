@@ -32,8 +32,13 @@ function isUniqueConstraintError(error: unknown) {
 
 export function GET() {
   return Response.json(
-    { error: "Consultations are not implemented in Phase 1." },
-    { status: 501 },
+    { error: "GET /api/consultations is not supported. Use role-scoped consultation pages to read consultations." },
+    {
+      headers: {
+        Allow: "POST",
+      },
+      status: 405,
+    },
   );
 }
 

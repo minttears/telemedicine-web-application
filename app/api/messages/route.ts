@@ -13,8 +13,13 @@ const MAX_MESSAGE_LENGTH = 2000;
 
 export function GET() {
   return Response.json(
-    { error: "Messages are not implemented in Phase 1." },
-    { status: 501 },
+    { error: "GET /api/messages is not supported. Use authorized consultation pages to read messages." },
+    {
+      headers: {
+        Allow: "POST",
+      },
+      status: 405,
+    },
   );
 }
 

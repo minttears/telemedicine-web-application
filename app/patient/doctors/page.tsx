@@ -84,7 +84,11 @@ async function getDoctors({
     },
     include: {
       specialty: true,
-      user: true,
+      user: {
+        select: {
+          name: true,
+        },
+      },
     },
     orderBy: [{ isAvailable: "desc" }, { updatedAt: "desc" }],
   });
