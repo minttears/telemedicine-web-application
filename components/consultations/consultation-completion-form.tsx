@@ -9,13 +9,13 @@ const MAX_SHORT_OUTCOME_FIELD_LENGTH = 2000;
 
 const diagnosisStatusOptions = [
   { label: "No diagnosis identified", value: "NOT_IDENTIFIED" },
-  { label: "Preliminary diagnosis", value: "PRELIMINARY" },
   {
     label: "Requires further examination",
     value: "REQUIRES_FURTHER_EXAMINATION",
   },
-  { label: "Referred to specialist", value: "REFERRED_TO_SPECIALIST" },
-  { label: "Not applicable", value: "NOT_APPLICABLE" },
+  { label: "Preliminary diagnosis", value: "PRELIMINARY" },
+  { label: "Confirmed diagnosis", value: "CONFIRMED" },
+  { label: "Cannot determine online", value: "CANNOT_DETERMINE_ONLINE" },
 ];
 
 type ConsultationCompletionFormProps = {
@@ -133,8 +133,18 @@ export function ConsultationCompletionForm({
       setFollowUpInstructions("");
       setAdditionalNotes("");
       router.refresh();
-    } catch {
-      setError("Unable to complete consultation.");
+    } catch (error) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Consultation completion request failed", error);
+      }
+
+      setError(
+        process.env.NODE_ENV === "production"
+          ? "Unable to complete consultation."
+          : error instanceof Error
+            ? error.message
+            : "Unable to complete consultation.",
+      );
     } finally {
       setIsSubmitting(false);
     }

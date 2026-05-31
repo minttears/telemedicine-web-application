@@ -63,6 +63,8 @@ const diagnosisStatusLabels: Record<string, string> = {
   NOT_IDENTIFIED: "No diagnosis identified",
   PRELIMINARY: "Preliminary diagnosis",
   REQUIRES_FURTHER_EXAMINATION: "Requires further examination",
+  CONFIRMED: "Confirmed diagnosis",
+  CANNOT_DETERMINE_ONLINE: "Cannot determine online",
   REFERRED_TO_SPECIALIST: "Referred to specialist",
   NOT_APPLICABLE: "Not applicable",
 };

@@ -16,9 +16,13 @@ const MAX_DOCTOR_NOTES_LENGTH = 4000;
 const MAX_LONG_OUTCOME_FIELD_LENGTH = 4000;
 const MAX_SHORT_OUTCOME_FIELD_LENGTH = 2000;
 const completableStatuses: ConsultationStatus[] = ["SCHEDULED", "IN_PROGRESS"];
-const diagnosisStatuses = new Set<string>(
-  Object.values(ConsultationDiagnosisStatus),
-);
+const diagnosisStatuses = new Set<string>([
+  ConsultationDiagnosisStatus.NOT_IDENTIFIED,
+  ConsultationDiagnosisStatus.REQUIRES_FURTHER_EXAMINATION,
+  ConsultationDiagnosisStatus.PRELIMINARY,
+  ConsultationDiagnosisStatus.CONFIRMED,
+  ConsultationDiagnosisStatus.CANNOT_DETERMINE_ONLINE,
+]);
 
 type CompleteConsultationRouteContext = {
   params: Promise<{
@@ -234,8 +238,19 @@ export async function POST(
       return forbidden();
     }
 
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Unable to complete consultation", error);
+    }
+
     return Response.json(
-      { error: "Unable to complete consultation." },
+      {
+        error:
+          process.env.NODE_ENV === "production"
+            ? "Unable to complete consultation."
+            : error instanceof Error
+              ? error.message
+              : "Unable to complete consultation.",
+      },
       { status: 500 },
     );
   }
