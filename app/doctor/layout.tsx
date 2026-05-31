@@ -7,6 +7,7 @@ const doctorNavItems = [
   { href: "/doctor/dashboard", label: "Dashboard" },
   { href: "/doctor/schedule", label: "Schedule" },
   { href: "/doctor/consultations", label: "Consultations" },
+  { href: "/doctor/files", label: "Files" },
   { href: "/doctor/patients", label: "Patients" },
   { href: "/doctor/profile", label: "Profile" },
 ];

@@ -288,11 +288,16 @@ Upload and download rules:
 - PostgreSQL stores attachment metadata.
 - Patients can upload/download only for consultations owned by their `PatientProfile`.
 - Doctors can upload/download only for consultations assigned to their `DoctorProfile`.
+- `/patient/files` is a server-rendered archive of attachments scoped through consultations owned by the current patient.
+- `/doctor/files` is a server-rendered archive of attachments scoped through consultations assigned to the current doctor.
+- Files archive pages are metadata indexes only; uploads remain inside consultation chats/details.
+- Files archive downloads use existing `/api/files/[attachmentId]` authorization and do not bypass the download route.
 - Admin users cannot access attachment content in this phase.
 - Completed consultations reject new uploads.
 - Direct browser Supabase Storage upload is not implemented.
 - Public buckets and public URLs are not used.
 - `storagePath` is never displayed in the UI.
+- Direct Supabase Storage object URLs and private bucket paths are never displayed in the Files archive UI.
 
 MVP file limits and allowlist:
 
@@ -318,6 +323,8 @@ Not included in the MVP:
 - Advanced file previews.
 - Admin break-glass attachment content access.
 - File retention policy.
+- File deletion from archive pages.
+- Free-standing uploads from archive pages.
 
 ## Audit Logging
 

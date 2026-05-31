@@ -42,12 +42,13 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 11G Public Forgot Password Flow
 - Phase 11H Auth Recovery Manual QA Record
 - Phase 12A MVP Technical Cleanup
-- Phase 12B MVP UX Polish And Small Auth UI Improvements
+- MVP UX Polish And Small Auth UI Improvements
+- Phase 12B Files Page Completion
 
 ## Current MVP Behavior
 
-- Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, upload/download allowed consultation files, and view a read-only doctor summary after completion.
-- Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with one plain-text conclusion/recommendations summary.
+- Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, upload/download allowed consultation files, use `/patient/files` as a secure consultation attachment archive, and view a read-only doctor summary after completion.
+- Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with one plain-text conclusion/recommendations summary.
 - Patients can open `/patient/profile`, view email/name/date of birth/gender/account status, and edit only name, date of birth, and gender.
 - Doctors can open `/doctor/profile`, view email/name/title/specialty/bio/education/experience/account status/booking availability, and edit only title, bio, and education.
 - Email, role, account status, specialty, experience years, and booking availability remain protected/admin-controlled where appropriate.
@@ -60,6 +61,9 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - File attachment download uses server-mediated `GET /api/files/[attachmentId]` and verifies consultation ownership/assignment before returning file bytes.
 - Patients can upload/download attachments only for consultations owned by their `PatientProfile`.
 - Doctors can upload/download attachments only for consultations assigned to their `DoctorProfile`.
+- Patient and doctor Files pages are server-rendered archive/index pages for consultation attachments already shared inside consultation chats; they do not add free-standing uploads, previews, deletion, storage cleanup, or direct Supabase access.
+- Files pages show safe attachment metadata only and use `/api/files/[attachmentId]` download links, preserving existing download authorization.
+- Files pages do not expose `storagePath`, private bucket paths, or direct Supabase Storage URLs.
 - Allowed attachment types are PDF, JPG/JPEG, PNG, and DOCX, with a 10 MB maximum file size.
 - Secure consultation file attachments were manually verified in the browser for patient upload/download, assigned-doctor download, completed read-only upload behavior, logged-out rejection, admin rejection, other-patient rejection, server-mediated download links, hidden `storagePath`, no public Storage URLs, and no visible browser secrets.
 - Public registration remains patient-only; doctors are created by admins and cannot self-register publicly.
@@ -94,7 +98,8 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 11H manual QA rechecked the corrected auth recovery UX: forgot-password requires the login email first, an empty login email shows a validation message before recovery starts, users can no longer choose a separate reset recipient email, reset email delivery works for the Resend account email test case, and the corrected UX was accepted.
 - The Phase 11H manual QA record confirms no reset URL, raw reset token, email API key, or secret was shared. Full testing to arbitrary recipient emails is deferred until a verified sender domain is configured in Resend; `onboarding@resend.dev` remains suitable only for limited local testing.
 - Phase 12A narrowed broad Prisma `user` relation reads in server pages/helpers to avoid unnecessary password-hash retrieval, refreshed stale unsupported GET endpoint wording, and updated clearly stale security/task documentation without changing product behavior.
-- Phase 12B added accessible show/hide controls to auth and admin temporary-password fields, improved patient/doctor/admin dashboard summary cards, replaced the bare patient files placeholder with a workspace-style empty state, and preserved the email-first forgot-password flow.
+- MVP UX polish added accessible show/hide controls to auth and admin temporary-password fields, improved patient/doctor/admin dashboard summary cards, replaced the bare patient files placeholder with a workspace-style empty state, and preserved the email-first forgot-password flow.
+- Phase 12B completed patient and doctor Files pages as secure consultation attachment archives while keeping uploads inside consultation chats only and leaving admin file content access deferred.
 
 ## Deferred Features
 
@@ -123,7 +128,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 12B: MVP UX Polish And Small Auth UI Improvements.
+Phase 12B: Files Page Completion.
 
 Latest known commit:
 

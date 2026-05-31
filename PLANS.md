@@ -1594,7 +1594,7 @@ Not implemented:
 - No dependencies.
 - No 2FA, deployment, or domain setup.
 
-### Phase 12B: MVP UX Polish And Small Auth UI Improvements
+### MVP UX Polish And Small Auth UI Improvements
 
 Status: Completed
 
@@ -1633,6 +1633,44 @@ Not implemented:
 - No auth or authorization behavior changes.
 - No file archive implementation.
 - No landing page, legal consent, video calls, avatars, 2FA, deployment, or domain setup.
+
+### Phase 12B: Files Page Completion
+
+Status: Completed
+
+Completed:
+
+- Implemented `/patient/files` as a server-rendered archive of attachments from consultations owned by the current patient.
+- Implemented `/doctor/files` as a server-rendered archive of attachments from consultations assigned to the current doctor and added the doctor Files navigation item.
+- Files archives show filename, type, size, uploader role/name, related doctor or patient, consultation scheduled time, consultation status, uploaded time, consultation link, and download link.
+- Files are sorted newest uploaded first.
+- Empty states clarify that files shared during consultations will appear in the archive.
+- Uploads remain available only inside consultation chats/details.
+- Downloads continue to use `/api/files/[attachmentId]` and existing authorization.
+
+Changed files:
+
+- `components/files/file-archive-list.tsx`
+- `app/patient/files/page.tsx`
+- `app/doctor/files/page.tsx`
+- `app/doctor/layout.tsx`
+- `TASKS.md`
+- `SECURITY.md`
+- `CURRENT_STATE.md`
+- `PLANS.md`
+
+Not implemented:
+
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+- No admin file archive or admin file content access.
+- No file deletion.
+- No file previews.
+- No free-standing uploads from Files pages.
+- No virus scanning.
+- No storage cleanup or retention changes.
+- No direct Supabase Storage URLs, private bucket paths, or `storagePath` displayed in the UI.
 
 ## Phase 5: Admin And Operational Views
 
