@@ -47,6 +47,7 @@ Requirements:
 - Public forgot-password must send reset email only to the matched user's stored `User.email`.
 - Public forgot-password is available only for active `PATIENT` users and completed/setup `DOCTOR` users. `ADMIN` users and invite-only inactive onboarding doctors are excluded in this phase.
 - Public reset password must identify the target account only from a valid, unused, unexpired `PASSWORD_RESET` token relation.
+- Phase 11H manual QA confirmed the corrected recovery UX requires the login email first, validates an empty login email before recovery starts, removes separate recipient selection, sends reset email only for the intended Resend account email test case, and no reset URL, raw token, email API key, or secret was shared.
 - Doctor set-password activates the invited doctor account, updates `User.passwordChangedAt`, revokes existing sessions for that doctor, and does not auto-login the doctor.
 - Doctor password reset updates `User.passwordChangedAt`, revokes existing sessions for that doctor, preserves the current `User.isActive` value, preserves `DoctorProfile.isAvailable`, and does not auto-login the doctor.
 
@@ -260,6 +261,7 @@ Rules:
 - A `PASSWORD_RESET` token is tied to exactly one `userId`, and reset completion updates only that token's user.
 - Public reset password accepts only token, password, and confirmation; identity fields such as email, account email, recipient email, target email, and user id are rejected with a generic invalid-link error.
 - Public forgot-password uses simple in-memory route-level rate limiting as MVP abuse protection. Persistent distributed rate limiting remains a production hardening TODO.
+- Phase 11H manually rechecked the previous account takeover issue and confirmed the corrected UX is acceptable. Full testing to arbitrary recipient emails is deferred until a verified sender domain is configured in Resend.
 - 2FA remains deferred.
 
 ## Chat Privacy
@@ -343,6 +345,8 @@ Required variables are listed in `.env.example`.
 
 Secrets must be configured locally in `.env.local` and in Vercel environment variables. Do not commit real values.
 Email provider secrets, including `RESEND_API_KEY`, must be configured only in `.env.local` and deployment environment variables.
+`.env.local` must remain ignored and untracked. `onboarding@resend.dev` is suitable only for limited local testing until a verified Resend sender domain is configured.
+Domain/DNS sender verification remains a deployment and email production readiness task.
 
 Development seed credentials are development-only placeholders and must never be used in production.
 Development seed credentials must not be printed in logs, terminal output, documentation, or chat summaries.

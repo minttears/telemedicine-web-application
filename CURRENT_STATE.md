@@ -40,6 +40,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 11D Patient And Doctor Profile Settings MVP
 - Phase 11F Email Provider Foundation
 - Phase 11G Public Forgot Password Flow
+- Phase 11H Auth Recovery Manual QA Record
 
 ## Current MVP Behavior
 
@@ -88,6 +89,8 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Public password reset tokens expire after 1 hour, are one-time-use, store only hashes, revoke existing sessions after success, and redirect to login without auto-login.
 - Raw public reset tokens appear only inside emailed reset links and are never stored, logged, audited, printed, or shown in the UI.
 - A critical forgot-password account-targeting bug was fixed: the login page now requires an email before starting recovery, `/forgot-password` no longer shows an editable email field, the public forgot-password endpoint accepts one email only, reset email is sent only to the matched stored `User.email`, and reset completion derives the target user only from the `PASSWORD_RESET` token.
+- Phase 11H manual QA rechecked the corrected auth recovery UX: forgot-password requires the login email first, an empty login email shows a validation message before recovery starts, users can no longer choose a separate reset recipient email, reset email delivery works for the Resend account email test case, and the corrected UX was accepted.
+- The Phase 11H manual QA record confirms no reset URL, raw reset token, email API key, or secret was shared. Full testing to arbitrary recipient emails is deferred until a verified sender domain is configured in Resend; `onboarding@resend.dev` remains suitable only for limited local testing.
 
 ## Deferred Features
 
@@ -116,7 +119,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 11G: Public Forgot Password Flow plus critical account-targeting security fix.
+Phase 11H: Auth Recovery Manual QA Record for the Phase 11G forgot-password security fix.
 
 Latest known commit:
 
@@ -124,4 +127,4 @@ Latest known commit:
 
 ## Next Recommended Phase
 
-Choose the next MVP gap deliberately. Strong candidates are remaining admin patient/consultation/schedule management, public SEO/deployment readiness, broader authenticated browser QA, invite/password reset flow, billing/payment, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.
+Choose the next MVP gap deliberately. Strong candidates are remaining admin patient/consultation/schedule management, public SEO/deployment readiness including Resend sender domain/DNS verification, broader authenticated browser QA, billing/payment, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.

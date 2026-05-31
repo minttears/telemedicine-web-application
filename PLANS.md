@@ -1508,6 +1508,55 @@ Security fix:
 - The public forgot-password API uses the normalized submitted email for lookup and rate limiting only, sends only to the matched database `User.email`, and stores a token tied to that same `userId`.
 - The public reset API accepts token, password, and confirmation only; client-provided email or user identity fields are rejected.
 
+### Phase 11H: Auth Recovery Manual QA Record
+
+Status: Completed
+
+Completed:
+
+- Recorded manual QA for the Phase 11G public forgot-password flow and critical account-targeting fix.
+- Manual QA confirmed forgot-password requires the login email first.
+- Manual QA confirmed clicking forgot password with an empty login email shows a validation message before recovery starts.
+- Manual QA confirmed `/forgot-password` no longer allows entering or choosing a separate reset recipient email.
+- Manual QA confirmed reset email delivery works for the Resend account email test case.
+- Manual QA confirmed the corrected UX is acceptable.
+- Manual QA rechecked that the previous account takeover issue is fixed.
+
+Changed files:
+
+- `PLANS.md`
+- `CURRENT_STATE.md`
+- `SECURITY.md`
+- `TASKS.md`
+
+Not implemented:
+
+- No auth behavior changes.
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+- No `.env.local` edits.
+- No 2FA.
+- No deployment or domain setup.
+
+Security notes:
+
+- Forgot-password uses one email value only.
+- Reset email is sent only to the matched `User.email`.
+- Reset target user is derived only from the `PASSWORD_RESET` token.
+- No separate recipient email is accepted.
+- Public responses remain generic.
+- Raw reset tokens and reset URLs must not be logged or printed.
+- `RESEND_API_KEY` remains server-only.
+- `.env.local` remains ignored and untracked.
+- The user did not share any reset URL, raw token, email API key, or secret during manual QA.
+
+Limitations:
+
+- Full testing to arbitrary recipient emails is deferred until a verified sender domain is configured in Resend.
+- `onboarding@resend.dev` remains suitable only for limited local testing.
+- Domain/DNS sender verification remains a deployment and email production readiness task.
+
 ## Phase 5: Admin And Operational Views
 
 Status: In progress

@@ -43,7 +43,7 @@
 | T302 | DONE | Implement registration, login, logout | Patient registration, login UI/API, logout API, and protected workspaces are implemented. Public doctor/admin registration is not allowed. |
 | T303 | DONE | Implement role-based access helpers | Includes `getCurrentUser`, `requireUser`, `requireRole`, and API response helpers. |
 | T304 | DONE | Add role-based redirects | Login redirects by role; protected workspace layouts enforce role access and wrong-role redirects. |
-| T306 | DONE | Add account access token, doctor invite, and admin reset flows | Phase 11A added hashed, expiring, one-time token storage and helpers. Phase 11B added the Admin Doctor Invite MVP and doctor set-password flow. Phase 11C added admin-generated doctor password reset links. Phase 11F added the server-only Resend email provider foundation. Phase 11G added public forgot-password email reset for eligible active patients and completed/setup doctors. A critical Phase 11G account-targeting bug was fixed so recovery starts from the login email, `/forgot-password` has no editable recipient field, reset email goes only to the matched `User.email`, and reset completion targets only the token user. Admin public reset, invite-only doctor reset, and 2FA remain deferred. |
+| T306 | DONE | Add account access token, doctor invite, and admin reset flows | Phase 11A added hashed, expiring, one-time token storage and helpers. Phase 11B added the Admin Doctor Invite MVP and doctor set-password flow. Phase 11C added admin-generated doctor password reset links. Phase 11F added the server-only Resend email provider foundation. Phase 11G added public forgot-password email reset for eligible active patients and completed/setup doctors. A critical Phase 11G account-targeting bug was fixed so recovery starts from the login email, `/forgot-password` has no editable recipient field, reset email goes only to the matched `User.email`, and reset completion targets only the token user. Phase 11H manually rechecked the corrected recovery UX, confirmed reset delivery for the Resend account email test case, and recorded that arbitrary-recipient testing is deferred until a verified Resend sender domain is configured. Admin public reset, invite-only doctor reset, and 2FA remain deferred. |
 | T305 | TODO | Add basic auth validation states | Loading, error, forbidden, unauthorized. |
 
 ## Milestone 4: Public Pages And SEO
@@ -97,7 +97,7 @@
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
 | T901 | TODO | Add responsive and state coverage checks | Phase 7B completed a code-level MVP workflow QA and small copy polish pass. Phase 10C completed MVP UI copy/workflow polish for login and patient-facing booking/chat/file copy. Broader authenticated browser, responsive, loading, empty, error, unauthorized, forbidden, and not-found coverage remains TODO. |
-| T902 | TODO | Add deployment configuration guidance for Vercel | Ensure environment variables are documented. |
+| T902 | TODO | Add deployment configuration guidance for Vercel | Ensure environment variables are documented. Include Resend sender domain/DNS verification for production email readiness; `onboarding@resend.dev` is limited to local testing. |
 | T903 | TODO | Add basic quality gates | Lint, typecheck, build, and Prisma validation scripts when app setup exists. |
 | T904 | TODO | Use Playwright MCP to verify key UI flows when available | Login, dashboards, booking, chat. |
 
