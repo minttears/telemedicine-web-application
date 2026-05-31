@@ -7,6 +7,7 @@ import {
   ConsultationStatusBadge,
   ConsultationMessagesPanel,
 } from "@/components/consultations/consultation-display";
+import { ReviewForm } from "@/components/reviews/review-form";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
 import { prisma } from "@/lib/prisma";
 
@@ -38,6 +39,42 @@ function DetailItem({
   );
 }
 
+function SubmittedReview({
+  review,
+}: {
+  review: {
+    comment: string | null;
+    createdAt: Date;
+    rating: number;
+  };
+}) {
+  return (
+    <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <p className="text-sm font-medium text-teal-700">Doctor review</p>
+      <h2 className="mt-2 text-lg font-semibold text-slate-950">
+        Your submitted review
+      </h2>
+      <div className="mt-4 rounded-md border border-slate-200 bg-slate-50 p-4">
+        <p className="text-sm font-semibold text-slate-950">
+          {review.rating.toFixed(1)} out of 5
+        </p>
+        {review.comment ? (
+          <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+            {review.comment}
+          </p>
+        ) : (
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            No written comment was added.
+          </p>
+        )}
+        <p className="mt-3 text-xs text-slate-500">
+          Submitted {formatDateTime(review.createdAt)}
+        </p>
+      </div>
+    </section>
+  );
+}
+
 export default async function PatientConsultationPage({
   params,
 }: PatientConsultationPageProps) {
@@ -65,6 +102,14 @@ export default async function PatientConsultationPage({
         },
       },
       scheduleSlot: true,
+      doctorReview: {
+        select: {
+          comment: true,
+          createdAt: true,
+          id: true,
+          rating: true,
+        },
+      },
       messages: {
         where: {
           type: {
@@ -155,6 +200,13 @@ export default async function PatientConsultationPage({
               doctorNotes={completedDoctorNotes}
               title="Doctor summary"
             />
+          ) : null}
+          {consultation.status === "COMPLETED" ? (
+            consultation.doctorReview ? (
+              <SubmittedReview review={consultation.doctorReview} />
+            ) : (
+              <ReviewForm consultationId={consultation.id} />
+            )
           ) : null}
           <ConsultationMessagesPanel
             consultationId={consultation.id}

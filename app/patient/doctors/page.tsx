@@ -56,6 +56,16 @@ function getShortBio(bio: string | null) {
   return bio.length > 180 ? `${bio.slice(0, 177).trim()}...` : bio;
 }
 
+function formatReviewSummary(averageRating: number | null, reviewCount: number) {
+  if (reviewCount === 0 || averageRating === null) {
+    return "No reviews yet";
+  }
+
+  return `${averageRating.toFixed(1)} out of 5 (${reviewCount} ${
+    reviewCount === 1 ? "review" : "reviews"
+  })`;
+}
+
 async function getDoctors({
   query,
   specialty,
@@ -63,7 +73,7 @@ async function getDoctors({
   query?: string;
   specialty?: string;
 }) {
-  return prisma.doctorProfile.findMany({
+  const doctors = await prisma.doctorProfile.findMany({
     where: {
       isAvailable: true,
       user: {
@@ -87,8 +97,19 @@ async function getDoctors({
           }
         : {}),
     },
-    include: {
-      specialty: true,
+    select: {
+      bio: true,
+      education: true,
+      experienceYears: true,
+      id: true,
+      isAvailable: true,
+      photoStoragePath: true,
+      specialty: {
+        select: {
+          name: true,
+        },
+      },
+      title: true,
       user: {
         select: {
           name: true,
@@ -97,6 +118,39 @@ async function getDoctors({
     },
     orderBy: [{ isAvailable: "desc" }, { updatedAt: "desc" }],
   });
+
+  const reviewStats = doctors.length
+    ? await prisma.doctorReview.groupBy({
+        by: ["doctorProfileId"],
+        where: {
+          doctorProfileId: {
+            in: doctors.map((doctor) => doctor.id),
+          },
+        },
+        _avg: {
+          rating: true,
+        },
+        _count: {
+          _all: true,
+        },
+      })
+    : [];
+
+  const statsByDoctorId = new Map(
+    reviewStats.map((item) => [
+      item.doctorProfileId,
+      {
+        averageRating: item._avg.rating,
+        reviewCount: item._count._all,
+      },
+    ]),
+  );
+
+  return doctors.map((doctor) => ({
+    ...doctor,
+    reviewAverageRating: statsByDoctorId.get(doctor.id)?.averageRating ?? null,
+    reviewCount: statsByDoctorId.get(doctor.id)?.reviewCount ?? 0,
+  }));
 }
 
 function DoctorCard({ doctor }: { doctor: DoctorWithDirectoryData }) {
@@ -134,6 +188,9 @@ function DoctorCard({ doctor }: { doctor: DoctorWithDirectoryData }) {
       >
         {doctor.isAvailable ? "Available" : "Unavailable"}
       </span>
+      <p className="mt-3 text-sm font-medium text-slate-700">
+        {formatReviewSummary(doctor.reviewAverageRating, doctor.reviewCount)}
+      </p>
 
       <p className="mt-4 text-sm leading-6 text-slate-600">
         {getShortBio(doctor.bio)}

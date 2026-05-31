@@ -1789,6 +1789,35 @@ Not implemented:
 - No admin chat access.
 - No direct Supabase Storage URLs or storage paths rendered in the UI.
 
+### Phase 12F: Doctor Reviews And Ratings
+
+Status: Completed
+
+Completed:
+
+- Added Prisma model `DoctorReview` and migration `20260531163859_add_doctor_reviews`.
+- Added patient-only `POST /api/consultations/[consultationId]/review`.
+- Enforced completed consultation status, current-patient ownership, one review per consultation, 1-5 integer ratings, optional trimmed comments, and a 1000-character comment maximum.
+- Derived review doctor and patient profile ids from the scoped consultation instead of trusting client input.
+- Added patient completed consultation review form and submitted-review display.
+- Added doctor average rating and review count to patient doctor cards and patient doctor detail pages.
+- Added recent review display on patient doctor detail pages with `Verified patient` labels.
+- Added simple authenticated doctor rating/review visibility on doctor dashboard/profile surfaces.
+
+Not implemented:
+
+- No review editing or deletion.
+- No doctor replies.
+- No admin moderation.
+- No public anonymous reviews.
+- No public placeholder `/doctors` review display.
+- No denormalized average rating fields.
+- No dependencies or full doctor directory redesign.
+
+Privacy notes:
+
+- Review displays use `Verified patient` and do not expose patient first name, full name, email, phone, date of birth, gender, private profile data, chats, files, storage paths, doctor notes, password hashes, token hashes, sessions, raw invite/reset tokens, reset/invite URLs, cookies, environment values, service role keys, or secrets.
+
 ## Phase 5: Admin And Operational Views
 
 Status: In progress

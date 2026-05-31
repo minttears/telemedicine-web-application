@@ -40,6 +40,22 @@ function formatSlotTime(value: Date) {
   }).format(value);
 }
 
+function formatReviewDate(value: Date) {
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "medium",
+  }).format(value);
+}
+
+function formatReviewSummary(averageRating: number | null, reviewCount: number) {
+  if (reviewCount === 0 || averageRating === null) {
+    return "No reviews yet";
+  }
+
+  return `${averageRating.toFixed(1)} out of 5 (${reviewCount} ${
+    reviewCount === 1 ? "review" : "reviews"
+  })`;
+}
+
 export default async function PatientDoctorProfilePage({
   params,
 }: PatientDoctorProfilePageProps) {
@@ -76,12 +92,39 @@ export default async function PatientDoctorProfilePage({
           name: true,
         },
       },
+      doctorReviews: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          comment: true,
+          createdAt: true,
+          id: true,
+          rating: true,
+        },
+        take: 10,
+      },
     },
   });
 
   if (!doctor) {
     notFound();
   }
+
+  const reviewAggregate = await prisma.doctorReview.aggregate({
+    where: {
+      doctorProfileId: doctor.id,
+    },
+    _avg: {
+      rating: true,
+    },
+    _count: {
+      _all: true,
+    },
+  });
+
+  const reviewAverageRating = reviewAggregate._avg.rating;
+  const reviewCount = reviewAggregate._count._all;
 
   return (
     <div className="space-y-6">
@@ -115,6 +158,9 @@ export default async function PatientDoctorProfilePage({
               {doctor.title ? (
                 <p className="mt-2 text-base text-slate-600">{doctor.title}</p>
               ) : null}
+              <p className="mt-3 text-sm font-medium text-slate-700">
+                {formatReviewSummary(reviewAverageRating, reviewCount)}
+              </p>
             </div>
           </div>
           <span
@@ -158,6 +204,56 @@ export default async function PatientDoctorProfilePage({
             {doctor.isAvailable ? "Available" : "Unavailable"}
           </p>
         </div>
+      </section>
+
+      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="text-sm font-medium text-teal-700">Patient reviews</p>
+            <h2 className="mt-2 text-xl font-semibold text-slate-950">
+              {formatReviewSummary(reviewAverageRating, reviewCount)}
+            </h2>
+          </div>
+          <span className="inline-flex w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+            Verified patients
+          </span>
+        </div>
+
+        {doctor.doctorReviews.length > 0 ? (
+          <ul className="mt-5 grid gap-3">
+            {doctor.doctorReviews.map((review) => (
+              <li
+                className="rounded-md border border-slate-200 bg-slate-50 p-4"
+                key={review.id}
+              >
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm font-semibold text-slate-950">
+                    Verified patient
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {formatReviewDate(review.createdAt)}
+                  </p>
+                </div>
+                <p className="mt-2 text-sm font-medium text-teal-800">
+                  {review.rating.toFixed(1)} out of 5
+                </p>
+                {review.comment ? (
+                  <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                    {review.comment}
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="mt-5 rounded-md border border-dashed border-slate-300 bg-slate-50 p-5">
+            <p className="text-sm font-medium text-slate-950">No reviews yet.</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              Reviews will appear after verified patients complete consultations
+              and submit feedback.
+            </p>
+          </div>
+        )}
       </section>
 
       <section className="grid gap-4 lg:grid-cols-[1fr_320px]">

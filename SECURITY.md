@@ -99,7 +99,7 @@ Profile settings boundaries:
 - `PATCH /api/doctor/profile` requires `DOCTOR`, scopes updates to the current user's own `DoctorProfile`, and can update only `DoctorProfile.title`, `DoctorProfile.bio`, and `DoctorProfile.education`.
 - Email, role, account status, specialty, experience years, and booking availability are not editable through self-service profile endpoints.
 - Profile pages and APIs do not expose password hashes, token hashes, sessions, other users' patient data, chats, files, storage paths, cookies, tokens, environment values, service role keys, or other secrets.
-- Patient avatar upload requires `PATIENT`, updates only the current user's `User.avatarStoragePath`, and serves the avatar only back to that same patient in this phase.
+- Patient avatar upload requires `PATIENT`, updates only the current user's `User.avatarStoragePath`, and serves the avatar only to that patient or assigned doctors through server-mediated checks.
 - Doctor photo upload requires `DOCTOR`, updates only the current doctor's `DoctorProfile.photoStoragePath`, and does not allow doctors to change specialty, experience, account status, booking availability, email, or role.
 - Profile images use the private `profile-images` Supabase Storage bucket and server-mediated upload/image routes. The bucket must be created manually as private before browser upload QA.
 - Profile image UI and API responses must not expose storage paths, private bucket paths, direct Supabase Storage URLs, or service role keys.
@@ -118,6 +118,19 @@ Doctor directory boundaries:
 - The doctor profile schedule preview shows only future `AVAILABLE` slots and is read-only.
 - Patient doctor profile detail pages show only bookable `AVAILABLE` slots that start at least 30 minutes from now.
 - Doctor profile detail pages do not display consultations, booking controls, chat content, files, session tokens, cookies, passwords, password hashes, environment values, storage paths, or private account data.
+- Doctor rating/review displays use `DoctorReview` aggregate data and recent review records only.
+- Public review author labels use `Verified patient`; review displays must not expose patient first name, full name, email, phone, date of birth, gender, private profile data, consultation chat, files, storage paths, doctor notes, password hashes, token hashes, sessions, cookies, raw invite/reset tokens, reset/invite URLs, environment values, service role keys, or secrets.
+
+Doctor review boundaries:
+
+- `POST /api/consultations/[consultationId]/review` requires `PATIENT` server-side.
+- Patients can create a review only for their own completed consultation.
+- The review endpoint derives `doctorProfileId` and `patientProfileId` from the scoped consultation and must not trust client-provided profile ids.
+- `Consultation.status` must be `COMPLETED`; reviews for `REQUESTED`, `SCHEDULED`, `IN_PROGRESS`, and `CANCELLED` consultations are rejected.
+- One review per consultation is enforced by `DoctorReview.consultationId` uniqueness and checked server-side.
+- Doctors and admins cannot create reviews.
+- Review editing, review deletion, doctor replies, admin moderation, public anonymous reviews, and public placeholder `/doctors` review display are deferred.
+- Review comments are rendered as plain React text with preserved whitespace where applicable and without `dangerouslySetInnerHTML`.
 
 Admin doctor management boundaries:
 

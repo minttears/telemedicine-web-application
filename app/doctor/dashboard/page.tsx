@@ -28,6 +28,14 @@ function StatCard({
   );
 }
 
+function formatReviewValue(averageRating: number | null, reviewCount: number) {
+  if (reviewCount === 0 || averageRating === null) {
+    return "No reviews";
+  }
+
+  return averageRating.toFixed(1);
+}
+
 export default async function DoctorDashboardPage() {
   const user = await requireRole("DOCTOR");
   const now = new Date();
@@ -37,9 +45,14 @@ export default async function DoctorDashboardPage() {
     include: { specialty: true },
   });
 
-  const [upcomingSlots, bookedConsultations, activeConsultations, nextSlots] =
-    doctorProfile
-      ? await Promise.all([
+  const [
+    upcomingSlots,
+    bookedConsultations,
+    activeConsultations,
+    nextSlots,
+    reviewAggregate,
+  ] = doctorProfile
+    ? await Promise.all([
           prisma.doctorScheduleSlot.count({
             where: {
               doctorId: doctorProfile.id,
@@ -68,8 +81,22 @@ export default async function DoctorDashboardPage() {
             orderBy: { startsAt: "asc" },
             take: 3,
           }),
+          prisma.doctorReview.aggregate({
+            where: {
+              doctorProfileId: doctorProfile.id,
+            },
+            _avg: {
+              rating: true,
+            },
+            _count: {
+              _all: true,
+            },
+          }),
         ])
-      : [0, 0, 0, []];
+    : [0, 0, 0, [], null];
+
+  const reviewAverageRating = reviewAggregate?._avg.rating ?? null;
+  const reviewCount = reviewAggregate?._count._all ?? 0;
 
   return (
     <div className="space-y-8">
@@ -86,7 +113,7 @@ export default async function DoctorDashboardPage() {
 
       <section
         aria-label="Doctor overview"
-        className="grid gap-4 md:grid-cols-3"
+        className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
       >
         <StatCard
           detail="Available future schedule slots."
@@ -102,6 +129,11 @@ export default async function DoctorDashboardPage() {
           detail="Consultations currently marked as in progress."
           label="Active"
           value={activeConsultations}
+        />
+        <StatCard
+          detail={`${reviewCount} ${reviewCount === 1 ? "verified review" : "verified reviews"}.`}
+          label="Patient rating"
+          value={formatReviewValue(reviewAverageRating, reviewCount)}
         />
       </section>
 

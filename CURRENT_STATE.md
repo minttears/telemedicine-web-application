@@ -47,11 +47,16 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12C Legal Pages And Registration Consent
 - Phase 12D Avatar And Doctor Photo Uploads
 - Phase 12E Consultation Chat UI Polish
+- Phase 12F Doctor Reviews And Ratings
 
 ## Current MVP Behavior
 
 - Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, upload/download allowed consultation files, use `/patient/files` as a secure consultation attachment archive, and view a read-only doctor summary after completion.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with one plain-text conclusion/recommendations summary.
+- Patients can submit one doctor review with a required 1-5 rating and optional comment only after their own consultation is completed.
+- Doctor rating summaries appear on patient doctor cards and patient doctor detail pages; patient doctor detail pages show recent reviews with the public author label `Verified patient`.
+- Patient completed consultation detail pages show the review form when eligible and no review exists, then show the submitted review after creation.
+- Doctors can view their rating/recent reviews on authenticated doctor dashboard/profile surfaces, but cannot create, edit, delete, reply to, or moderate reviews.
 - Patients can upload/update a private self-only avatar from `/patient/profile`; the avatar is stored in the private `profile-images` Supabase bucket and served through a server-mediated route.
 - Doctors can upload/update their own professional photo from `/doctor/profile`; doctor photos are stored in the private `profile-images` bucket and shown through server-mediated routes on patient-facing doctor cards/profile pages.
 - Patients can open `/patient/profile`, view email/name/date of birth/gender/account status, and edit only name, date of birth, and gender.
@@ -113,6 +118,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12C added MVP legal pages and registration consent persistence/enforcement without adding doctor/admin public registration, email change, 2FA, deletion, retention, re-consent, or production legal workflows.
 - Phase 12D added patient avatar and doctor professional photo uploads with nullable private storage-path fields, server-side role checks, server-mediated image serving, 2 MB JPEG/PNG/WEBP validation, best-effort old-object cleanup, and no public bucket, direct Storage URLs, cropping/resizing, delete UI, reviews, or admin moderation workflow.
 - Phase 12E polished consultation chat UI with aligned text/file bubbles, safe participant avatars/photos, unchanged polling, unchanged completed-chat read-only behavior, and no realtime, video calls, message editing/deleting, reactions, read receipts, typing indicators, schema changes, migrations, dependencies, or admin chat access.
+- Phase 12F added `DoctorReview` with migration `20260531163859_add_doctor_reviews`, patient-only completed-consultation review creation, one-review-per-consultation enforcement, doctor rating aggregation, `Verified patient` review display, and no review editing/deletion, doctor replies, admin moderation, public placeholder `/doctors` changes, dependencies, or denormalized rating fields.
 
 ## Deferred Features
 
@@ -123,6 +129,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Doctor profile/specialty management beyond seeded data
 - Recurring schedules, booked slot cancellation, consultation cancellation, and status changes
 - Legal prescription workflow, structured diagnosis/recommendation/follow-up fields, medical notes, and archives
+- Review editing/deletion, doctor replies, admin review moderation, and public placeholder `/doctors` review display
 - Time-based chat restrictions beyond completed-status read-only behavior
 - Video calls, payments, 2FA enforcement, public SEO polish, and full responsive/browser QA
 
@@ -141,7 +148,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 12E: Consultation Chat UI Polish.
+Phase 12F: Doctor Reviews And Ratings.
 
 Latest known commit:
 

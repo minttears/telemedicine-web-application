@@ -170,6 +170,14 @@ Patient avatars use nullable `User.avatarStoragePath`; doctor professional photo
 
 Reason: Profile images have different access rules from consultation attachments. Private storage paths preserve control over patient self-only avatars and patient-facing doctor photos without exposing direct Supabase Storage URLs or service role credentials.
 
+### D022: Store Doctor Reviews Per Completed Consultation
+
+Status: Accepted
+
+Doctor reviews use a dedicated `DoctorReview` model linked to one consultation, one doctor profile, and one patient profile. `consultationId` is unique to enforce one review per consultation. Patients can create reviews only for their own completed consultations. Public review displays use `Verified patient` instead of patient names or private profile data.
+
+Reason: Reviews belong to verified care interactions and should not expose patient identity. A normalized review table keeps rating aggregation accurate without denormalized average fields in the MVP.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

@@ -23,6 +23,22 @@ function FieldValue({
   );
 }
 
+function formatReviewDate(value: Date) {
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "medium",
+  }).format(value);
+}
+
+function formatReviewSummary(averageRating: number | null, reviewCount: number) {
+  if (reviewCount === 0 || averageRating === null) {
+    return "No reviews yet";
+  }
+
+  return `${averageRating.toFixed(1)} out of 5 (${reviewCount} ${
+    reviewCount === 1 ? "review" : "reviews"
+  })`;
+}
+
 export default async function DoctorProfilePage() {
   const user = await requireWorkspaceRole("DOCTOR");
 
@@ -43,8 +59,37 @@ export default async function DoctorProfilePage() {
         },
       },
       title: true,
+      doctorReviews: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          comment: true,
+          createdAt: true,
+          id: true,
+          rating: true,
+        },
+        take: 5,
+      },
     },
   });
+
+  const reviewAggregate = doctorProfile
+    ? await prisma.doctorReview.aggregate({
+        where: {
+          doctorProfileId: doctorProfile.id,
+        },
+        _avg: {
+          rating: true,
+        },
+        _count: {
+          _all: true,
+        },
+      })
+    : null;
+
+  const reviewAverageRating = reviewAggregate?._avg.rating ?? null;
+  const reviewCount = reviewAggregate?._count._all ?? 0;
 
   return (
     <div className="space-y-6">
@@ -124,6 +169,43 @@ export default async function DoctorProfilePage() {
               initials={getInitials(user.name, user.email)}
               title="Professional photo"
             />
+
+            <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+              <p className="text-sm font-medium text-teal-700">
+                Patient reviews
+              </p>
+              <h2 className="mt-2 text-xl font-semibold text-slate-950">
+                {formatReviewSummary(reviewAverageRating, reviewCount)}
+              </h2>
+              {doctorProfile.doctorReviews.length > 0 ? (
+                <ul className="mt-5 divide-y divide-slate-100">
+                  {doctorProfile.doctorReviews.map((review) => (
+                    <li className="py-3" key={review.id}>
+                      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                        <p className="text-sm font-semibold text-slate-950">
+                          Verified patient
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {formatReviewDate(review.createdAt)}
+                        </p>
+                      </div>
+                      <p className="mt-2 text-sm font-medium text-teal-800">
+                        {review.rating.toFixed(1)} out of 5
+                      </p>
+                      {review.comment ? (
+                        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-600">
+                          {review.comment}
+                        </p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  No reviews yet.
+                </p>
+              )}
+            </div>
           </div>
 
           <DoctorProfileForm
