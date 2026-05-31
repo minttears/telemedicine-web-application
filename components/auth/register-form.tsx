@@ -25,6 +25,7 @@ export function RegisterForm() {
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [legalConsentAccepted, setLegalConsentAccepted] = useState(false);
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
@@ -57,6 +58,11 @@ export function RegisterForm() {
       return;
     }
 
+    if (!legalConsentAccepted) {
+      setFieldError("Accept the legal terms before creating an account.");
+      return;
+    }
+
     setIsPending(true);
 
     try {
@@ -70,6 +76,7 @@ export function RegisterForm() {
           email: normalizedEmail,
           dateOfBirth,
           gender,
+          legalConsentAccepted,
           password,
           confirmPassword,
         }),
@@ -97,6 +104,7 @@ export function RegisterForm() {
   return (
     <form
       className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
+      noValidate
       onSubmit={handleSubmit}
     >
       <div className="space-y-2">
@@ -202,6 +210,35 @@ export function RegisterForm() {
           onChange={setConfirmPassword}
           value={confirmPassword}
         />
+
+        <label className="flex gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700">
+          <input
+            checked={legalConsentAccepted}
+            className="mt-1 h-4 w-4 rounded border-slate-300 text-teal-700 focus:ring-teal-600"
+            name="legalConsentAccepted"
+            onChange={(event) => setLegalConsentAccepted(event.target.checked)}
+            required
+            type="checkbox"
+          />
+          <span>
+            I have read and agree to the{" "}
+            <Link className="font-medium text-teal-700 hover:text-teal-800" href="/terms">
+              Terms of Use
+            </Link>
+            ,{" "}
+            <Link className="font-medium text-teal-700 hover:text-teal-800" href="/privacy">
+              Privacy Policy
+            </Link>
+            , and{" "}
+            <Link
+              className="font-medium text-teal-700 hover:text-teal-800"
+              href="/telemedicine-consent"
+            >
+              Telemedicine Consent
+            </Link>
+            .
+          </span>
+        </label>
       </div>
 
       {(fieldError || submitError) && (

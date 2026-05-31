@@ -60,26 +60,30 @@ enum AuditAction {
 }
 
 model User {
-  id                     String                  @id @default(cuid())
-  email                  String                  @unique
-  passwordHash           String
-  passwordChangedAt      DateTime?
-  role                   UserRole                @default(PATIENT)
-  name                   String?
-  phone                  String?
-  isActive               Boolean                 @default(true)
-  createdAt              DateTime                @default(now())
-  updatedAt              DateTime                @updatedAt
-  sessions               Session[]
-  patientProfile         PatientProfile?
-  doctorProfile          DoctorProfile?
-  messages               Message[]               @relation("MessageSender")
-  attachments            Attachment[]            @relation("AttachmentUploader")
-  auditLogs              AuditLog[]              @relation("AuditActor")
-  accountAccessTokens    AccountAccessToken[]    @relation("AccessTokenUser")
-  createdAccessTokens    AccountAccessToken[]    @relation("AccessTokenCreator")
-  twoFactorSecret        TwoFactorSecret?
-  twoFactorRecoveryCodes TwoFactorRecoveryCode[]
+  id                            String                  @id @default(cuid())
+  email                         String                  @unique
+  passwordHash                  String
+  passwordChangedAt             DateTime?
+  termsAcceptedAt               DateTime?
+  privacyAcceptedAt             DateTime?
+  telemedicineConsentAcceptedAt DateTime?
+  legalConsentVersion           String?
+  role                          UserRole                @default(PATIENT)
+  name                          String?
+  phone                         String?
+  isActive                      Boolean                 @default(true)
+  createdAt                     DateTime                @default(now())
+  updatedAt                     DateTime                @updatedAt
+  sessions                      Session[]
+  patientProfile                PatientProfile?
+  doctorProfile                 DoctorProfile?
+  messages                      Message[]               @relation("MessageSender")
+  attachments                   Attachment[]            @relation("AttachmentUploader")
+  auditLogs                     AuditLog[]              @relation("AuditActor")
+  accountAccessTokens           AccountAccessToken[]    @relation("AccessTokenUser")
+  createdAccessTokens           AccountAccessToken[]    @relation("AccessTokenCreator")
+  twoFactorSecret               TwoFactorSecret?
+  twoFactorRecoveryCodes        TwoFactorRecoveryCode[]
 
   @@index([role])
   @@index([isActive])

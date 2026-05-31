@@ -27,9 +27,14 @@ Requirements:
 - Public registration is patient-only.
 - Public doctor and admin registration are not allowed.
 - Public registration cannot create `DOCTOR` or `ADMIN` users.
+- Public patient registration requires explicit legal consent in the UI and in the registration API.
+- New patient registration stores nullable `termsAcceptedAt`, `privacyAcceptedAt`, `telemedicineConsentAcceptedAt`, and `legalConsentVersion` fields on `User`.
+- Existing users are not blocked from login if historical consent fields are null; future re-consent remains deferred.
+- Legal pages are MVP/demo legal copy and require qualified legal review before real production launch.
 - Registration hashes passwords with `bcryptjs`.
 - Duplicate registration email handling returns a safe conflict error.
 - Registration must not log passwords, password hashes, cookies, session tokens, `DATABASE_URL`, `DIRECT_URL`, or `.env.local` contents.
+- Registration must not log consent payloads together with passwords or other secrets.
 - Login and registration UI must not display development seed account emails or password hints.
 - Account access tokens for future invite/reset flows store only SHA-256 token hashes, never raw tokens.
 - Account access tokens are one-time-use and expire.

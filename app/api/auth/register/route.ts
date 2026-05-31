@@ -3,12 +3,14 @@ import { hashPassword } from "@/lib/auth/password";
 import { createSession, setSessionCookie } from "@/lib/auth/session";
 
 const duplicateEmailMessage = "An account with this email cannot be registered.";
+const legalConsentVersion = "2026-05-31";
 
 type RegisterBody = {
   name?: string;
   email: string;
   dateOfBirth?: string;
   gender?: string;
+  legalConsentAccepted?: boolean;
   password: string;
   confirmPassword: string;
 };
@@ -24,6 +26,8 @@ function isRegisterBody(value: unknown): value is RegisterBody {
     typeof body.email === "string" &&
     typeof body.password === "string" &&
     typeof body.confirmPassword === "string" &&
+    (body.legalConsentAccepted === undefined ||
+      typeof body.legalConsentAccepted === "boolean") &&
     (body.name === undefined || typeof body.name === "string") &&
     (body.dateOfBirth === undefined || typeof body.dateOfBirth === "string") &&
     (body.gender === undefined || typeof body.gender === "string")
@@ -100,7 +104,15 @@ export async function POST(request: Request) {
     return Response.json({ error: "Passwords must match." }, { status: 400 });
   }
 
+  if (body.legalConsentAccepted !== true) {
+    return Response.json(
+      { error: "You must accept the legal terms before registration." },
+      { status: 400 },
+    );
+  }
+
   const passwordHash = await hashPassword(body.password);
+  const acceptedAt = new Date();
 
   try {
     const user = await prisma.user.create({
@@ -110,6 +122,10 @@ export async function POST(request: Request) {
         role: "PATIENT",
         name,
         isActive: true,
+        legalConsentVersion,
+        privacyAcceptedAt: acceptedAt,
+        telemedicineConsentAcceptedAt: acceptedAt,
+        termsAcceptedAt: acceptedAt,
         patientProfile: {
           create: {
             dateOfBirth,

@@ -24,6 +24,24 @@ export default async function RegisterPage() {
             Create a patient account to access your protected workspace. Doctor
             and admin accounts are managed separately.
           </p>
+          <p className="mt-6 text-sm leading-6 text-slate-500">
+            Review the{" "}
+            <a className="font-medium text-teal-700 hover:text-teal-800" href="/terms">
+              Terms
+            </a>
+            ,{" "}
+            <a className="font-medium text-teal-700 hover:text-teal-800" href="/privacy">
+              Privacy Policy
+            </a>
+            , and{" "}
+            <a
+              className="font-medium text-teal-700 hover:text-teal-800"
+              href="/telemedicine-consent"
+            >
+              Telemedicine Consent
+            </a>
+            before registering.
+          </p>
         </div>
 
         <RegisterForm />

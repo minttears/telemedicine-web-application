@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about",
     "/contacts",
     "/privacy",
+    "/telemedicine-consent",
     "/terms",
   ].map((path) => ({
     url: `${appUrl}${path}`,

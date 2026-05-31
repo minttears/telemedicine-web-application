@@ -1672,6 +1672,53 @@ Not implemented:
 - No storage cleanup or retention changes.
 - No direct Supabase Storage URLs, private bucket paths, or `storagePath` displayed in the UI.
 
+### Phase 12C: Legal Pages And Registration Consent
+
+Status: Completed
+
+Completed:
+
+- Added public `/terms`, `/privacy`, and `/telemedicine-consent` MVP/demo legal pages.
+- Added a required patient registration consent checkbox linking to all three legal pages.
+- Enforced registration consent in the client UI and in `POST /api/auth/register`.
+- Added nullable account-level consent fields to `User` and stored consent timestamps/version for successful new patient registrations.
+- Added legal links to auth page copy and included telemedicine consent in the sitemap.
+- Documented that existing users are not blocked from login by missing historical consent records.
+
+Migration:
+
+- `20260531150524_add_registration_consent_fields`
+
+Changed files:
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260531150524_add_registration_consent_fields/migration.sql`
+- `app/api/auth/register/route.ts`
+- `components/auth/register-form.tsx`
+- `app/(auth)/register/page.tsx`
+- `app/(auth)/login/page.tsx`
+- `app/(public)/terms/page.tsx`
+- `app/(public)/privacy/page.tsx`
+- `app/(public)/telemedicine-consent/page.tsx`
+- `components/legal/legal-page.tsx`
+- `app/sitemap.ts`
+- `TASKS.md`
+- `SECURITY.md`
+- `DECISIONS.md`
+- `CURRENT_STATE.md`
+- `PLANS.md`
+
+Not implemented:
+
+- No doctor/admin public registration.
+- No login behavior changes.
+- No password reset or invite flow changes.
+- No email change.
+- No 2FA.
+- No deletion or retention workflows.
+- No future re-consent flow.
+- No production legal workflow; legal copy requires qualified legal review before real launch.
+
 ## Phase 5: Admin And Operational Views
 
 Status: In progress

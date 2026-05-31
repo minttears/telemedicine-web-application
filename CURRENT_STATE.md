@@ -44,6 +44,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12A MVP Technical Cleanup
 - MVP UX Polish And Small Auth UI Improvements
 - Phase 12B Files Page Completion
+- Phase 12C Legal Pages And Registration Consent
 
 ## Current MVP Behavior
 
@@ -67,6 +68,9 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Allowed attachment types are PDF, JPG/JPEG, PNG, and DOCX, with a 10 MB maximum file size.
 - Secure consultation file attachments were manually verified in the browser for patient upload/download, assigned-doctor download, completed read-only upload behavior, logged-out rejection, admin rejection, other-patient rejection, server-mediated download links, hidden `storagePath`, no public Storage URLs, and no visible browser secrets.
 - Public registration remains patient-only; doctors are created by admins and cannot self-register publicly.
+- Patient registration requires acceptance of the Terms of Use, Privacy Policy, and Telemedicine Consent in the UI and in the registration API.
+- New patient registrations store nullable account-level consent timestamps and `legalConsentVersion` on `User`; existing users are not blocked from login by this phase.
+- `/terms`, `/privacy`, and `/telemedicine-consent` are public MVP/demo legal pages and require qualified legal review before real production launch.
 - Admin can list doctors, create `DOCTOR` users with linked `DoctorProfile` records, assign existing active specialties, edit basic doctor account/profile fields, deactivate doctor accounts, and control patient-facing booking availability.
 - Admin doctor creation now defaults to invite mode. Temporary-password doctor creation remains available as a fallback.
 - Invite-created doctors start inactive and unavailable for booking. After successful password setup, `User.isActive` becomes true while `DoctorProfile.isAvailable` remains false until an admin enables booking.
@@ -100,6 +104,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12A narrowed broad Prisma `user` relation reads in server pages/helpers to avoid unnecessary password-hash retrieval, refreshed stale unsupported GET endpoint wording, and updated clearly stale security/task documentation without changing product behavior.
 - MVP UX polish added accessible show/hide controls to auth and admin temporary-password fields, improved patient/doctor/admin dashboard summary cards, replaced the bare patient files placeholder with a workspace-style empty state, and preserved the email-first forgot-password flow.
 - Phase 12B completed patient and doctor Files pages as secure consultation attachment archives while keeping uploads inside consultation chats only and leaving admin file content access deferred.
+- Phase 12C added MVP legal pages and registration consent persistence/enforcement without adding doctor/admin public registration, email change, 2FA, deletion, retention, re-consent, or production legal workflows.
 
 ## Deferred Features
 
@@ -128,7 +133,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 12B: Files Page Completion.
+Phase 12C: Legal Pages And Registration Consent.
 
 Latest known commit:
 

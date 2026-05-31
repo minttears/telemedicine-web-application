@@ -154,6 +154,14 @@ Use Resend as the MVP transactional email provider and call its API with server-
 
 Reason: Resend is simple for a Next.js/Vercel MVP, has a usable free transactional tier, and direct `fetch` avoids an extra dependency while the app only needs first-version password reset email delivery.
 
+### D020: Store Registration Consent On User
+
+Status: Accepted
+
+Patient registration consent is stored as nullable account-level fields on `User`: `termsAcceptedAt`, `privacyAcceptedAt`, `telemedicineConsentAcceptedAt`, and `legalConsentVersion`.
+
+Reason: Consent is tied to the account created during public patient registration. Nullable fields preserve compatibility for existing seeded, development, and historical accounts. Future re-consent and production legal workflows remain deferred.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

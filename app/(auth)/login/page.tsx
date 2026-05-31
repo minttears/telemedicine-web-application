@@ -34,6 +34,24 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             Sign in to manage consultations, messages, files, schedules, and
             care history.
           </p>
+          <p className="mt-6 text-sm leading-6 text-slate-500">
+            Legal information: {" "}
+            <a className="font-medium text-teal-700 hover:text-teal-800" href="/terms">
+              Terms
+            </a>
+            , {" "}
+            <a className="font-medium text-teal-700 hover:text-teal-800" href="/privacy">
+              Privacy
+            </a>
+            , and {" "}
+            <a
+              className="font-medium text-teal-700 hover:text-teal-800"
+              href="/telemedicine-consent"
+            >
+              Telemedicine Consent
+            </a>
+            .
+          </p>
         </div>
 
         <div>
