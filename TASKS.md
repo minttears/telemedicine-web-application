@@ -44,7 +44,7 @@
 | T303 | DONE | Implement role-based access helpers | Includes `getCurrentUser`, `requireUser`, `requireRole`, and API response helpers. |
 | T304 | DONE | Add role-based redirects | Login redirects by role; protected workspace layouts enforce role access and wrong-role redirects. |
 | T306 | DONE | Add account access token, doctor invite, and admin reset flows | Phase 11A added hashed, expiring, one-time token storage and helpers. Phase 11B added the Admin Doctor Invite MVP and doctor set-password flow. Phase 11C added admin-generated doctor password reset links. Phase 11F added the server-only Resend email provider foundation. Phase 11G added public forgot-password email reset for eligible active patients and completed/setup doctors. A critical Phase 11G account-targeting bug was fixed so recovery starts from the login email, `/forgot-password` has no editable recipient field, reset email goes only to the matched `User.email`, and reset completion targets only the token user. Phase 11H manually rechecked the corrected recovery UX, confirmed reset delivery for the Resend account email test case, and recorded that arbitrary-recipient testing is deferred until a verified Resend sender domain is configured. Admin public reset, invite-only doctor reset, and 2FA remain deferred. |
-| T305 | TODO | Add basic auth validation states | Loading, error, forbidden, unauthorized. |
+| T305 | DONE | Add basic auth validation states | Auth forms now include field-level errors, submission errors, disabled submit states, and Phase 12B show/hide password controls. Broader forbidden/unauthorized route-state polish remains part of quality work. |
 
 ## Milestone 4: Public Pages And SEO
 
@@ -59,9 +59,9 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T501 | DONE | Create patient workspace route structure | Patient workspace routes exist with a responsive dashboard shell and navigation. Doctor directory, booking, consultation detail, PostgreSQL/Prisma text chat workflows, secure attachments, and safe patient profile editing are completed. True Realtime, video calls, diagnosis, prescriptions, medical notes, status changes, and admin management remain TODO. |
-| T502 | DONE | Create doctor workspace route structure | Doctor workspace routes exist with a responsive dashboard shell and navigation. Doctor schedule management, consultation list/detail views, PostgreSQL/Prisma text chat workflows, secure attachments, and limited doctor public profile editing are completed. True Realtime, video calls, diagnosis, prescriptions, medical notes, status changes, admin management, recurring schedules, and booked slot cancellation remain TODO. |
-| T503 | DONE | Create admin workspace route structure | Admin workspace routes exist with a responsive aggregate dashboard shell and navigation. Admin management actions remain TODO. |
+| T501 | DONE | Create patient workspace route structure | Patient workspace routes exist with a responsive dashboard shell and navigation. Doctor directory, booking, consultation detail, PostgreSQL/Prisma text chat workflows, secure attachments, safe patient profile editing, dashboard summaries, consultation-list count copy, and a patient files empty state are completed. True Realtime, video calls, diagnosis, prescriptions, medical notes, status changes, and admin management remain TODO. |
+| T502 | DONE | Create doctor workspace route structure | Doctor workspace routes exist with a responsive dashboard shell and navigation. Doctor schedule management, consultation list/detail views, PostgreSQL/Prisma text chat workflows, secure attachments, limited doctor public profile editing, and dashboard schedule guidance are completed. True Realtime, video calls, diagnosis, prescriptions, medical notes, status changes, admin management, recurring schedules, and booked slot cancellation remain TODO. |
+| T503 | DONE | Create admin workspace route structure | Admin workspace routes exist with a responsive aggregate dashboard shell and navigation, including aggregate availability and active-consultation dashboard details. Remaining broader admin management actions remain TODO. |
 | T504 | DONE | Add responsive layout patterns | Workspace shell and role dashboards use responsive desktop/mobile layout patterns. Further page-specific responsive checks remain part of quality work. |
 
 ## Milestone 6: Doctors, Scheduling, And Booking
@@ -96,7 +96,7 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T901 | TODO | Add responsive and state coverage checks | Phase 7B completed a code-level MVP workflow QA and small copy polish pass. Phase 10C completed MVP UI copy/workflow polish for login and patient-facing booking/chat/file copy. Broader authenticated browser, responsive, loading, empty, error, unauthorized, forbidden, and not-found coverage remains TODO. |
+| T901 | TODO | Add responsive and state coverage checks | Phase 7B completed a code-level MVP workflow QA and small copy polish pass. Phase 10C completed MVP UI copy/workflow polish for login and patient-facing booking/chat/file copy. Phase 12B added small MVP UX polish across auth forms, dashboards, consultation-list count copy, and the patient files empty state. Broader authenticated browser, responsive, loading, empty, error, unauthorized, forbidden, and not-found coverage remains TODO. |
 | T902 | TODO | Add deployment configuration guidance for Vercel | Ensure environment variables are documented. Include Resend sender domain/DNS verification for production email readiness; `onboarding@resend.dev` is limited to local testing. |
 | T903 | TODO | Add basic quality gates | Lint, typecheck, build, and Prisma validation scripts when app setup exists. |
 | T904 | TODO | Use Playwright MCP to verify key UI flows when available | Login, dashboards, booking, chat. |

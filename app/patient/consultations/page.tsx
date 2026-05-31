@@ -180,6 +180,10 @@ export default async function PatientConsultationsPage({
           Review upcoming visits and completed consultation history. Completed
           consultations keep their chat history and doctor summary.
         </p>
+        <p className="mt-4 text-sm font-medium text-slate-700">
+          {consultations.length} visible{" "}
+          {consultations.length === 1 ? "consultation" : "consultations"}
+        </p>
       </section>
 
       <ConsultationFilterTabs activeFilter={activeFilter} />

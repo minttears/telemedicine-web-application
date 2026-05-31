@@ -50,15 +50,19 @@ export default async function AdminDashboardPage() {
     totalUsers,
     patientProfiles,
     doctorProfiles,
+    availableDoctors,
     specialties,
     consultations,
+    activeConsultations,
     auditLogs,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.patientProfile.count(),
     prisma.doctorProfile.count(),
+    prisma.doctorProfile.count({ where: { isAvailable: true } }),
     prisma.specialty.count(),
     prisma.consultation.count(),
+    prisma.consultation.count({ where: { status: "IN_PROGRESS" } }),
     prisma.auditLog.count(),
   ]);
 
@@ -90,7 +94,7 @@ export default async function AdminDashboardPage() {
           value={patientProfiles}
         />
         <StatCard
-          detail="Doctor profile records."
+          detail={`${availableDoctors} marked available for patient booking.`}
           label="Doctors"
           value={doctorProfiles}
         />
@@ -100,7 +104,7 @@ export default async function AdminDashboardPage() {
           value={specialties}
         />
         <StatCard
-          detail="Consultation records across all statuses."
+          detail={`${activeConsultations} currently marked as in progress.`}
           label="Consultations"
           value={consultations}
         />

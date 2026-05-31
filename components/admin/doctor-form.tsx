@@ -3,6 +3,8 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { PasswordField } from "@/components/auth/password-field";
+
 type SpecialtyOption = {
   id: string;
   name: string;
@@ -295,21 +297,14 @@ export function DoctorForm({
         </label>
 
         {mode === "create" && setupMethod === "temporaryPassword" ? (
-          <label className="block">
-            <span className="text-sm font-medium text-slate-800">
-              Temporary password
-            </span>
-            <input
-              autoComplete="new-password"
-              className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
-              onChange={(event) => setTemporaryPassword(event.target.value)}
-              type="password"
-              value={temporaryPassword}
-            />
-            <span className="mt-2 block text-xs leading-5 text-slate-500">
-              Use at least 8 characters. It will not be shown after creation.
-            </span>
-          </label>
+          <PasswordField
+            autoComplete="new-password"
+            helpText="Use at least 8 characters. It will not be shown after creation."
+            id="temporaryPassword"
+            label="Temporary password"
+            onChange={setTemporaryPassword}
+            value={temporaryPassword}
+          />
         ) : null}
 
         <label className="block">

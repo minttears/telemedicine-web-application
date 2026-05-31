@@ -42,6 +42,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 11G Public Forgot Password Flow
 - Phase 11H Auth Recovery Manual QA Record
 - Phase 12A MVP Technical Cleanup
+- Phase 12B MVP UX Polish And Small Auth UI Improvements
 
 ## Current MVP Behavior
 
@@ -93,6 +94,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 11H manual QA rechecked the corrected auth recovery UX: forgot-password requires the login email first, an empty login email shows a validation message before recovery starts, users can no longer choose a separate reset recipient email, reset email delivery works for the Resend account email test case, and the corrected UX was accepted.
 - The Phase 11H manual QA record confirms no reset URL, raw reset token, email API key, or secret was shared. Full testing to arbitrary recipient emails is deferred until a verified sender domain is configured in Resend; `onboarding@resend.dev` remains suitable only for limited local testing.
 - Phase 12A narrowed broad Prisma `user` relation reads in server pages/helpers to avoid unnecessary password-hash retrieval, refreshed stale unsupported GET endpoint wording, and updated clearly stale security/task documentation without changing product behavior.
+- Phase 12B added accessible show/hide controls to auth and admin temporary-password fields, improved patient/doctor/admin dashboard summary cards, replaced the bare patient files placeholder with a workspace-style empty state, and preserved the email-first forgot-password flow.
 
 ## Deferred Features
 
@@ -121,11 +123,11 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 12A: MVP Technical Cleanup.
+Phase 12B: MVP UX Polish And Small Auth UI Improvements.
 
 Latest known commit:
 
-- See `git log --oneline` for the latest committed Phase 11C hash after commit.
+- See `git log --oneline` for the latest committed hash.
 
 ## Next Recommended Phase
 

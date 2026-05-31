@@ -4,6 +4,8 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { PasswordField } from "@/components/auth/password-field";
+
 type RegisterResponse = {
   redirectTo?: string;
   error?: string;
@@ -182,44 +184,24 @@ export function RegisterForm() {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label
-            className="text-sm font-medium text-slate-800"
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <input
-            autoComplete="new-password"
-            className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-            id="password"
-            name="password"
-            onChange={(event) => setPassword(event.target.value)}
-            type="password"
-            value={password}
-          />
-          <p className="text-xs text-slate-500">
-            Use at least 8 characters.
-          </p>
-        </div>
+        <PasswordField
+          autoComplete="new-password"
+          helpText="Use at least 8 characters."
+          id="password"
+          label="Password"
+          name="password"
+          onChange={setPassword}
+          value={password}
+        />
 
-        <div className="space-y-2">
-          <label
-            className="text-sm font-medium text-slate-800"
-            htmlFor="confirmPassword"
-          >
-            Confirm password
-          </label>
-          <input
-            autoComplete="new-password"
-            className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-            id="confirmPassword"
-            name="confirmPassword"
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            type="password"
-            value={confirmPassword}
-          />
-        </div>
+        <PasswordField
+          autoComplete="new-password"
+          id="confirmPassword"
+          label="Confirm password"
+          name="confirmPassword"
+          onChange={setConfirmPassword}
+          value={confirmPassword}
+        />
       </div>
 
       {(fieldError || submitError) && (

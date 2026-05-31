@@ -3,6 +3,13 @@ import Link from "next/link";
 import { requireRole } from "@/lib/auth/current-user";
 import { prisma } from "@/lib/prisma";
 
+function formatDateTime(value: Date) {
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(value);
+}
+
 function StatCard({
   label,
   value,
@@ -45,18 +52,23 @@ function ActionLink({
 
 export default async function PatientDashboardPage() {
   const user = await requireRole("PATIENT");
+  const now = new Date();
 
   const patientProfile = await prisma.patientProfile.findUnique({
     where: { userId: user.id },
   });
 
-  const [upcomingConsultations, activeConsultations, totalConsultations] =
-    patientProfile
-      ? await Promise.all([
+  const [
+    upcomingConsultations,
+    activeConsultations,
+    totalConsultations,
+    nextConsultation,
+  ] = patientProfile
+    ? await Promise.all([
           prisma.consultation.count({
             where: {
               patientId: patientProfile.id,
-              scheduledAt: { gte: new Date() },
+              scheduledAt: { gte: now },
               status: { in: ["REQUESTED", "SCHEDULED"] },
             },
           }),
@@ -71,8 +83,35 @@ export default async function PatientDashboardPage() {
               patientId: patientProfile.id,
             },
           }),
+          prisma.consultation.findFirst({
+            where: {
+              patientId: patientProfile.id,
+              scheduledAt: { gte: now },
+              status: { in: ["REQUESTED", "SCHEDULED", "IN_PROGRESS"] },
+            },
+            orderBy: { scheduledAt: "asc" },
+            select: {
+              id: true,
+              scheduledAt: true,
+              status: true,
+              doctor: {
+                select: {
+                  specialty: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                  user: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          }),
         ])
-      : [0, 0, 0];
+    : [0, 0, 0, null];
 
   const profileFields = [
     Boolean(user.name),
@@ -125,17 +164,30 @@ export default async function PatientDashboardPage() {
       <section className="grid gap-4 lg:grid-cols-[1fr_1fr]">
         <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-950">
-            Consultation status
+            Next consultation
           </h2>
-          {totalConsultations > 0 ? (
-            <p className="mt-3 text-sm leading-6 text-slate-600">
-              Your consultation records are available in consultation history,
-              including active chats, attachments, and completed summaries.
-            </p>
+          {nextConsultation ? (
+            <div className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
+              <p className="font-medium text-slate-900">
+                {formatDateTime(nextConsultation.scheduledAt)}
+              </p>
+              <p>
+                {nextConsultation.doctor.user.name ?? "Doctor profile"}
+                {nextConsultation.doctor.specialty?.name
+                  ? `, ${nextConsultation.doctor.specialty.name}`
+                  : ""}
+              </p>
+              <Link
+                className="inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-600 hover:text-teal-700"
+                href={`/patient/consultations/${nextConsultation.id}`}
+              >
+                Open consultation
+              </Link>
+            </div>
           ) : (
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              You do not have consultations yet. Browse available doctors to
-              choose a time and book your first consultation.
+              You do not have an upcoming consultation. Browse available doctors
+              to choose a time and book your next visit.
             </p>
           )}
         </div>

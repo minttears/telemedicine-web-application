@@ -4,6 +4,8 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { PasswordField } from "@/components/auth/password-field";
+
 const genericLoginError = "Invalid email or password.";
 
 type LoginResponse = {
@@ -122,30 +124,21 @@ export function LoginForm() {
         </div>
 
         <div className="space-y-2">
-          <div className="flex items-center justify-between gap-3">
-            <label
-              className="text-sm font-medium text-slate-800"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <button
-              className="text-sm font-medium text-teal-700 hover:text-teal-800"
-              onClick={handleForgotPassword}
-              type="button"
-            >
-              Forgot password?
-            </button>
-          </div>
-          <input
+          <PasswordField
             autoComplete="current-password"
-            className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
             id="password"
+            label="Password"
             name="password"
-            onChange={(event) => setPassword(event.target.value)}
-            type="password"
+            onChange={setPassword}
             value={password}
           />
+          <button
+            className="text-sm font-medium text-teal-700 transition hover:text-teal-800"
+            onClick={handleForgotPassword}
+            type="button"
+          >
+            Forgot password?
+          </button>
         </div>
       </div>
 

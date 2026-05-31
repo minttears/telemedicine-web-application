@@ -4,6 +4,8 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { PasswordField } from "@/components/auth/password-field";
+
 type ResetPasswordFormProps = {
   token: string;
 };
@@ -85,32 +87,22 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       </div>
 
       <div className="mt-6 space-y-4">
-        <label className="block">
-          <span className="text-sm font-medium text-slate-800">Password</span>
-          <input
-            autoComplete="new-password"
-            className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-            onChange={(event) => setPassword(event.target.value)}
-            type="password"
-            value={password}
-          />
-          <span className="mt-2 block text-xs leading-5 text-slate-500">
-            Use at least 8 characters.
-          </span>
-        </label>
+        <PasswordField
+          autoComplete="new-password"
+          helpText="Use at least 8 characters."
+          id="password"
+          label="Password"
+          onChange={setPassword}
+          value={password}
+        />
 
-        <label className="block">
-          <span className="text-sm font-medium text-slate-800">
-            Confirm password
-          </span>
-          <input
-            autoComplete="new-password"
-            className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            type="password"
-            value={confirmPassword}
-          />
-        </label>
+        <PasswordField
+          autoComplete="new-password"
+          id="confirmPassword"
+          label="Confirm password"
+          onChange={setConfirmPassword}
+          value={confirmPassword}
+        />
       </div>
 
       {(fieldError || submitError) && (

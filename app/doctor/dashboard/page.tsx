@@ -30,6 +30,7 @@ function StatCard({
 
 export default async function DoctorDashboardPage() {
   const user = await requireRole("DOCTOR");
+  const now = new Date();
 
   const doctorProfile = await prisma.doctorProfile.findUnique({
     where: { userId: user.id },
@@ -42,7 +43,7 @@ export default async function DoctorDashboardPage() {
           prisma.doctorScheduleSlot.count({
             where: {
               doctorId: doctorProfile.id,
-              startsAt: { gte: new Date() },
+              startsAt: { gte: now },
               status: "AVAILABLE",
             },
           }),
@@ -61,7 +62,7 @@ export default async function DoctorDashboardPage() {
           prisma.doctorScheduleSlot.findMany({
             where: {
               doctorId: doctorProfile.id,
-              startsAt: { gte: new Date() },
+              startsAt: { gte: now },
               status: "AVAILABLE",
             },
             orderBy: { startsAt: "asc" },
@@ -164,9 +165,16 @@ export default async function DoctorDashboardPage() {
             </ul>
           ) : (
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              No upcoming available slots are configured yet.
+              No upcoming available slots are configured yet. Add future slots so
+              patients can reserve consultation times.
             </p>
           )}
+          <Link
+            className="mt-5 inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-600 hover:text-teal-700"
+            href="/doctor/schedule"
+          >
+            Manage schedule
+          </Link>
         </div>
       </section>
     </div>

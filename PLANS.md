@@ -1594,6 +1594,46 @@ Not implemented:
 - No dependencies.
 - No 2FA, deployment, or domain setup.
 
+### Phase 12B: MVP UX Polish And Small Auth UI Improvements
+
+Status: Completed
+
+Completed:
+
+- Added reusable accessible show/hide password controls for login, patient registration, public password reset, doctor set-password, and admin temporary-password creation.
+- Preserved the login-email-first forgot-password flow and did not add a separate recovery recipient input.
+- Improved patient dashboard summary content with the next scoped consultation when present.
+- Improved doctor dashboard schedule guidance and linked the schedule management action from the next-slots card.
+- Improved admin dashboard aggregate details for available doctors and active consultations without exposing chat or file contents.
+- Replaced the bare patient files placeholder with a workspace-style empty state that points patients back to consultation attachments and does not expose storage paths.
+- Added patient consultation-list count copy.
+
+Changed files:
+
+- `components/auth/password-field.tsx`
+- `components/auth/login-form.tsx`
+- `components/auth/register-form.tsx`
+- `components/auth/reset-password-form.tsx`
+- `components/auth/set-password-form.tsx`
+- `components/admin/doctor-form.tsx`
+- `app/patient/dashboard/page.tsx`
+- `app/doctor/dashboard/page.tsx`
+- `app/admin/dashboard/page.tsx`
+- `app/patient/files/page.tsx`
+- `app/patient/consultations/page.tsx`
+- `TASKS.md`
+- `CURRENT_STATE.md`
+- `PLANS.md`
+
+Not implemented:
+
+- No Prisma schema changes.
+- No migrations.
+- No dependencies.
+- No auth or authorization behavior changes.
+- No file archive implementation.
+- No landing page, legal consent, video calls, avatars, 2FA, deployment, or domain setup.
+
 ## Phase 5: Admin And Operational Views
 
 Status: In progress
