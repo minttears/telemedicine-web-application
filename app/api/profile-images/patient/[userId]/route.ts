@@ -17,15 +17,29 @@ function notFound() {
 
 export async function GET(_request: Request, context: PatientImageRouteContext) {
   try {
-    const user = await requireRole("PATIENT");
+    const user = await requireRole("PATIENT", "DOCTOR");
     const { userId } = await context.params;
 
-    if (user.id !== userId) {
+    if (user.role === "PATIENT" && user.id !== userId) {
       return notFound();
     }
 
+    if (user.role === "DOCTOR") {
+      const assignedConsultation = await prisma.consultation.findFirst({
+        where: {
+          doctor: { userId: user.id },
+          patient: { userId },
+        },
+        select: { id: true },
+      });
+
+      if (!assignedConsultation) {
+        return notFound();
+      }
+    }
+
     const profileUser = await prisma.user.findFirst({
-      where: { id: user.id, role: "PATIENT" },
+      where: { id: userId, role: "PATIENT" },
       select: { avatarStoragePath: true },
     });
 

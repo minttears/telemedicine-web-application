@@ -110,6 +110,14 @@ export default async function DoctorConsultationPage({
           id: true,
           sender: {
             select: {
+              avatarStoragePath: true,
+              doctorProfile: {
+                select: {
+                  id: true,
+                  photoStoragePath: true,
+                },
+              },
+              id: true,
               name: true,
               role: true,
             },
@@ -165,6 +173,7 @@ export default async function DoctorConsultationPage({
           )}
           <ConsultationMessagesPanel
             consultationId={consultation.id}
+            currentUserId={user.id}
             messages={consultation.messages}
             readOnly={consultation.status === "COMPLETED"}
           />

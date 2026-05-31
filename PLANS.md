@@ -1755,6 +1755,40 @@ Not implemented:
 - No admin photo moderation/editing workflow.
 - No reviews, ratings, or full UI redesign.
 
+### Phase 12E: Consultation Chat UI Polish
+
+Status: Completed
+
+Completed:
+
+- Updated consultation chat display to align current user messages on the right and other participant messages on the left.
+- Added messenger-style text bubbles and file bubbles/cards while preserving chronological order.
+- Added patient avatars and doctor photos to chat messages through existing server-mediated profile image routes when available, with initials placeholders as fallback.
+- Kept file message downloads on `/api/files/[attachmentId]`.
+- Improved the no-message empty state copy.
+- Preserved completed consultation read-only behavior and existing polling refresh behavior.
+
+Changed files:
+
+- `app/patient/consultations/[consultationId]/page.tsx`
+- `app/doctor/consultations/[consultationId]/page.tsx`
+- `components/consultations/consultation-display.tsx`
+- `app/api/profile-images/patient/[userId]/route.ts`
+- `TASKS.md`
+- `SECURITY.md`
+- `CURRENT_STATE.md`
+- `PLANS.md`
+
+Not implemented:
+
+- No Supabase Realtime or WebSockets.
+- No video calls.
+- No message editing or deletion.
+- No reactions, read receipts, typing indicators, voice messages, image previews, or file previews.
+- No schema changes, migrations, or dependencies.
+- No admin chat access.
+- No direct Supabase Storage URLs or storage paths rendered in the UI.
+
 ## Phase 5: Admin And Operational Views
 
 Status: In progress

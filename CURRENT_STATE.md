@@ -46,6 +46,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12B Files Page Completion
 - Phase 12C Legal Pages And Registration Consent
 - Phase 12D Avatar And Doctor Photo Uploads
+- Phase 12E Consultation Chat UI Polish
 
 ## Current MVP Behavior
 
@@ -60,6 +61,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Patient and doctor consultation reads are server-rendered and scoped by current profile ownership.
 - Patient and doctor consultation lists support `Upcoming`, `Completed`, and `All` history filters.
 - Completed consultations remain visible in consultation history and stay accessible from the completed and all filters.
+- Consultation chat now uses messenger-style bubbles: current user messages align right, other participant messages align left, and patient avatars/doctor photos are shown through safe app routes when available.
 - Message creation uses `POST /api/messages`, stores `MessageType.TEXT`, trims body text, and enforces a 2000-character limit.
 - File attachment upload uses server-mediated `POST /api/files`, stores `MessageType.FILE` plus `Attachment` metadata in PostgreSQL, and stores file bytes only in the private Supabase Storage bucket.
 - File attachment download uses server-mediated `GET /api/files/[attachmentId]` and verifies consultation ownership/assignment before returning file bytes.
@@ -110,6 +112,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12B completed patient and doctor Files pages as secure consultation attachment archives while keeping uploads inside consultation chats only and leaving admin file content access deferred.
 - Phase 12C added MVP legal pages and registration consent persistence/enforcement without adding doctor/admin public registration, email change, 2FA, deletion, retention, re-consent, or production legal workflows.
 - Phase 12D added patient avatar and doctor professional photo uploads with nullable private storage-path fields, server-side role checks, server-mediated image serving, 2 MB JPEG/PNG/WEBP validation, best-effort old-object cleanup, and no public bucket, direct Storage URLs, cropping/resizing, delete UI, reviews, or admin moderation workflow.
+- Phase 12E polished consultation chat UI with aligned text/file bubbles, safe participant avatars/photos, unchanged polling, unchanged completed-chat read-only behavior, and no realtime, video calls, message editing/deleting, reactions, read receipts, typing indicators, schema changes, migrations, dependencies, or admin chat access.
 
 ## Deferred Features
 
@@ -138,7 +141,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 12D: Avatar And Doctor Photo Uploads.
+Phase 12E: Consultation Chat UI Polish.
 
 Latest known commit:
 

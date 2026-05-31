@@ -196,6 +196,8 @@ Consultation detail shell boundaries:
 - Patient users can read and send messages only for consultations owned by their `PatientProfile`.
 - Doctor users can read and send messages only for consultations assigned to their `DoctorProfile`.
 - Admin chat and consultation history access is excluded in Phase 8B.
+- Chat UI alignment and avatars/photos are presentation-only and do not change consultation ownership or assignment checks.
+- Chat participant images use server-mediated profile image routes and must not render `avatarStoragePath`, `photoStoragePath`, private bucket paths, direct Supabase Storage URLs, or service role credentials.
 - `POST /api/messages` performs server-side role and consultation ownership checks.
 - `POST /api/messages` rejects completed consultations with a safe `409` response.
 - Phase 6B polling refresh reuses the existing patient and doctor page ownership checks.
@@ -211,6 +213,7 @@ Consultation detail shell boundaries:
 - Admin users cannot access attachment content in this phase.
 - Completed consultations reject new file uploads and show existing file messages read-only.
 - Attachment UI shows safe metadata only and never displays `storagePath`.
+- File messages in chat continue to download only through `/api/files/[attachmentId]` and never display `storagePath` or direct Supabase Storage URLs.
 - No secrets, cookies, session tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, service role keys, or development seed password literals should be printed or displayed.
 
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
