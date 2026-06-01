@@ -169,7 +169,7 @@ export default async function DoctorConsultationPage({
       <section className="grid gap-4 lg:grid-cols-[1fr_320px]">
         <div className="space-y-4">
           <VideoCallPanel
-            consultationId={consultation.id}
+            callHref={`/doctor/consultations/${consultation.id}/call`}
             disabledReason={videoCallAvailability.reason}
             isEligible={videoCallAvailability.isEligible}
             role="DOCTOR"

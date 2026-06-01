@@ -51,6 +51,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 13A Consultation Treatment Plan / Doctor Recommendations
 - Phase 13B Doctor Search Filters And Symptom Tags
 - Phase 14B Daily Video Provider Foundation
+- Phase 14C Daily Video Call UI
 
 ## Current MVP Behavior
 
@@ -113,7 +114,10 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Video call session creation is allowed only for authenticated patients who own the consultation and assigned doctors, rejects admins and wrong users, rejects completed/cancelled consultations, and is available from 15 minutes before scheduled time until 90 minutes after it for `SCHEDULED` and `IN_PROGRESS` consultations.
 - Doctor start/join prepares the Daily session and moves a `SCHEDULED` consultation to `IN_PROGRESS`; patient join prepares a token without completing the consultation.
 - Daily participant tokens are returned only from the authenticated API response, are not stored in PostgreSQL, are not shown in the UI, and `DAILY_API_KEY` remains server-only.
-- Patient and doctor consultation detail pages show a minimal Daily video call panel. Full embedded Daily call UI is deferred to Phase 14C.
+- Patient and doctor consultation detail pages show a Daily video call panel that links to role-scoped call pages.
+- Phase 14C added `/patient/consultations/[consultationId]/call` and `/doctor/consultations/[consultationId]/call` with Daily Prebuilt embedded through `@daily-co/daily-js`.
+- The Daily call UI requests the existing authenticated call-session API only after the participant clicks join/start, passes the short-lived token to `join({ url, token })`, and keeps the token in memory only.
+- Daily Prebuilt handles camera/microphone permissions, mute, camera toggle, and leave controls. Leave returns to a safe ended state with a back-to-consultation action.
 - Admin has no attachment content access in this phase.
 - Admin doctor management is implemented for the MVP, while broader operational management remains deferred.
 - Login and patient-facing workflow copy now reflects current MVP behavior for patient registration, doctor discovery, booking, chat, file attachments, consultation history, and admin-created doctor/specialty management.
@@ -146,7 +150,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Legal prescription workflow, official prescriptions, medication database, PDF generation, e-signature, pharmacy integration, diagnosis automation, medical archives, and doctor outcome editing after completion
 - Review editing/deletion, doctor replies, admin review moderation, and public placeholder `/doctors` review display
 - Time-based chat restrictions beyond completed-status read-only behavior
-- Full embedded video call UI, call end workflow, payments, 2FA enforcement, public SEO polish, and full responsive/browser QA
+- Full production video device/network QA, call end persistence, payments, 2FA enforcement, public SEO polish, and full responsive/browser QA
 - Symptom severity scoring, patient medical questionnaire, AI triage, emergency-care workflow, and advanced doctor availability algorithms
 
 ## Current Workflow Rules
@@ -164,7 +168,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 14B: Daily Video Provider Foundation.
+Phase 14C: Daily Video Call UI.
 
 Latest known commit:
 

@@ -202,6 +202,14 @@ Use Daily Prebuilt as the MVP video provider. The app creates private Daily room
 
 Reason: Daily avoids custom WebRTC signaling, STUN/TURN, and media infrastructure for the Vercel MVP while supporting private rooms and server-issued access. Provider API keys remain server-only. Recording, transcription, screen sharing, group calls, public call links, raw WebRTC signaling, Supabase Realtime signaling, and admin call access are excluded from this phase.
 
+### D026: Embed Daily Prebuilt With `@daily-co/daily-js`
+
+Status: Accepted
+
+Use `@daily-co/daily-js` to embed Daily Prebuilt in role-scoped patient and doctor call pages. The client joins with `join({ url, token })` after the authenticated app API issues a short-lived participant token.
+
+Reason: Daily Prebuilt gives the MVP camera, microphone, mute, camera toggle, and leave controls without custom WebRTC UI. Passing the token to `join()` keeps it out of URLs, rendered markup, local storage, session storage, and PostgreSQL. `DAILY_API_KEY` remains server-only.
+
 ## Pending Decisions
 
 - Exact application name and public branding.
@@ -210,5 +218,4 @@ Reason: Daily avoids custom WebRTC signaling, STUN/TURN, and media infrastructur
 - File size limits and final allowed attachment MIME types.
 - Admin policy for exceptional access to private chat content.
 - Session renewal strategy.
-- Full embedded Daily call room UI for patients and doctors.
 - Whether to add shadcn/ui after base Tailwind setup.

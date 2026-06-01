@@ -2,7 +2,27 @@
 
 ## Current Plan
 
-Phase 14B Daily Video Provider Foundation is completed. Daily is selected as the MVP video provider, with server-side private room creation, short-lived server-issued meeting tokens, call-session persistence, strict patient/assigned-doctor authorization, and a minimal consultation call panel. Full embedded video UI is deferred to Phase 14C. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 14C Daily Video Call UI is completed. Daily Prebuilt is embedded with `@daily-co/daily-js` on dedicated patient and doctor call pages, using the existing authenticated server-issued token flow. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+
+## Phase 14C: Daily Video Call UI
+
+Status: Completed
+
+Completed:
+
+- Added `@daily-co/daily-js` as the only new dependency for Daily Prebuilt.
+- Added role-scoped call pages at `/patient/consultations/[consultationId]/call` and `/doctor/consultations/[consultationId]/call`.
+- Updated the consultation video panel to link to the role-specific call page instead of requesting tokens on the consultation detail page.
+- Added a shared Daily call-room client component that requests the existing authenticated call-session API only after the user clicks join/start.
+- Passes the short-lived Daily participant token directly to `join({ url, token })` and keeps it in memory only.
+- Cleans up the Daily call frame on leave and component unmount.
+- Preserved Phase 14B authorization, time-window, private-room, and server-only API key boundaries.
+
+Deferred:
+
+- Full production device/network QA and advanced browser hardening.
+- Call end persistence.
+- Recording, transcription, screen sharing, persistent media storage, group calls, admin call access, public call links, raw WebRTC signaling, and Supabase Realtime signaling.
 
 ## Phase 14B: Daily Video Provider Foundation
 

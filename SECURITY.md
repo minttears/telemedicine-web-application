@@ -249,9 +249,12 @@ Video call boundaries:
 - When an assigned doctor starts or joins a call for a `SCHEDULED` consultation, the consultation may move to `IN_PROGRESS`; patient join alone does not complete the consultation.
 - Video call logic must not mark consultations as `COMPLETED`.
 - Daily meeting tokens are short-lived, returned only to the authenticated participant, and are never stored in PostgreSQL.
+- Phase 14C uses Daily Prebuilt through `@daily-co/daily-js`; the browser receives a short-lived participant token only after the user clicks join/start and passes it to `join({ url, token })` in memory.
+- Daily participant tokens must not be rendered as text, logged, placed in URLs, stored in local storage, stored in session storage, persisted in PostgreSQL, or included in documentation/screenshots.
+- Patient and doctor call pages are role-scoped under `/patient/consultations/[consultationId]/call` and `/doctor/consultations/[consultationId]/call` and reuse the same server-side ownership/assignment checks as the consultation detail pages.
 - Call APIs must not return the Daily API key, unrelated consultation data, chat content, attachment data, storage paths, medical outcome fields, password hashes, token hashes, cookies, raw invite/reset tokens, reset/invite URLs, or environment values.
 - Audit logs for video calls may include safe metadata such as consultation id, call session id, provider, role, and action, but must not include meeting tokens, provider API keys, cookies, passwords, hashes, or secret-bearing URLs.
-- Recording, transcription, screen sharing, group calls, raw WebRTC signaling, Supabase Realtime signaling, public call links, and admin call access are not implemented in Phase 14B.
+- Recording, transcription, screen sharing, persistent media storage, group calls, raw WebRTC signaling, Supabase Realtime signaling, public call links, and admin call access are not implemented in Phase 14B or Phase 14C.
 
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
