@@ -49,10 +49,13 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12E Consultation Chat UI Polish
 - Phase 12F Doctor Reviews And Ratings
 - Phase 13A Consultation Treatment Plan / Doctor Recommendations
+- Phase 13B Doctor Search Filters And Symptom Tags
 
 ## Current MVP Behavior
 
 - Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, upload/download allowed consultation files, use `/patient/files` as a secure consultation attachment archive, and view a read-only consultation outcome after completion.
+- Patient doctor directory supports name, specialty, and symptom-helper filtering. Symptom filtering maps curated symptom slugs to active specialty slugs and is a doctor-discovery helper only, not diagnosis, AI triage, or emergency medical advice.
+- Patient doctor directory still shows only active `DOCTOR` users with `DoctorProfile.isAvailable=true` and active specialties.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with structured consultation outcome fields.
 - New structured consultation completion requires only a conclusion/summary in `Consultation.doctorNotes` and an active diagnosis-status selection; diagnosis details, doctor recommendations, medication notes, follow-up instructions, and additional notes are optional and stored as null when empty.
 - Diagnosis status supports no diagnosis identified, preliminary diagnosis, requires further examination, referred to specialist, and not applicable without forcing fake diagnosis text.
@@ -124,6 +127,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12E polished consultation chat UI with aligned text/file bubbles, safe participant avatars/photos, unchanged polling, unchanged completed-chat read-only behavior, and no realtime, video calls, message editing/deleting, reactions, read receipts, typing indicators, schema changes, migrations, dependencies, or admin chat access.
 - Phase 12F added `DoctorReview` with migration `20260531163859_add_doctor_reviews`, patient-only completed-consultation review creation, one-review-per-consultation enforcement, doctor rating aggregation, `Verified patient` review display, and no review editing/deletion, doctor replies, admin moderation, public placeholder `/doctors` changes, dependencies, or denormalized rating fields.
 - Phase 13A added nullable structured consultation outcome fields with migration `20260531215443_add_consultation_outcome_fields`, kept `Consultation.doctorNotes` for backward-compatible summaries, required diagnosis status only for new structured completion submissions, and did not add official prescriptions, doctor outcome editing after completion, admin medical content access, dependencies, or AI diagnosis automation.
+- Phase 13B added symptom-based doctor filtering through a curated in-code symptom-to-specialty map, expanded idempotent development seed specialties/doctors/future slots, and did not add schema changes, migrations, AI diagnosis, triage, emergency-care workflows, dependencies, or booking logic changes.
 
 ## Deferred Features
 
@@ -137,6 +141,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Review editing/deletion, doctor replies, admin review moderation, and public placeholder `/doctors` review display
 - Time-based chat restrictions beyond completed-status read-only behavior
 - Video calls, payments, 2FA enforcement, public SEO polish, and full responsive/browser QA
+- Symptom severity scoring, patient medical questionnaire, AI triage, emergency-care workflow, and advanced doctor availability algorithms
 
 ## Current Workflow Rules
 
@@ -153,7 +158,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 13A: Consultation Treatment Plan / Doctor Recommendations.
+Phase 13B: Doctor Search Filters And Symptom Tags.
 
 Latest known commit:
 

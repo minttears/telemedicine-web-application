@@ -112,6 +112,8 @@ Doctor directory boundaries:
 - Doctor and admin users are redirected away from `/patient/doctors`.
 - Only directory-safe doctor profile fields are displayed.
 - The doctor directory does not display private messages, files, passwords, hashes, cookies, tokens, or environment secrets.
+- Patient doctor directory symptom filtering uses a static symptom-to-specialty slug map only. It is not diagnosis, AI triage, emergency medical advice, severity scoring, or a patient questionnaire.
+- Symptom filtering must continue to show only active `DOCTOR` users, active specialties, and `DoctorProfile.isAvailable=true` records.
 - `/patient/doctors/[doctorId]` is protected by the existing patient workspace layout.
 - Patient doctor profile detail pages use server-side Prisma reads.
 - Patient doctor profile detail pages display only directory-safe doctor fields: name, title, specialty, bio, education, experience years, and availability status.

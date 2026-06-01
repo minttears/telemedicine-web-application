@@ -1848,6 +1848,34 @@ Security notes:
 - Outcome access remains scoped to the owning patient or assigned doctor through existing consultation detail queries.
 - Admins do not gain consultation outcome/medical content access in this phase.
 
+### Phase 13B: Doctor Search Filters And Symptom Tags
+
+Status: Completed
+
+Completed:
+
+- Added a curated symptom-to-specialty slug map for patient doctor discovery.
+- Added `symptom` query-param filtering to `/patient/doctors` while preserving existing `q` and `specialty` filters.
+- Combined filters with AND behavior: active/available doctor, search query, selected specialty, and mapped symptom specialties.
+- Added patient-facing safety copy explaining symptom filtering is not diagnosis, AI triage, or emergency medical advice.
+- Added an emergency-care warning for emergency-like symptom helpers such as chest pain and shortness of breath.
+- Expanded idempotent development seed data with more specialties, doctor profiles, and future available schedule slots.
+
+Not implemented:
+
+- No schema changes or migrations.
+- No AI diagnosis or medical triage engine.
+- No emergency-care workflow beyond static safety copy.
+- No symptom severity scoring.
+- No patient medical questionnaire.
+- No booking logic changes.
+- No dependencies, video calls, or 2FA.
+
+Security notes:
+
+- Patient doctor directory still shows only active `DOCTOR` users with active specialties and `DoctorProfile.isAvailable=true`.
+- Symptom filtering uses specialty slugs only and does not expose doctor private account data, patient data, storage paths, password hashes, token hashes, sessions, raw tokens, cookies, environment values, service keys, or secrets.
+
 ## Phase 5: Admin And Operational Views
 
 Status: In progress

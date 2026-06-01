@@ -186,6 +186,14 @@ Structured consultation outcomes extend `Consultation` with nullable fields for 
 
 Reason: The MVP has exactly one outcome per consultation and already completes consultations through `Consultation`. Nullable fields avoid a separate model and keep old completed consultations readable while deferring official prescription workflows and outcome editing.
 
+### D024: Use Static Symptom-To-Specialty Mapping For Doctor Discovery
+
+Status: Accepted
+
+Patient doctor directory symptom filtering uses a curated in-code mapping from symptom slugs to specialty slugs. It does not store symptoms in the database and does not infer diagnosis, severity, urgency, or medical triage.
+
+Reason: The MVP needs a simple discovery helper without schema changes, dependencies, AI, or a medical triage workflow. Specialty slugs keep the mapping stable across dev seed data and admin-managed specialties.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

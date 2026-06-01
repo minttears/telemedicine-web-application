@@ -1,12 +1,17 @@
 import Link from "next/link";
 
 import { ProfileImage } from "@/components/profile/profile-image";
+import {
+  symptomSpecialtyMap,
+  symptomSpecialtyMappings,
+} from "@/lib/doctors/symptom-specialty-map";
 import { prisma } from "@/lib/prisma";
 
 type PatientDoctorsPageProps = {
   searchParams: Promise<{
     q?: string;
     specialty?: string;
+    symptom?: string;
   }>;
 };
 
@@ -22,9 +27,11 @@ function normalizeSearchParam(value: string | undefined) {
 function buildDirectoryHref({
   query,
   specialty,
+  symptom,
 }: {
   query?: string;
   specialty?: string;
+  symptom?: string;
 }) {
   const params = new URLSearchParams();
 
@@ -34,6 +41,10 @@ function buildDirectoryHref({
 
   if (specialty) {
     params.set("specialty", specialty);
+  }
+
+  if (symptom) {
+    params.set("symptom", symptom);
   }
 
   const serialized = params.toString();
@@ -69,12 +80,45 @@ function formatReviewSummary(averageRating: number | null, reviewCount: number) 
 async function getDoctors({
   query,
   specialty,
+  symptomSpecialtySlugs,
 }: {
   query?: string;
   specialty?: string;
+  symptomSpecialtySlugs?: string[];
 }) {
+  const specialtyFilters = [
+    {
+      specialty: {
+        isActive: true,
+      },
+    },
+    ...(specialty
+      ? [
+          {
+            specialty: {
+              isActive: true,
+              slug: specialty,
+            },
+          },
+        ]
+      : []),
+    ...(symptomSpecialtySlugs?.length
+      ? [
+          {
+            specialty: {
+              isActive: true,
+              slug: {
+                in: symptomSpecialtySlugs,
+              },
+            },
+          },
+        ]
+      : []),
+  ];
+
   const doctors = await prisma.doctorProfile.findMany({
     where: {
+      AND: specialtyFilters,
       isAvailable: true,
       user: {
         isActive: true,
@@ -88,14 +132,6 @@ async function getDoctors({
             }
           : {}),
       },
-      ...(specialty
-        ? {
-            specialty: {
-              slug: specialty,
-              isActive: true,
-            },
-          }
-        : {}),
     },
     select: {
       bio: true,
@@ -228,9 +264,14 @@ function DoctorCard({ doctor }: { doctor: DoctorWithDirectoryData }) {
 export default async function PatientDoctorsPage({
   searchParams,
 }: PatientDoctorsPageProps) {
-  const { q, specialty } = await searchParams;
+  const { q, specialty, symptom } = await searchParams;
   const query = normalizeSearchParam(q);
   const specialtySlug = normalizeSearchParam(specialty);
+  const symptomSlug = normalizeSearchParam(symptom);
+  const selectedSymptom = symptomSlug
+    ? symptomSpecialtyMap.get(symptomSlug)
+    : undefined;
+  const effectiveSymptomSlug = selectedSymptom?.slug;
 
   const [specialties, allDoctorCount, doctors] = await Promise.all([
     prisma.specialty.findMany({
@@ -240,16 +281,28 @@ export default async function PatientDoctorsPage({
     prisma.doctorProfile.count({
       where: {
         isAvailable: true,
+        specialty: {
+          isActive: true,
+        },
         user: {
           isActive: true,
           role: "DOCTOR",
         },
       },
     }),
-    getDoctors({ query, specialty: specialtySlug }),
+    getDoctors({
+      query,
+      specialty: specialtySlug,
+      symptomSpecialtySlugs: selectedSymptom?.specialtySlugs,
+    }),
   ]);
 
-  const hasFilters = Boolean(query || specialtySlug);
+  const mappedSpecialtyNames = selectedSymptom
+    ? specialties
+        .filter((item) => selectedSymptom.specialtySlugs.includes(item.slug))
+        .map((item) => item.name)
+    : [];
+  const hasFilters = Boolean(query || specialtySlug || effectiveSymptomSlug);
 
   return (
     <div className="space-y-8">
@@ -259,8 +312,8 @@ export default async function PatientDoctorsPage({
           Find a doctor
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Browse available doctor profiles by name and specialty, then open a
-          profile to choose an available time.
+          Browse available doctor profiles by name, specialty, or symptom. Symptoms
+          help suggest relevant specialties and do not replace medical advice.
         </p>
         <p className="mt-4 text-sm font-medium text-slate-700">
           {allDoctorCount} {allDoctorCount === 1 ? "doctor" : "doctors"} in the
@@ -269,7 +322,7 @@ export default async function PatientDoctorsPage({
       </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-        <form className="grid gap-4 md:grid-cols-[1fr_240px_auto]" action="/patient/doctors">
+        <form className="grid gap-4 lg:grid-cols-[1fr_240px_280px_auto]" action="/patient/doctors">
           <label className="block">
             <span className="text-sm font-medium text-slate-700">
               Search by doctor name
@@ -301,6 +354,24 @@ export default async function PatientDoctorsPage({
             </select>
           </label>
 
+          <label className="block">
+            <span className="text-sm font-medium text-slate-700">
+              Symptom helper
+            </span>
+            <select
+              className="mt-2 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
+              defaultValue={effectiveSymptomSlug ?? ""}
+              name="symptom"
+            >
+              <option value="">All symptoms</option>
+              {symptomSpecialtyMappings.map((item) => (
+                <option key={item.slug} value={item.slug}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
+
           <div className="flex items-end gap-3">
             <button
               className="inline-flex min-h-11 items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800"
@@ -318,6 +389,30 @@ export default async function PatientDoctorsPage({
             ) : null}
           </div>
         </form>
+      </section>
+
+      <section className="rounded-lg border border-sky-100 bg-sky-50 p-4 shadow-sm">
+        <p className="text-sm font-medium text-slate-950">
+          Symptoms help suggest relevant specialties. This does not replace
+          medical advice.
+        </p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          This directory filter is not diagnosis, AI triage, or emergency medical
+          advice.
+        </p>
+        {selectedSymptom ? (
+          <p className="mt-2 text-sm leading-6 text-slate-700">
+            Selected symptom: {selectedSymptom.label}. Suggested specialties: {" "}
+            {mappedSpecialtyNames.length > 0
+              ? mappedSpecialtyNames.join(", ")
+              : selectedSymptom.specialtySlugs.join(", ")}.
+          </p>
+        ) : null}
+        {selectedSymptom?.emergencyNotice ? (
+          <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900">
+            If this is an emergency, seek urgent local medical care.
+          </p>
+        ) : null}
       </section>
 
       {doctors.length > 0 ? (
@@ -339,12 +434,12 @@ export default async function PatientDoctorsPage({
           <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-600">
             {allDoctorCount === 0
               ? "Doctor profiles will appear here after they are created."
-              : "Try changing the doctor name or specialty filter."}
+              : "Try changing the doctor name, specialty, or symptom filter."}
           </p>
           {hasFilters ? (
             <Link
               className="mt-5 inline-flex min-h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
-              href={buildDirectoryHref({})}
+                href={buildDirectoryHref({})}
             >
               Clear filters
             </Link>

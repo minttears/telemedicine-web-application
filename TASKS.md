@@ -32,7 +32,7 @@
 | --- | --- | --- | --- |
 | T201 | DONE | Configure Prisma and Supabase Postgres connection | Supabase Postgres connection validated; `DATABASE_URL` and `DIRECT_URL` are configured locally. |
 | T202 | DONE | Draft the initial Prisma schema | Includes users, sessions, profiles, specialties, schedule slots, consultations, messages, attachments, audit log, and future 2FA models. |
-| T203 | DONE | Add seed data | Development admin, doctor, patient, specialties, profiles, and schedule slots were seeded. |
+| T203 | DONE | Add seed data | Development admin, doctor, patient, expanded specialties, multiple doctor profiles, and future schedule slots are seeded idempotently for local/dev workflows. |
 | T204 | DONE | Validate Prisma setup | Initial migration was created/applied and Prisma validation commands passed. |
 
 ## Milestone 3: Authentication And Authorization
@@ -69,7 +69,7 @@
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
 | T601 | DONE | Implement doctor specialty and profile management | Phase 10A Admin Doctor Management MVP and Phase 10B Admin Specialty Management MVP are completed: admins can create `DOCTOR` users with linked `DoctorProfile` records, manage specialties, assign existing active specialties, edit basic doctor fields, deactivate accounts, and control booking visibility. Admin schedule management, invite/password reset flow, 2FA, hard deletion workflows, and doctor self-service profile editing remain TODO/deferred. |
-| T602 | DONE | Implement doctor list and filters | Patient doctor directory supports doctor name search, specialty filtering, server-served professional doctor photos, and availability display. Availability filtering remains deferred. |
+| T602 | DONE | Implement doctor list and filters | Patient doctor directory supports doctor name search, specialty filtering, symptom-helper filtering, server-served professional doctor photos, ratings/review count, and availability display. Symptom filtering maps curated symptoms to specialty slugs and is not diagnosis, AI triage, or emergency medical advice. Availability filtering remains deferred. |
 | T603 | DONE | Implement doctor profile page | Patient-only doctor profile details, server-served professional doctor photos, and a read-only upcoming slot preview are completed. Booking, consultation creation, and schedule selection remain TODO. |
 | T604 | DONE | Implement basic schedule slots | First-version doctor schedule management is completed: doctor schedule page, schedule slot creation, soft cancellation of future `AVAILABLE` slots, 30-minute minimum lead time for doctor slot creation, 30-minute minimum lead time for patient booking, and patient booking integration with newly created `AVAILABLE` slots. Recurring schedules, admin schedule management, `BOOKED` slot cancellation, consultation cancellation, payments, video calls, file uploads, Storage, Realtime, diagnosis, prescriptions, medical notes, and status changes remain TODO. |
 | T605 | DONE | Implement consultation booking | First-version patient booking is completed: selecting a future available slot creates a scheduled consultation and books the slot. PostgreSQL/Prisma text chat and doctor schedule management are completed. Uploads, true Realtime, Storage, video calls, payment, admin management, booked slot cancellation, consultation cancellation, diagnosis, prescriptions, medical notes, and status changes remain TODO. |
