@@ -194,6 +194,14 @@ Patient doctor directory symptom filtering uses a curated in-code mapping from s
 
 Reason: The MVP needs a simple discovery helper without schema changes, dependencies, AI, or a medical triage workflow. Specialty slugs keep the mapping stable across dev seed data and admin-managed specialties.
 
+### D025: Use Daily For MVP Video Calls
+
+Status: Accepted
+
+Use Daily Prebuilt as the MVP video provider. The app creates private Daily rooms server-side and issues short-lived Daily meeting tokens only after authenticated patient/assigned-doctor consultation checks.
+
+Reason: Daily avoids custom WebRTC signaling, STUN/TURN, and media infrastructure for the Vercel MVP while supporting private rooms and server-issued access. Provider API keys remain server-only. Recording, transcription, screen sharing, group calls, public call links, raw WebRTC signaling, Supabase Realtime signaling, and admin call access are excluded from this phase.
+
 ## Pending Decisions
 
 - Exact application name and public branding.
@@ -202,5 +210,5 @@ Reason: The MVP needs a simple discovery helper without schema changes, dependen
 - File size limits and final allowed attachment MIME types.
 - Admin policy for exceptional access to private chat content.
 - Session renewal strategy.
-- Whether to use Jitsi or another provider for the first video-call iteration.
+- Full embedded Daily call room UI for patients and doctors.
 - Whether to add shadcn/ui after base Tailwind setup.

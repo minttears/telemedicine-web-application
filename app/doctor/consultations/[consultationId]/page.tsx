@@ -8,8 +8,10 @@ import {
   ConsultationMessagesPanel,
 } from "@/components/consultations/consultation-display";
 import { ConsultationCompletionForm } from "@/components/consultations/consultation-completion-form";
+import { VideoCallPanel } from "@/components/consultations/video-call-panel";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
 import { prisma } from "@/lib/prisma";
+import { getVideoCallAvailability } from "@/lib/video/call-window";
 
 type DoctorConsultationPageProps = {
   params: Promise<{
@@ -133,6 +135,10 @@ export default async function DoctorConsultationPage({
   }
 
   const completedDoctorNotes = consultation.doctorNotes?.trim() ?? "";
+  const videoCallAvailability = getVideoCallAvailability({
+    scheduledAt: consultation.scheduledAt,
+    status: consultation.status,
+  });
 
   return (
     <div className="space-y-6">
@@ -162,6 +168,12 @@ export default async function DoctorConsultationPage({
 
       <section className="grid gap-4 lg:grid-cols-[1fr_320px]">
         <div className="space-y-4">
+          <VideoCallPanel
+            consultationId={consultation.id}
+            disabledReason={videoCallAvailability.reason}
+            isEligible={videoCallAvailability.isEligible}
+            role="DOCTOR"
+          />
           {consultation.status === "COMPLETED" ? (
             <ConsultationSummaryPanel
               additionalNotes={consultation.additionalNotes}

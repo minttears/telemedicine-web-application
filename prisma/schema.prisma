@@ -43,6 +43,12 @@ enum MessageType {
   CALL_ENDED
 }
 
+enum ConsultationCallSessionStatus {
+  CREATED
+  ACTIVE
+  ENDED
+}
+
 enum ScheduleSlotStatus {
   AVAILABLE
   BOOKED
@@ -67,32 +73,35 @@ enum AuditAction {
   CONSULTATION_STATUS_CHANGED
   FILE_UPLOADED
   PRIVATE_DATA_ACCESSED
+  VIDEO_CALL_SESSION_CREATED
+  VIDEO_CALL_JOIN_TOKEN_CREATED
 }
 
 model User {
-  id                            String                  @id @default(cuid())
-  email                         String                  @unique
+  id                            String                    @id @default(cuid())
+  email                         String                    @unique
   passwordHash                  String
   passwordChangedAt             DateTime?
   termsAcceptedAt               DateTime?
   privacyAcceptedAt             DateTime?
   telemedicineConsentAcceptedAt DateTime?
   legalConsentVersion           String?
-  role                          UserRole                @default(PATIENT)
+  role                          UserRole                  @default(PATIENT)
   name                          String?
   phone                         String?
   avatarStoragePath             String?
-  isActive                      Boolean                 @default(true)
-  createdAt                     DateTime                @default(now())
-  updatedAt                     DateTime                @updatedAt
+  isActive                      Boolean                   @default(true)
+  createdAt                     DateTime                  @default(now())
+  updatedAt                     DateTime                  @updatedAt
   sessions                      Session[]
   patientProfile                PatientProfile?
   doctorProfile                 DoctorProfile?
-  messages                      Message[]               @relation("MessageSender")
-  attachments                   Attachment[]            @relation("AttachmentUploader")
-  auditLogs                     AuditLog[]              @relation("AuditActor")
-  accountAccessTokens           AccountAccessToken[]    @relation("AccessTokenUser")
-  createdAccessTokens           AccountAccessToken[]    @relation("AccessTokenCreator")
+  messages                      Message[]                 @relation("MessageSender")
+  attachments                   Attachment[]              @relation("AttachmentUploader")
+  auditLogs                     AuditLog[]                @relation("AuditActor")
+  createdCallSessions           ConsultationCallSession[] @relation("CallSessionCreator")
+  accountAccessTokens           AccountAccessToken[]      @relation("AccessTokenUser")
+  createdAccessTokens           AccountAccessToken[]      @relation("AccessTokenCreator")
   twoFactorSecret               TwoFactorSecret?
   twoFactorRecoveryCodes        TwoFactorRecoveryCode[]
 
@@ -223,11 +232,33 @@ model Consultation {
   messages             Message[]
   attachments          Attachment[]
   doctorReview         DoctorReview?
+  callSessions         ConsultationCallSession[]
 
   @@index([patientId])
   @@index([doctorId])
   @@index([status])
   @@index([scheduledAt])
+}
+
+model ConsultationCallSession {
+  id               String                        @id @default(cuid())
+  consultationId   String
+  provider         String
+  providerRoomName String
+  providerRoomUrl  String?
+  status           ConsultationCallSessionStatus @default(CREATED)
+  createdByUserId  String?
+  startedAt        DateTime?
+  endedAt          DateTime?
+  createdAt        DateTime                      @default(now())
+  updatedAt        DateTime                      @updatedAt
+  consultation     Consultation                  @relation(fields: [consultationId], references: [id], onDelete: Cascade)
+  createdBy        User?                         @relation("CallSessionCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([consultationId, providerRoomName])
+  @@index([consultationId])
+  @@index([status])
+  @@index([createdByUserId])
 }
 
 model DoctorReview {

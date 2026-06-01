@@ -2,7 +2,34 @@
 
 ## Current Plan
 
-Phase 11G Public Forgot Password Flow is completed, including the critical account-targeting security fix that starts recovery from the login email, removes the editable recovery recipient field, and binds email delivery and password reset target to the matched token user. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 14B Daily Video Provider Foundation is completed. Daily is selected as the MVP video provider, with server-side private room creation, short-lived server-issued meeting tokens, call-session persistence, strict patient/assigned-doctor authorization, and a minimal consultation call panel. Full embedded video UI is deferred to Phase 14C. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+
+## Phase 14B: Daily Video Provider Foundation
+
+Status: Completed
+
+Completed:
+
+- Selected Daily Prebuilt as the MVP video provider.
+- Added Daily environment placeholders to `.env.example`; real values must be set only in `.env.local` or deployment environment variables.
+- Added a server-only Daily REST helper for private room creation and short-lived meeting token creation.
+- Added `ConsultationCallSession` persistence for provider room metadata without storing participant tokens.
+- Added `POST /api/consultations/[consultationId]/call/session` for authenticated patient/doctor call session creation and token issuance.
+- Kept call authorization scoped to the owning patient or assigned doctor only; admins, wrong patients, wrong doctors, and logged-out users are rejected.
+- Rejected completed/cancelled consultations and restricted calls to the documented 15-minute-before through 90-minute-after scheduled window.
+- Added safe video call audit events with metadata only, excluding tokens, provider keys, room secrets, cookies, passwords, hashes, and environment values.
+- Added a minimal patient/doctor consultation detail call panel. Full embedded call UI is deferred.
+
+Deferred:
+
+- Full Daily Prebuilt room UI and browser permission flow.
+- Call end workflow.
+- Recording, transcription, screen sharing, group calls, admin call access, public call links, raw WebRTC signaling, and Supabase Realtime signaling.
+
+Manual setup:
+
+- Create a Daily account.
+- Add `VIDEO_PROVIDER`, `DAILY_API_KEY`, `DAILY_API_BASE_URL`, and optional Daily room domain values locally and in deployment variables.
 
 ## Phase 0: Documentation And Alignment
 

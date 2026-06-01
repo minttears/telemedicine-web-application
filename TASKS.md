@@ -85,6 +85,7 @@
 | T704 | DONE | Add future call-ready message types | `CALL_STARTED` and `CALL_ENDED` are supported in the `MessageType` enum. UI/API behavior for call events remains deferred. |
 | T705 | DONE | Implement first-version doctor consultation completion summary | Assigned doctors can complete `SCHEDULED` and `IN_PROGRESS` consultations and save a structured consultation outcome for patient read-only viewing. `doctorNotes` remains the required conclusion/summary for compatibility; new structured completion requires a diagnosis status and supports optional diagnosis details, doctor recommendations, medication notes, follow-up instructions, and additional notes. Official prescriptions, legal prescription workflow, medication database, PDF generation, e-signature, pharmacy integration, doctor outcome editing after completion, uploads, Storage, Realtime, video calls, payment, admin medical content access, and time-based chat restrictions remain TODO/deferred. |
 | T706 | DONE | Implement consultation history and archive rules | Patient and doctor consultation lists now support Upcoming, Completed, and All filters. Completed consultations stay visible and accessible, chat history is preserved, and completed chat is read-only with `POST /api/messages` returning a safe `409`. File uploads, Storage, Realtime, video calls, payment, legal prescription workflow, structured diagnosis fields, admin message access, admin management, and hard deletion remain TODO/deferred. |
+| T707 | DONE | Add Daily video provider foundation | Phase 14B selected Daily for MVP calls, added server-side private room creation, short-lived meeting token issuance, call-session persistence, strict patient/assigned-doctor authorization, documented env placeholders, and a minimal consultation call panel. Full embedded video UI is deferred to Phase 14C. |
 
 ## Milestone 8: Admin And Audit
 
@@ -107,7 +108,7 @@
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
 | D001 | DEFERRED | 2FA enforcement for doctors and admins | Prepare models earlier, implement after MVP auth/chat. |
-| D002 | DEFERRED | Video calls | Consider Jitsi first, custom WebRTC later only if needed. |
+| D002 | DEFERRED | Full video call UI | Daily provider foundation is completed. Full embedded call room UI, call end workflow, recording, transcription, screen sharing, group calls, and admin call access remain deferred. |
 | D003 | DEFERRED | Patient intake questionnaire | Add after core consultation flow works. |
 | D004 | DEFERRED | Consultation archive download | Export chat, files, final diagnosis/notes. |
 | D005 | DEFERRED | AI consultation summaries | Summary only, not diagnosis. |

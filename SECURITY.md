@@ -235,6 +235,24 @@ Consultation detail shell boundaries:
 - File messages in chat continue to download only through `/api/files/[attachmentId]` and never display `storagePath` or direct Supabase Storage URLs.
 - No secrets, cookies, session tokens, passwords, password hashes, `DATABASE_URL`, `DIRECT_URL`, `.env.local` contents, service role keys, or development seed password literals should be printed or displayed.
 
+Video call boundaries:
+
+- Daily is the selected MVP video provider.
+- Daily rooms are created only server-side as private provider rooms.
+- `DAILY_API_KEY` is server-only and must never use a `NEXT_PUBLIC_` environment variable name.
+- `POST /api/consultations/[consultationId]/call/session` requires `PATIENT` or `DOCTOR` server-side and rejects admins.
+- Patients can create or join a call session only for consultations owned by their own `PatientProfile`.
+- Doctors can create or join a call session only for consultations assigned to their own `DoctorProfile`.
+- Wrong patients, wrong doctors, logged-out users, and admins cannot create Daily rooms or receive meeting tokens.
+- Completed and cancelled consultations reject video call session creation.
+- Video calls are available only for `SCHEDULED` and `IN_PROGRESS` consultations from 15 minutes before the scheduled time until 90 minutes after it.
+- When an assigned doctor starts or joins a call for a `SCHEDULED` consultation, the consultation may move to `IN_PROGRESS`; patient join alone does not complete the consultation.
+- Video call logic must not mark consultations as `COMPLETED`.
+- Daily meeting tokens are short-lived, returned only to the authenticated participant, and are never stored in PostgreSQL.
+- Call APIs must not return the Daily API key, unrelated consultation data, chat content, attachment data, storage paths, medical outcome fields, password hashes, token hashes, cookies, raw invite/reset tokens, reset/invite URLs, or environment values.
+- Audit logs for video calls may include safe metadata such as consultation id, call session id, provider, role, and action, but must not include meeting tokens, provider API keys, cookies, passwords, hashes, or secret-bearing URLs.
+- Recording, transcription, screen sharing, group calls, raw WebRTC signaling, Supabase Realtime signaling, public call links, and admin call access are not implemented in Phase 14B.
+
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
 ## Session And Cookie Requirements

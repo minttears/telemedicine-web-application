@@ -7,9 +7,11 @@ import {
   ConsultationStatusBadge,
   ConsultationMessagesPanel,
 } from "@/components/consultations/consultation-display";
+import { VideoCallPanel } from "@/components/consultations/video-call-panel";
 import { ReviewForm } from "@/components/reviews/review-form";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
 import { prisma } from "@/lib/prisma";
+import { getVideoCallAvailability } from "@/lib/video/call-window";
 
 type PatientConsultationPageProps = {
   params: Promise<{
@@ -163,6 +165,10 @@ export default async function PatientConsultationPage({
   }
 
   const completedDoctorNotes = consultation.doctorNotes?.trim() ?? "";
+  const videoCallAvailability = getVideoCallAvailability({
+    scheduledAt: consultation.scheduledAt,
+    status: consultation.status,
+  });
 
   return (
     <div className="space-y-6">
@@ -194,6 +200,12 @@ export default async function PatientConsultationPage({
 
       <section className="grid gap-4 lg:grid-cols-[1fr_320px]">
         <div className="space-y-4">
+          <VideoCallPanel
+            consultationId={consultation.id}
+            disabledReason={videoCallAvailability.reason}
+            isEligible={videoCallAvailability.isEligible}
+            role="PATIENT"
+          />
           {completedDoctorNotes ? (
             <ConsultationSummaryPanel
               additionalNotes={consultation.additionalNotes}
