@@ -43,7 +43,7 @@ export function DailyCallRoom({
   isEligible,
   role,
 }: DailyCallRoomProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const frameHostRef = useRef<HTMLDivElement | null>(null);
   const callFrameRef = useRef<DailyCall | null>(null);
   const [callState, setCallState] = useState<CallState>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -57,8 +57,16 @@ export function DailyCallRoom({
     const callFrame = callFrameRef.current;
     callFrameRef.current = null;
 
-    if (callFrame && !callFrame.isDestroyed()) {
-      callFrame.destroy();
+    if (!callFrame) {
+      return;
+    }
+
+    try {
+      if (!callFrame.isDestroyed()) {
+        void Promise.resolve(callFrame.destroy()).catch(() => null);
+      }
+    } catch {
+      // Daily may already have removed its iframe during leave/error handling.
     }
   }
 
@@ -107,18 +115,17 @@ export function DailyCallRoom({
           return;
         }
 
-        const container = containerRef.current;
+        const frameHost = frameHostRef.current;
 
-        if (!container) {
+        if (!frameHost) {
           setCallState("error");
           setError("Video call container is not available.");
           return;
         }
 
         destroyCallFrame();
-        container.replaceChildren();
 
-        const callFrame = DailyIframe.createFrame(container, {
+        const callFrame = DailyIframe.createFrame(frameHost, {
           iframeStyle: {
             border: "0",
             borderRadius: "14px",
@@ -179,10 +186,10 @@ export function DailyCallRoom({
       <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-950 p-2">
         <div
           className="relative min-h-[28rem] overflow-hidden rounded-xl bg-slate-900 sm:min-h-[36rem]"
-          ref={containerRef}
         >
+          <div className="absolute inset-0" ref={frameHostRef} />
           {callState !== "joined" && callState !== "joining" ? (
-            <div className="flex min-h-[28rem] flex-col items-center justify-center p-6 text-center sm:min-h-[36rem]">
+            <div className="relative z-10 flex min-h-[28rem] flex-col items-center justify-center p-6 text-center sm:min-h-[36rem]">
               <div className="max-w-md rounded-xl border border-white/10 bg-white p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-slate-950">
                   Ready to connect
