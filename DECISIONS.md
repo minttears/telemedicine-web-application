@@ -196,7 +196,7 @@ Reason: The MVP needs a simple discovery helper without schema changes, dependen
 
 ### D025: Use Daily For MVP Video Calls
 
-Status: Accepted
+Status: Superseded by D027
 
 Use Daily Prebuilt as the MVP video provider. The app creates private Daily rooms server-side and issues short-lived Daily meeting tokens only after authenticated patient/assigned-doctor consultation checks.
 
@@ -204,11 +204,19 @@ Reason: Daily avoids custom WebRTC signaling, STUN/TURN, and media infrastructur
 
 ### D026: Embed Daily Prebuilt With `@daily-co/daily-js`
 
-Status: Accepted
+Status: Superseded by D027
 
 Use `@daily-co/daily-js` to embed Daily Prebuilt in role-scoped patient and doctor call pages. The client joins with `join({ url, token })` after the authenticated app API issues a short-lived participant token.
 
 Reason: Daily Prebuilt gives the MVP camera, microphone, mute, camera toggle, and leave controls without custom WebRTC UI. Passing the token to `join()` keeps it out of URLs, rendered markup, local storage, session storage, and PostgreSQL. `DAILY_API_KEY` remains server-only.
+
+### D027: Replace Daily With LiveKit For MVP Video Calls
+
+Status: Accepted
+
+Use LiveKit Cloud as the active MVP video provider. The app reuses the existing `ConsultationCallSession` model with `provider = "livekit"`, creates consultation-specific random room names, and issues short-lived LiveKit participant tokens only after authenticated patient/assigned-doctor consultation checks.
+
+Reason: Daily real calls required a payment method, while LiveKit Cloud Free Build better matches the current hard-cap/free MVP requirement. LiveKit official React components provide camera, microphone, local/remote video, and leave controls without custom signaling. `LIVEKIT_API_KEY` and `LIVEKIT_API_SECRET` remain server-only. Recording, transcription, egress, screen sharing, group calls, public call links, raw WebRTC signaling, Supabase Realtime signaling, and admin call access are excluded from this phase.
 
 ## Pending Decisions
 

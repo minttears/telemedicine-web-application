@@ -2,11 +2,36 @@
 
 ## Current Plan
 
-Phase 14C Daily Video Call UI is completed. Daily Prebuilt is embedded with `@daily-co/daily-js` on dedicated patient and doctor call pages, using the existing authenticated server-issued token flow. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 14D Switch Video Provider From Daily To LiveKit is completed. LiveKit official React components are used on dedicated patient and doctor call pages, using the existing authenticated server-issued token flow. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+
+## Phase 14D: Switch Video Provider From Daily To LiveKit
+
+Status: Completed
+
+Completed:
+
+- Replaced Daily with LiveKit because Daily required a payment method for real calls and LiveKit Cloud Free Build better matches the current hard-cap/free MVP goal.
+- Removed `@daily-co/daily-js` and added `livekit-server-sdk`, `livekit-client`, `@livekit/components-react`, and `@livekit/components-styles`.
+- Reused `ConsultationCallSession` without a Prisma migration by storing `provider = "livekit"` and a random provider room name.
+- Preserved `POST /api/consultations/[consultationId]/call/session`, existing patient/assigned-doctor authorization, admin rejection, completed/cancelled rejection, call window checks, and doctor-start transition from `SCHEDULED` to `IN_PROGRESS`.
+- Added server-only LiveKit token generation with short-lived participant tokens and camera/microphone-only publish grants.
+- Replaced Daily call UI with LiveKit official React components on `/patient/consultations/[consultationId]/call` and `/doctor/consultations/[consultationId]/call`.
+- Updated `.env.example` to document `VIDEO_PROVIDER="livekit"`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and `LIVEKIT_API_SECRET`.
+
+Deferred:
+
+- Full production device/network QA and advanced browser hardening.
+- Call end persistence.
+- Recording, transcription, egress, persistent media storage, group calls, admin call access, public call links, raw WebRTC signaling, and Supabase Realtime signaling.
+
+Manual setup:
+
+- Create a LiveKit Cloud project.
+- Add `VIDEO_PROVIDER`, `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and `LIVEKIT_API_SECRET` locally and in deployment variables.
 
 ## Phase 14C: Daily Video Call UI
 
-Status: Completed
+Status: Completed, superseded by Phase 14D
 
 Completed:
 
@@ -26,7 +51,7 @@ Deferred:
 
 ## Phase 14B: Daily Video Provider Foundation
 
-Status: Completed
+Status: Completed, superseded by Phase 14D
 
 Completed:
 
@@ -46,7 +71,7 @@ Deferred:
 - Call end workflow.
 - Recording, transcription, screen sharing, group calls, admin call access, public call links, raw WebRTC signaling, and Supabase Realtime signaling.
 
-Manual setup:
+Historical manual setup, no longer active after Phase 14D:
 
 - Create a Daily account.
 - Add `VIDEO_PROVIDER`, `DAILY_API_KEY`, `DAILY_API_BASE_URL`, and optional Daily room domain values locally and in deployment variables.

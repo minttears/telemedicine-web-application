@@ -19,15 +19,10 @@ import { prisma } from "@/lib/prisma";
 import {
   getVideoCallWindow,
   isWithinVideoCallWindow,
-  VIDEO_CALL_JOIN_WINDOW_AFTER_MS,
 } from "@/lib/video/call-window";
-import {
-  createDailyMeetingToken,
-  createDailyPrivateRoom,
-} from "@/lib/video/daily";
+import { createLiveKitParticipantToken } from "@/lib/video/livekit";
 
-const VIDEO_PROVIDER = "daily";
-const ROOM_EXPIRY_BUFFER_MS = 15 * 60 * 1000;
+const VIDEO_PROVIDER = "livekit";
 const TOKEN_TTL_MS = 15 * 60 * 1000;
 const CALL_ENABLED_STATUSES: ConsultationStatus[] = [
   ConsultationStatus.SCHEDULED,
@@ -87,21 +82,11 @@ async function findActiveCallSession(consultationId: string) {
 async function createCallSession({
   consultationId,
   createdByUserId,
-  roomExpiresAt,
 }: {
   consultationId: string;
   createdByUserId: string;
-  roomExpiresAt: Date;
 }) {
   const roomName = `tm-${randomUUID()}`;
-  const room = await createDailyPrivateRoom({
-    expiresAt: roomExpiresAt,
-    roomName,
-  });
-
-  if (!room.ok) {
-    return room;
-  }
 
   try {
     const session = await prisma.consultationCallSession.create({
@@ -109,8 +94,8 @@ async function createCallSession({
         consultationId,
         createdByUserId,
         provider: VIDEO_PROVIDER,
-        providerRoomName: room.data.name,
-        providerRoomUrl: room.data.url,
+        providerRoomName: roomName,
+        providerRoomUrl: null,
         status: ConsultationCallSessionStatus.CREATED,
       },
     });
@@ -130,7 +115,7 @@ async function createCallSession({
       },
     });
 
-    return { data: session, ok: true as const };
+    return session;
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -139,7 +124,7 @@ async function createCallSession({
       const existingSession = await findActiveCallSession(consultationId);
 
       if (existingSession) {
-        return { data: existingSession, ok: true as const };
+        return existingSession;
       }
     }
 
@@ -208,17 +193,10 @@ export async function POST(
     let callSession = await findActiveCallSession(consultation.id);
 
     if (!callSession) {
-      const createdSession = await createCallSession({
+      callSession = await createCallSession({
         consultationId: consultation.id,
         createdByUserId: user.id,
-        roomExpiresAt: new Date(closesAt.getTime() + ROOM_EXPIRY_BUFFER_MS),
       });
-
-      if (!createdSession.ok) {
-        return unavailable(createdSession.error);
-      }
-
-      callSession = createdSession.data;
     }
 
     if (user.role === "DOCTOR") {
@@ -249,15 +227,15 @@ export async function POST(
     const tokenExpiresAt = new Date(
       Math.min(
         now.getTime() + TOKEN_TTL_MS,
-        consultation.scheduledAt.getTime() + VIDEO_CALL_JOIN_WINDOW_AFTER_MS,
+        closesAt.getTime(),
       ),
     );
-    const token = await createDailyMeetingToken({
+    const token = await createLiveKitParticipantToken({
       expiresAt: tokenExpiresAt,
-      isOwner: user.role === "DOCTOR",
       roomName: callSession.providerRoomName,
       userId: user.id,
       userName: getParticipantName({ role: user.role, userName: user.name }),
+      userRole: user.role,
     });
 
     if (!token.ok) {
@@ -282,10 +260,10 @@ export async function POST(
 
     return Response.json({
       callSessionId: callSession.id,
-      meetingToken: token.data.token,
+      livekitUrl: token.data.url,
+      participantToken: token.data.token,
       provider: VIDEO_PROVIDER,
       roomName: callSession.providerRoomName,
-      roomUrl: callSession.providerRoomUrl,
       sessionStatus: callSession.status,
       tokenExpiresAt: tokenExpiresAt.toISOString(),
     });

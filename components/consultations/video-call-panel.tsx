@@ -19,12 +19,12 @@ export function VideoCallPanel({
     <section className="rounded-lg border border-teal-100 bg-teal-50 p-6 shadow-sm">
       <p className="text-sm font-medium text-teal-800">Video consultation</p>
       <h2 className="mt-2 text-lg font-semibold text-slate-950">
-        Daily video call
+        LiveKit video call
       </h2>
       <p className="mt-3 text-sm leading-6 text-slate-700">
-        Private Daily rooms and short-lived server-issued meeting tokens are used
-        for eligible scheduled consultations. Tokens are never shown on this
-        page.
+        Private LiveKit rooms and short-lived server-issued participant tokens
+        are used for eligible scheduled consultations. Tokens are never shown on
+        this page.
       </p>
       {isEligible ? (
         <Link

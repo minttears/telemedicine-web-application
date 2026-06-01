@@ -12,11 +12,14 @@
     "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
-    "@daily-co/daily-js": "^0.90.0",
+    "@livekit/components-react": "^2.9.21",
+    "@livekit/components-styles": "^1.2.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "latest",
     "@supabase/supabase-js": "^2.106.2",
     "bcryptjs": "^3.0.3",
+    "livekit-client": "^2.19.1",
+    "livekit-server-sdk": "^2.15.4",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"

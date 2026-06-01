@@ -50,8 +50,8 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 12F Doctor Reviews And Ratings
 - Phase 13A Consultation Treatment Plan / Doctor Recommendations
 - Phase 13B Doctor Search Filters And Symptom Tags
-- Phase 14B Daily Video Provider Foundation
-- Phase 14C Daily Video Call UI
+- Phase 14B/14C Daily Video Provider Foundation And UI, superseded by Phase 14D
+- Phase 14D LiveKit Video Provider And Call UI
 
 ## Current MVP Behavior
 
@@ -110,14 +110,15 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Completed consultations show preserved chat history in read-only mode.
 - Completed consultations show existing file messages read-only and reject new file uploads.
 - `POST /api/messages` rejects completed consultations with a safe `409`, while non-completed consultation chat remains writable.
-- Phase 14B selected Daily as the MVP video provider and added server-side private Daily room creation plus short-lived meeting token issuance through `POST /api/consultations/[consultationId]/call/session`.
+- Phase 14D replaced Daily with LiveKit as the active MVP video provider because Daily required a payment method for real calls.
+- `POST /api/consultations/[consultationId]/call/session` now issues short-lived LiveKit participant tokens for random consultation-specific room names stored in `ConsultationCallSession`.
 - Video call session creation is allowed only for authenticated patients who own the consultation and assigned doctors, rejects admins and wrong users, rejects completed/cancelled consultations, and is available from 15 minutes before scheduled time until 90 minutes after it for `SCHEDULED` and `IN_PROGRESS` consultations.
-- Doctor start/join prepares the Daily session and moves a `SCHEDULED` consultation to `IN_PROGRESS`; patient join prepares a token without completing the consultation.
-- Daily participant tokens are returned only from the authenticated API response, are not stored in PostgreSQL, are not shown in the UI, and `DAILY_API_KEY` remains server-only.
-- Patient and doctor consultation detail pages show a Daily video call panel that links to role-scoped call pages.
-- Phase 14C added `/patient/consultations/[consultationId]/call` and `/doctor/consultations/[consultationId]/call` with Daily Prebuilt embedded through `@daily-co/daily-js`.
-- The Daily call UI requests the existing authenticated call-session API only after the participant clicks join/start, passes the short-lived token to `join({ url, token })`, and keeps the token in memory only.
-- Daily Prebuilt handles camera/microphone permissions, mute, camera toggle, and leave controls. Leave returns to a safe ended state with a back-to-consultation action.
+- Doctor start/join prepares the LiveKit session and moves a `SCHEDULED` consultation to `IN_PROGRESS`; patient join prepares a token without completing the consultation.
+- LiveKit participant tokens are returned only from the authenticated API response, are not stored in PostgreSQL, are not shown in the UI, and `LIVEKIT_API_SECRET` remains server-only.
+- Patient and doctor consultation detail pages show a LiveKit video call panel that links to role-scoped call pages.
+- Phase 14D keeps `/patient/consultations/[consultationId]/call` and `/doctor/consultations/[consultationId]/call` with LiveKit official React components.
+- The LiveKit call UI requests the existing authenticated call-session API only after the participant clicks join/start and keeps the short-lived token in memory only.
+- LiveKit components handle camera/microphone permissions, mute, camera toggle, local/remote video, and leave controls. Screen sharing is disabled in token grants and UI controls. Leave returns to a safe ended state with a back-to-consultation action.
 - Admin has no attachment content access in this phase.
 - Admin doctor management is implemented for the MVP, while broader operational management remains deferred.
 - Login and patient-facing workflow copy now reflects current MVP behavior for patient registration, doctor discovery, booking, chat, file attachments, consultation history, and admin-created doctor/specialty management.
@@ -168,7 +169,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 14C: Daily Video Call UI.
+Phase 14D: LiveKit Video Provider And Call UI.
 
 Latest known commit:
 

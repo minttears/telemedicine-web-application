@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { DailyCallRoom } from "@/components/consultations/daily-call-room";
 import { ConsultationStatusBadge } from "@/components/consultations/consultation-display";
+import { LiveKitCallRoom } from "@/components/consultations/livekit-call-room";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
 import { prisma } from "@/lib/prisma";
 import { getVideoCallAvailability } from "@/lib/video/call-window";
@@ -96,7 +96,7 @@ export default async function PatientCallPage({ params }: PatientCallPageProps) 
         </div>
       </section>
 
-      <DailyCallRoom
+      <LiveKitCallRoom
         backHref={backHref}
         consultationId={consultation.id}
         disabledReason={videoCallAvailability.reason}

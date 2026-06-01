@@ -237,24 +237,24 @@ Consultation detail shell boundaries:
 
 Video call boundaries:
 
-- Daily is the selected MVP video provider.
-- Daily rooms are created only server-side as private provider rooms.
-- `DAILY_API_KEY` is server-only and must never use a `NEXT_PUBLIC_` environment variable name.
+- LiveKit is the selected MVP video provider; Daily was replaced because it required a payment method for real calls.
+- LiveKit rooms use random consultation-specific names stored in `ConsultationCallSession`; rooms are joined only with server-issued participant tokens.
+- `LIVEKIT_API_KEY` and `LIVEKIT_API_SECRET` are server-only and must never use `NEXT_PUBLIC_` environment variable names.
 - `POST /api/consultations/[consultationId]/call/session` requires `PATIENT` or `DOCTOR` server-side and rejects admins.
 - Patients can create or join a call session only for consultations owned by their own `PatientProfile`.
 - Doctors can create or join a call session only for consultations assigned to their own `DoctorProfile`.
-- Wrong patients, wrong doctors, logged-out users, and admins cannot create Daily rooms or receive meeting tokens.
+- Wrong patients, wrong doctors, logged-out users, and admins cannot create call sessions or receive LiveKit participant tokens.
 - Completed and cancelled consultations reject video call session creation.
 - Video calls are available only for `SCHEDULED` and `IN_PROGRESS` consultations from 15 minutes before the scheduled time until 90 minutes after it.
 - When an assigned doctor starts or joins a call for a `SCHEDULED` consultation, the consultation may move to `IN_PROGRESS`; patient join alone does not complete the consultation.
 - Video call logic must not mark consultations as `COMPLETED`.
-- Daily meeting tokens are short-lived, returned only to the authenticated participant, and are never stored in PostgreSQL.
-- Phase 14C uses Daily Prebuilt through `@daily-co/daily-js`; the browser receives a short-lived participant token only after the user clicks join/start and passes it to `join({ url, token })` in memory.
-- Daily participant tokens must not be rendered as text, logged, placed in URLs, stored in local storage, stored in session storage, persisted in PostgreSQL, or included in documentation/screenshots.
+- LiveKit participant tokens are short-lived, returned only to the authenticated participant, and are never stored in PostgreSQL.
+- Phase 14D uses LiveKit official React components; the browser receives a short-lived participant token only after the user clicks join/start and keeps it in memory for the active room connection.
+- LiveKit participant tokens must not be rendered as text, logged, placed in URLs, stored in local storage, stored in session storage, persisted in PostgreSQL, or included in documentation/screenshots.
 - Patient and doctor call pages are role-scoped under `/patient/consultations/[consultationId]/call` and `/doctor/consultations/[consultationId]/call` and reuse the same server-side ownership/assignment checks as the consultation detail pages.
-- Call APIs must not return the Daily API key, unrelated consultation data, chat content, attachment data, storage paths, medical outcome fields, password hashes, token hashes, cookies, raw invite/reset tokens, reset/invite URLs, or environment values.
+- Call APIs must not return LiveKit provider secrets, unrelated consultation data, chat content, attachment data, storage paths, medical outcome fields, password hashes, token hashes, cookies, raw invite/reset tokens, reset/invite URLs, or environment values.
 - Audit logs for video calls may include safe metadata such as consultation id, call session id, provider, role, and action, but must not include meeting tokens, provider API keys, cookies, passwords, hashes, or secret-bearing URLs.
-- Recording, transcription, screen sharing, persistent media storage, group calls, raw WebRTC signaling, Supabase Realtime signaling, public call links, and admin call access are not implemented in Phase 14B or Phase 14C.
+- Recording, transcription, egress, screen sharing, persistent media storage, group calls, raw WebRTC signaling, Supabase Realtime signaling, public call links, and admin call access are not implemented in Phase 14D. Screen sharing is disabled in LiveKit token grants and UI controls.
 
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 
