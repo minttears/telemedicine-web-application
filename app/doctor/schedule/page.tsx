@@ -1,5 +1,6 @@
 import { ScheduleSlotActions } from "@/components/doctor/schedule-slot-actions";
 import { ScheduleSlotForm } from "@/components/doctor/schedule-slot-form";
+import { VideoQaTools } from "@/components/doctor/video-qa-tools";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
 import { prisma } from "@/lib/prisma";
 
@@ -55,6 +56,7 @@ function getStatusClassName(status: string) {
 export default async function DoctorSchedulePage() {
   const user = await requireWorkspaceRole("DOCTOR");
   const now = new Date();
+  const showDevQaTools = process.env.NODE_ENV !== "production";
 
   const doctorProfile = await prisma.doctorProfile.findUnique({
     where: {
@@ -137,6 +139,8 @@ export default async function DoctorSchedulePage() {
               <ScheduleSlotForm />
             </div>
           </section>
+
+          {showDevQaTools ? <VideoQaTools /> : null}
 
           <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">

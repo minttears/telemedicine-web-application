@@ -53,6 +53,12 @@ export default async function DoctorCallPage({ params }: DoctorCallPageProps) {
           },
         },
       },
+      scheduleSlot: {
+        select: {
+          endsAt: true,
+          startsAt: true,
+        },
+      },
       scheduledAt: true,
       status: true,
     },
@@ -63,7 +69,9 @@ export default async function DoctorCallPage({ params }: DoctorCallPageProps) {
   }
 
   const videoCallAvailability = getVideoCallAvailability({
+    endsAt: consultation.scheduleSlot?.endsAt,
     scheduledAt: consultation.scheduledAt,
+    startsAt: consultation.scheduleSlot?.startsAt,
     status: consultation.status,
   });
   const backHref = `/doctor/consultations/${consultation.id}`;

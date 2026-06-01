@@ -245,7 +245,7 @@ Video call boundaries:
 - Doctors can create or join a call session only for consultations assigned to their own `DoctorProfile`.
 - Wrong patients, wrong doctors, logged-out users, and admins cannot create call sessions or receive LiveKit participant tokens.
 - Completed and cancelled consultations reject video call session creation.
-- Video calls are available only for `SCHEDULED` and `IN_PROGRESS` consultations from 15 minutes before the scheduled time until 90 minutes after it.
+- Video calls are available only for `SCHEDULED` and `IN_PROGRESS` consultations from the consultation start time until the consultation end time. A linked schedule slot's `startsAt` and `endsAt` define the window; consultations without a linked end time use a conservative 60-minute fallback after `scheduledAt`.
 - When an assigned doctor starts or joins a call for a `SCHEDULED` consultation, the consultation may move to `IN_PROGRESS`; patient join alone does not complete the consultation.
 - Video call logic must not mark consultations as `COMPLETED`.
 - LiveKit participant tokens are short-lived, returned only to the authenticated participant, and are never stored in PostgreSQL.
@@ -254,7 +254,10 @@ Video call boundaries:
 - Patient and doctor call pages are role-scoped under `/patient/consultations/[consultationId]/call` and `/doctor/consultations/[consultationId]/call` and reuse the same server-side ownership/assignment checks as the consultation detail pages.
 - Call APIs must not return LiveKit provider secrets, unrelated consultation data, chat content, attachment data, storage paths, medical outcome fields, password hashes, token hashes, cookies, raw invite/reset tokens, reset/invite URLs, or environment values.
 - Audit logs for video calls may include safe metadata such as consultation id, call session id, provider, role, and action, but must not include meeting tokens, provider API keys, cookies, passwords, hashes, or secret-bearing URLs.
-- Recording, transcription, egress, screen sharing, persistent media storage, group calls, raw WebRTC signaling, Supabase Realtime signaling, public call links, and admin call access are not implemented in Phase 14D. Screen sharing is disabled in LiveKit token grants and UI controls.
+- Built-in LiveKit chat/data messaging is disabled because the application has its own persisted consultation chat backed by PostgreSQL.
+- Recording, transcription, egress, screen sharing, persistent media storage, group calls, raw WebRTC signaling, Supabase Realtime signaling, public call links, and admin call access are not implemented in Phase 14E. Screen sharing is disabled in LiveKit token grants and UI controls.
+- Local video QA must not change system time because provider participant tokens depend on real clock time. Use the dev-only video QA action instead.
+- The dev-only video QA action is unavailable in production, requires an authenticated `DOCTOR`, creates development-labeled test data only, and must not expose public call links or provider secrets.
 
 API routes still need their own authorization checks in future phases. Layout protection only protects workspace page rendering.
 

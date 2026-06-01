@@ -1,32 +1,55 @@
 import type { ConsultationStatus } from "@prisma/client";
 
-export const VIDEO_CALL_JOIN_WINDOW_BEFORE_MS = 15 * 60 * 1000;
-export const VIDEO_CALL_JOIN_WINDOW_AFTER_MS = 90 * 60 * 1000;
+export const VIDEO_CALL_FALLBACK_DURATION_MS = 60 * 60 * 1000;
 
 const CALL_ENABLED_STATUSES: ConsultationStatus[] = ["SCHEDULED", "IN_PROGRESS"];
 
-export function getVideoCallWindow(scheduledAt: Date) {
+export function getVideoCallWindow({
+  endsAt,
+  scheduledAt,
+  startsAt,
+}: {
+  endsAt?: Date | null;
+  scheduledAt: Date;
+  startsAt?: Date | null;
+}) {
+  const opensAt = startsAt ?? scheduledAt;
+
   return {
-    closesAt: new Date(
-      scheduledAt.getTime() + VIDEO_CALL_JOIN_WINDOW_AFTER_MS,
-    ),
-    opensAt: new Date(
-      scheduledAt.getTime() - VIDEO_CALL_JOIN_WINDOW_BEFORE_MS,
-    ),
+    closesAt: endsAt ?? new Date(scheduledAt.getTime() + VIDEO_CALL_FALLBACK_DURATION_MS),
+    opensAt,
   };
 }
 
-export function isWithinVideoCallWindow(scheduledAt: Date, now = new Date()) {
-  const { closesAt, opensAt } = getVideoCallWindow(scheduledAt);
+export function isWithinVideoCallWindow({
+  endsAt,
+  now = new Date(),
+  scheduledAt,
+  startsAt,
+}: {
+  endsAt?: Date | null;
+  now?: Date;
+  scheduledAt: Date;
+  startsAt?: Date | null;
+}) {
+  const { closesAt, opensAt } = getVideoCallWindow({
+    endsAt,
+    scheduledAt,
+    startsAt,
+  });
 
   return now >= opensAt && now <= closesAt;
 }
 
 export function getVideoCallAvailability({
+  endsAt,
   scheduledAt,
+  startsAt,
   status,
 }: {
+  endsAt?: Date | null;
   scheduledAt: Date;
+  startsAt?: Date | null;
   status: ConsultationStatus;
 }) {
   if (status === "COMPLETED") {
@@ -50,11 +73,17 @@ export function getVideoCallAvailability({
     };
   }
 
-  if (!isWithinVideoCallWindow(scheduledAt)) {
+  if (
+    !isWithinVideoCallWindow({
+      endsAt,
+      scheduledAt,
+      startsAt,
+    })
+  ) {
     return {
       isEligible: false,
       reason:
-        "Video calls are available from 15 minutes before the scheduled time until 90 minutes after it.",
+        "Video calls are available from the scheduled start time until the consultation end time.",
     };
   }
 

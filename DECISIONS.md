@@ -218,6 +218,14 @@ Use LiveKit Cloud as the active MVP video provider. The app reuses the existing 
 
 Reason: Daily real calls required a payment method, while LiveKit Cloud Free Build better matches the current hard-cap/free MVP requirement. LiveKit official React components provide camera, microphone, local/remote video, and leave controls without custom signaling. `LIVEKIT_API_KEY` and `LIVEKIT_API_SECRET` remain server-only. Recording, transcription, egress, screen sharing, group calls, public call links, raw WebRTC signaling, Supabase Realtime signaling, and admin call access are excluded from this phase.
 
+### D028: Use Consultation Start-To-End Window For MVP Video Calls
+
+Status: Accepted
+
+Video calls are available from the scheduled consultation start time until the consultation end time. When a linked schedule slot exists, its `startsAt` and `endsAt` define the window; otherwise the fallback end is 60 minutes after `Consultation.scheduledAt`.
+
+Reason: This avoids pre-start joining and matches the expected appointment window. Local QA should create near-now dev consultations instead of changing system time because LiveKit participant tokens depend on real clock time. Built-in LiveKit chat is disabled because the app already has persisted consultation chat in PostgreSQL.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

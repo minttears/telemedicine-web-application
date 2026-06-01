@@ -2,7 +2,25 @@
 
 ## Current Plan
 
-Phase 14D Switch Video Provider From Daily To LiveKit is completed. LiveKit official React components are used on dedicated patient and doctor call pages, using the existing authenticated server-issued token flow. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 14E Video Call QA Polish is completed. LiveKit calls use the consultation start-to-end window, built-in LiveKit chat is disabled, and local QA uses a dev-only near-now consultation creator instead of system time changes. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+
+## Phase 14E: Video Call QA Polish
+
+Status: Completed
+
+Completed:
+
+- Added a dev-only doctor schedule QA panel that creates a development-labeled booked slot and scheduled consultation starting now or in 5 minutes with an existing active patient.
+- Kept the QA action disabled in production and protected by the existing authenticated `DOCTOR` role check.
+- Changed video eligibility to the exact consultation window: schedule slot start through schedule slot end, with a 60-minute fallback after `scheduledAt` when no slot end is available.
+- Disabled built-in LiveKit chat UI because consultation chat is persisted through the app's PostgreSQL-backed messaging workflow.
+- Preserved short-lived LiveKit participant tokens, server-only provider secrets, no public call links, no admin video access, no recording/transcription/egress, and disabled screen sharing.
+
+QA notes:
+
+- Do not change system time for video testing because LiveKit tokens depend on the real clock and may become invalid.
+- Use the dev-only video QA action on the doctor schedule page for local near-now testing.
+- Local phone testing requires an HTTPS-accessible app URL, such as a Vercel preview or HTTPS tunnel; plain LAN `http://IP:3000` may not allow camera or microphone access.
 
 ## Phase 14D: Switch Video Provider From Daily To LiveKit
 

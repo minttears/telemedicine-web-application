@@ -136,7 +136,9 @@ export default async function DoctorConsultationPage({
 
   const completedDoctorNotes = consultation.doctorNotes?.trim() ?? "";
   const videoCallAvailability = getVideoCallAvailability({
+    endsAt: consultation.scheduleSlot?.endsAt,
     scheduledAt: consultation.scheduledAt,
+    startsAt: consultation.scheduleSlot?.startsAt,
     status: consultation.status,
   });
 

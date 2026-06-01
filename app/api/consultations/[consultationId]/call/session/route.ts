@@ -162,6 +162,12 @@ export async function POST(
       },
       select: {
         id: true,
+        scheduleSlot: {
+          select: {
+            endsAt: true,
+            startsAt: true,
+          },
+        },
         scheduledAt: true,
         status: true,
       },
@@ -183,13 +189,24 @@ export async function POST(
       return conflict("Video calls are not available for this consultation status.");
     }
 
-    if (!isWithinVideoCallWindow(consultation.scheduledAt, now)) {
+    if (
+      !isWithinVideoCallWindow({
+        endsAt: consultation.scheduleSlot?.endsAt,
+        now,
+        scheduledAt: consultation.scheduledAt,
+        startsAt: consultation.scheduleSlot?.startsAt,
+      })
+    ) {
       return conflict(
-        "Video calls are available from 15 minutes before the scheduled time until 90 minutes after it.",
+        "Video calls are available from the scheduled start time until the consultation end time.",
       );
     }
 
-    const { closesAt } = getVideoCallWindow(consultation.scheduledAt);
+    const { closesAt } = getVideoCallWindow({
+      endsAt: consultation.scheduleSlot?.endsAt,
+      scheduledAt: consultation.scheduledAt,
+      startsAt: consultation.scheduleSlot?.startsAt,
+    });
     let callSession = await findActiveCallSession(consultation.id);
 
     if (!callSession) {

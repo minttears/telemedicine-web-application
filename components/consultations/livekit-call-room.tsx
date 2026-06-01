@@ -135,6 +135,7 @@ export function LiveKitCallRoom({
             >
               <VideoConference className="h-full min-h-[28rem] sm:min-h-[36rem]" />
               <style jsx global>{`
+                .lk-video-conference .lk-chat,
                 .lk-video-conference .lk-chat-toggle,
                 .lk-video-conference .lk-button[data-lk-source="screen_share"] {
                   display: none;

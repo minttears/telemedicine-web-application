@@ -87,6 +87,7 @@
 | T706 | DONE | Implement consultation history and archive rules | Patient and doctor consultation lists now support Upcoming, Completed, and All filters. Completed consultations stay visible and accessible, chat history is preserved, and completed chat is read-only with `POST /api/messages` returning a safe `409`. File uploads, Storage, Realtime, video calls, payment, legal prescription workflow, structured diagnosis fields, admin message access, admin management, and hard deletion remain TODO/deferred. |
 | T707 | DONE | Add video provider foundation | Phase 14B selected Daily initially, then Phase 14D replaced it with LiveKit because Daily required a payment method for real calls. The active implementation uses LiveKit room names, short-lived participant tokens, existing call-session persistence, strict patient/assigned-doctor authorization, documented env placeholders, and a consultation call panel. |
 | T708 | DONE | Add LiveKit video call UI | Phase 14D replaced Daily Prebuilt with LiveKit official React components on dedicated patient/doctor call pages. The existing call panel links to the role-scoped call page, the client requests a short-lived token only after join/start, and tokens are kept in memory only. Recording, transcription, screen sharing, persistent media storage, group calls, public links, raw WebRTC signaling, and admin call access remain excluded. |
+| T709 | DONE | Polish video call QA flow | Phase 14E added a dev-only doctor QA action for near-now test consultations, changed the video access window to consultation start through consultation end, disabled built-in LiveKit chat in favor of persisted app chat, and documented that system time must not be changed for provider-token testing. |
 
 ## Milestone 8: Admin And Audit
 
@@ -109,7 +110,7 @@
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
 | D001 | DEFERRED | 2FA enforcement for doctors and admins | Prepare models earlier, implement after MVP auth/chat. |
-| D002 | DEFERRED | Video call hardening | LiveKit call UI is implemented for the MVP. Full production device/network QA, call end persistence, recording, transcription, group calls, and admin call access remain deferred. Screen sharing remains disabled in token grants and UI controls. |
+| D002 | DEFERRED | Video call hardening | LiveKit call UI is implemented for the MVP and Phase 14E added local QA helpers. Full production device/network QA, call end persistence, recording, transcription, group calls, and admin call access remain deferred. Screen sharing and built-in LiveKit chat remain disabled. |
 | D003 | DEFERRED | Patient intake questionnaire | Add after core consultation flow works. |
 | D004 | DEFERRED | Consultation archive download | Export chat, files, final diagnosis/notes. |
 | D005 | DEFERRED | AI consultation summaries | Summary only, not diagnosis. |
