@@ -119,7 +119,6 @@ export async function createDailyPrivateRoom({
       privacy: "private",
       properties: {
         enable_chat: false,
-        enable_recording: "off",
         enable_screenshare: false,
         exp: Math.floor(expiresAt.getTime() / 1000),
       },
