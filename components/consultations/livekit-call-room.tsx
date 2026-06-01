@@ -1,15 +1,10 @@
 "use client";
 
 import {
-  ControlBar,
-  GridLayout,
   LiveKitRoom,
-  ParticipantTile,
-  RoomAudioRenderer,
-  useTracks,
+  VideoConference,
 } from "@livekit/components-react";
 import "@livekit/components-styles";
-import { Track } from "livekit-client";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -28,18 +23,6 @@ type CallSessionResponse = {
 };
 
 type CallState = "idle" | "loading" | "joined" | "ended" | "error";
-
-function VideoGrid() {
-  const tracks = useTracks([
-    { source: Track.Source.Camera, withPlaceholder: true },
-  ]);
-
-  return (
-    <GridLayout className="h-full min-h-[22rem]" tracks={tracks}>
-      <ParticipantTile />
-    </GridLayout>
-  );
-}
 
 export function LiveKitCallRoom({
   backHref,
@@ -131,8 +114,10 @@ export function LiveKitCallRoom({
               audio
               className="h-full min-h-[28rem] bg-slate-900 sm:min-h-[36rem]"
               connect
+              data-lk-theme="default"
               onDisconnected={leaveCall}
               onError={() => {
+                setJoinInfo(null);
                 setCallState("error");
                 setError(
                   "LiveKit could not start the call. Check camera and microphone permissions, then try again.",
@@ -148,26 +133,13 @@ export function LiveKitCallRoom({
               token={joinInfo.token}
               video
             >
-              <div className="flex h-full min-h-[28rem] flex-col sm:min-h-[36rem]">
-                <div className="min-h-0 flex-1 p-2">
-                  <VideoGrid />
-                </div>
-                <RoomAudioRenderer />
-                <div className="border-t border-white/10 bg-slate-950/80 p-3">
-                  <ControlBar
-                    controls={{
-                      camera: true,
-                      chat: false,
-                      leave: true,
-                      microphone: true,
-                      screenShare: false,
-                      settings: true,
-                    }}
-                    saveUserChoices={false}
-                    variation="minimal"
-                  />
-                </div>
-              </div>
+              <VideoConference className="h-full min-h-[28rem] sm:min-h-[36rem]" />
+              <style jsx global>{`
+                .lk-video-conference .lk-chat-toggle,
+                .lk-video-conference .lk-button[data-lk-source="screen_share"] {
+                  display: none;
+                }
+              `}</style>
             </LiveKitRoom>
           ) : (
             <div className="flex min-h-[28rem] flex-col items-center justify-center p-6 text-center sm:min-h-[36rem]">
