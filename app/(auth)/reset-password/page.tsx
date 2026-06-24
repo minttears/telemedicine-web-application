@@ -30,14 +30,15 @@ export default async function ResetPasswordPage({
       ) : (
         <section className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 text-center shadow-sm">
           <p className="text-sm font-medium text-teal-700">
-            Password reset
+            Сброс пароля
           </p>
           <h1 className="mt-3 text-2xl font-semibold tracking-normal text-slate-950">
-            Reset link unavailable
+            Ссылка для сброса недоступна
           </h1>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            This password reset link is invalid or expired. Request a new reset
-            link if you still need access.
+            Эта ссылка для сброса пароля недействительна или устарела.
+            Запросите новую ссылку, если вам по-прежнему нужно восстановить
+            доступ.
           </p>
         </section>
       )}

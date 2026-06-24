@@ -27,7 +27,7 @@ export function DoctorTwoFactorResetAction({
 
   async function handleReset() {
     if (confirmation !== confirmationText) {
-      setError(`Type ${confirmationText} to confirm.`);
+      setError(`Для подтверждения введите ${confirmationText}.`);
       return;
     }
 
@@ -45,7 +45,10 @@ export function DoctorTwoFactorResetAction({
       const result = (await response.json().catch(() => ({}))) as ResetResponse;
 
       if (!response.ok || !result.success) {
-        setError(result.error ?? "Unable to reset doctor two-factor authentication.");
+        setError(
+          result.error ??
+            "Не удалось сбросить двухфакторную аутентификацию врача.",
+        );
         return;
       }
 
@@ -54,7 +57,9 @@ export function DoctorTwoFactorResetAction({
       setIsEnabled(false);
       setSuccess(true);
     } catch {
-      setError("Unable to reset doctor two-factor authentication right now.");
+      setError(
+        "Сейчас не удалось сбросить двухфакторную аутентификацию врача.",
+      );
     } finally {
       setIsPending(false);
     }
@@ -65,10 +70,10 @@ export function DoctorTwoFactorResetAction({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-xl font-semibold text-slate-950">
-            Doctor two-factor authentication
+            Двухфакторная аутентификация врача
           </h2>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            Status: {isEnabled ? "Enabled" : "Not enrolled"}
+            Статус: {isEnabled ? "включена" : "не настроена"}
           </p>
         </div>
         <span
@@ -78,25 +83,26 @@ export function DoctorTwoFactorResetAction({
               : "border-slate-200 bg-slate-100 text-slate-600"
           }`}
         >
-          {isEnabled ? "2FA enabled" : "Setup required"}
+          {isEnabled ? "2FA включена" : "Требуется настройка"}
         </span>
       </div>
 
       <div className="mt-4 space-y-2 text-sm leading-6 text-slate-600">
         <p>
-          Resetting does not reveal the doctor&apos;s authenticator secret or
-          recovery codes.
+          Сброс не раскрывает секрет приложения-аутентификатора или коды
+          восстановления врача.
         </p>
         <p>
-          The doctor&apos;s active sessions will be revoked, and the doctor
-          must enroll 2FA again after the next password login.
+          Активные сеансы врача будут отозваны. После следующего входа с
+          паролем врач должен будет заново настроить двухфакторную
+          аутентификацию.
         </p>
       </div>
 
       {success ? (
         <p className="mt-4 rounded-md border border-teal-200 bg-teal-50 px-3 py-2 text-sm text-teal-800">
-          Two-factor enrollment reset. The doctor must enroll again at next
-          login.
+          Настройка двухфакторной аутентификации сброшена. При следующем входе
+          врач должен будет настроить её заново.
         </p>
       ) : null}
 
@@ -118,7 +124,7 @@ export function DoctorTwoFactorResetAction({
           }}
           type="button"
         >
-          Reset 2FA
+          Сбросить двухфакторную аутентификацию
         </button>
       ) : null}
 
@@ -128,7 +134,7 @@ export function DoctorTwoFactorResetAction({
             className="text-sm font-medium text-red-900"
             htmlFor="doctor-two-factor-reset-confirmation"
           >
-            Type {confirmationText} to confirm
+            Для подтверждения введите {confirmationText}
           </label>
           <input
             className="mt-2 h-11 w-full rounded-md border border-red-300 bg-white px-3 text-base text-slate-950 outline-none focus:border-red-600 focus:ring-2 focus:ring-red-100"
@@ -143,7 +149,7 @@ export function DoctorTwoFactorResetAction({
               onClick={handleReset}
               type="button"
             >
-              {isPending ? "Resetting..." : "Confirm reset"}
+              {isPending ? "Сброс..." : "Подтвердить сброс"}
             </button>
             <button
               className="inline-flex min-h-11 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 hover:bg-slate-50"
@@ -155,7 +161,7 @@ export function DoctorTwoFactorResetAction({
               }}
               type="button"
             >
-              Cancel
+              Отмена
             </button>
           </div>
         </div>

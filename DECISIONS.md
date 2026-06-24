@@ -250,6 +250,14 @@ Status: Accepted
 
 Reason: Enrolled TOTP secrets are encrypted with the configured key and cannot be verified if that key is replaced. The enforcement flag provides a controlled temporary recovery path without weakening the default requirement for doctor and admin accounts.
 
+### D032: Translate The MVP With Direct Russian Copy
+
+Status: Accepted
+
+Translate user-facing copy directly in the existing pages, components, email templates, and safe API messages, using formal Russian `вы`. Do not introduce an i18n dependency during the MVP translation phases.
+
+Reason: The current product targets a Russian interface and has no active multi-language requirement. Direct copy changes minimize refactoring risk and preserve existing auth, routing, API, session, and security behavior. Brands and technical identifiers remain untranslated.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

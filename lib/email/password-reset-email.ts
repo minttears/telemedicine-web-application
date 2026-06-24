@@ -29,32 +29,32 @@ export function buildPasswordResetEmail({
 }: PasswordResetEmailInput): PasswordResetEmail {
   const escapedResetUrl = escapeHtml(resetUrl);
   const expirationText =
-    expiresInHours === 1 ? "1 hour" : `${expiresInHours} hours`;
+    expiresInHours === 1 ? "1 час" : `${expiresInHours} ч.`;
 
   return {
     html: `
       <div style="font-family: Arial, sans-serif; color: #0f172a; line-height: 1.6;">
-        <h1 style="font-size: 20px; margin: 0 0 16px;">Reset your password</h1>
-        <p>Use the link below to create a new password for your Telemedicine account.</p>
+        <h1 style="font-size: 20px; margin: 0 0 16px;">Сброс пароля</h1>
+        <p>Используйте ссылку ниже, чтобы создать новый пароль для аккаунта Telemedicine.</p>
         <p>
           <a href="${escapedResetUrl}" style="display: inline-block; background: #0f766e; color: #ffffff; padding: 10px 14px; border-radius: 6px; text-decoration: none;">
-            Reset password
+            Сбросить пароль
           </a>
         </p>
-        <p>This link expires in ${expirationText} and can be used only once.</p>
-        <p>If you did not request a password reset, you can ignore this email.</p>
-        <p style="font-size: 12px; color: #475569;">If the button does not work, copy and paste this link into your browser: ${escapedResetUrl}</p>
+        <p>Ссылка действует ${expirationText} и может быть использована только один раз.</p>
+        <p>Если вы не запрашивали сброс пароля, проигнорируйте это письмо.</p>
+        <p style="font-size: 12px; color: #475569;">Если кнопка не работает, скопируйте ссылку и вставьте её в браузер: ${escapedResetUrl}</p>
       </div>
     `.trim(),
-    subject: "Reset your Telemedicine password",
+    subject: "Сброс пароля Telemedicine",
     text: [
-      "Reset your Telemedicine password",
+      "Сброс пароля Telemedicine",
       "",
-      "Use the link below to create a new password for your Telemedicine account.",
+      "Используйте ссылку ниже, чтобы создать новый пароль для аккаунта Telemedicine.",
       resetUrl,
       "",
-      `This link expires in ${expirationText} and can be used only once.`,
-      "If you did not request a password reset, you can ignore this email.",
+      `Ссылка действует ${expirationText} и может быть использована только один раз.`,
+      "Если вы не запрашивали сброс пароля, проигнорируйте это письмо.",
     ].join("\n"),
     to: recipientEmail,
   };

@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   if (!challenge) {
     await clearTwoFactorChallengeCookie();
     return Response.json(
-      { error: "Sign in again to continue." },
+      { error: "Войдите снова, чтобы продолжить." },
       { status: 401 },
     );
   }
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
   if (!twoFactorSecret || twoFactorSecret.enabledAt) {
     return Response.json(
-      { error: "Unable to complete two-factor setup." },
+      { error: "Не удалось завершить настройку двухфакторной аутентификации." },
       { status: 409 },
     );
   }
@@ -64,8 +64,8 @@ export async function POST(request: Request) {
     return Response.json(
       {
         error: denied
-          ? "Sign in again to continue."
-          : "The verification code is invalid.",
+          ? "Войдите снова, чтобы продолжить."
+          : "Код подтверждения недействителен.",
       },
       { status: 400 },
     );
@@ -146,7 +146,7 @@ export async function POST(request: Request) {
   if (!completed) {
     await clearTwoFactorChallengeCookie();
     return Response.json(
-      { error: "Sign in again to continue." },
+      { error: "Войдите снова, чтобы продолжить." },
       { status: 409 },
     );
   }

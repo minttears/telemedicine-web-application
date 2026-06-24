@@ -16,7 +16,7 @@ import { prisma } from "@/lib/prisma";
 export const runtime = "nodejs";
 
 const invalidVerificationMessage =
-  "Unable to verify your password and two-factor code.";
+  "Не удалось проверить пароль и код двухфакторной аутентификации.";
 
 type RegenerateRecoveryCodesBody = {
   password?: unknown;

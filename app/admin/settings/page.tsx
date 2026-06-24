@@ -33,9 +33,11 @@ export default async function AdminSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-sm font-medium text-teal-700">Admin settings</p>
+        <p className="text-sm font-medium text-teal-700">
+          Настройки администратора
+        </p>
         <h1 className="mt-2 text-3xl font-semibold text-slate-950">
-          Account security
+          Безопасность аккаунта
         </h1>
       </div>
       <TwoFactorManagement

@@ -11,9 +11,9 @@ import { forbidden, unauthorized } from "@/lib/auth/responses";
 import { prisma } from "@/lib/prisma";
 
 const DOCTOR_INVITE_EXPIRATION_DAYS = 7;
-const invalidDoctorMessage = "Doctor not found.";
+const invalidDoctorMessage = "Врач не найден.";
 const setupCompletedMessage =
-  "Doctor account setup is already complete. Use password reset instead.";
+  "Настройка аккаунта врача уже завершена. Используйте сброс пароля.";
 
 type DoctorInviteRouteContext = {
   params: Promise<{

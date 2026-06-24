@@ -37,7 +37,7 @@ export function DoctorPasswordResetAction({
       const result = (await response.json().catch(() => ({}))) as PasswordResetResponse;
 
       if (!response.ok || !result.resetUrl || !result.resetExpiresAt) {
-        setError(result.error ?? "Unable to create password reset link.");
+        setError(result.error ?? "Не удалось создать ссылку для сброса пароля.");
         return;
       }
 
@@ -46,7 +46,7 @@ export function DoctorPasswordResetAction({
         url: result.resetUrl,
       });
     } catch {
-      setError("Unable to create password reset link right now.");
+      setError("Сейчас не удалось создать ссылку для сброса пароля.");
     } finally {
       setIsPending(false);
     }
@@ -55,27 +55,27 @@ export function DoctorPasswordResetAction({
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
       <h2 className="text-xl font-semibold text-slate-950">
-        Doctor password reset
+        Сброс пароля врача
       </h2>
       <p className="mt-2 text-sm leading-6 text-slate-600">
-        Generate a one-time reset link for an existing doctor who forgot their
-        password or needs a reset. Any unused active reset link for this doctor
-        will be invalidated.
+        Создайте одноразовую ссылку для врача, которому необходимо сбросить
+        пароль. Все ранее созданные неиспользованные ссылки для этого врача
+        будут аннулированы.
       </p>
 
       {reset ? (
         <div className="mt-5 rounded-lg border border-teal-200 bg-teal-50 p-4">
           <h3 className="text-sm font-semibold text-teal-950">
-            One-time password reset link
+            Одноразовая ссылка для сброса пароля
           </h3>
           <p className="mt-2 text-sm leading-6 text-teal-900">
-            Copy this link now and share it through an approved secure process.
-            It expires in 1 hour and will not be shown again after you leave
-            this page.
+            Скопируйте ссылку сейчас и передайте её по согласованному
+            защищённому каналу. Ссылка действует 1 час и больше не будет
+            показана после ухода с этой страницы.
           </p>
           <label className="mt-3 block">
             <span className="text-xs font-medium uppercase tracking-normal text-teal-900">
-              Password reset link
+              Ссылка для сброса пароля
             </span>
             <input
               className="mt-2 w-full rounded-md border border-teal-200 bg-white px-3 py-2 text-sm text-slate-950"
@@ -84,7 +84,8 @@ export function DoctorPasswordResetAction({
             />
           </label>
           <p className="mt-2 text-xs text-teal-900">
-            Expires {new Date(reset.expiresAt).toLocaleString()}.
+            Действует до{" "}
+            {new Date(reset.expiresAt).toLocaleString("ru-RU")}.
           </p>
         </div>
       ) : null}
@@ -101,7 +102,7 @@ export function DoctorPasswordResetAction({
         onClick={handleGenerateReset}
         type="button"
       >
-        {isPending ? "Generating..." : "Generate password reset link"}
+        {isPending ? "Создание..." : "Создать ссылку для сброса пароля"}
       </button>
     </section>
   );

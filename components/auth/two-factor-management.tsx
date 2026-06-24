@@ -33,7 +33,9 @@ export function TwoFactorManagement({
     setRecoveryCodes(null);
 
     if (!password || !verificationCode.trim()) {
-      setError("Enter your current password and two-factor code.");
+      setError(
+        "Введите текущий пароль и код двухфакторной аутентификации.",
+      );
       return;
     }
 
@@ -62,7 +64,7 @@ export function TwoFactorManagement({
       ) {
         setError(
           result.error ??
-            "Unable to verify your password and two-factor code.",
+            "Не удалось проверить пароль и код двухфакторной аутентификации.",
         );
         return;
       }
@@ -72,7 +74,7 @@ export function TwoFactorManagement({
       setRecoveryCodes(result.recoveryCodes);
       setRemainingRecoveryCodeCount(result.remainingRecoveryCodeCount);
     } catch {
-      setError("Unable to regenerate recovery codes right now.");
+      setError("Сейчас не удалось создать новые коды восстановления.");
     } finally {
       setIsPending(false);
     }
@@ -82,60 +84,64 @@ export function TwoFactorManagement({
     <div className="space-y-6">
       <section className="grid gap-4 md:grid-cols-3">
         <div className="rounded-lg border border-teal-200 bg-teal-50 p-5">
-          <p className="text-sm font-medium text-teal-800">Two-factor status</p>
-          <p className="mt-2 text-lg font-semibold text-teal-950">Enabled</p>
+          <p className="text-sm font-medium text-teal-800">
+            Статус двухфакторной аутентификации
+          </p>
+          <p className="mt-2 text-lg font-semibold text-teal-950">Включена</p>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm font-medium text-slate-600">
-            Recovery codes remaining
+            Осталось кодов восстановления
           </p>
           <p className="mt-2 text-lg font-semibold text-slate-950">
             {remainingRecoveryCodeCount}
           </p>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Enabled</p>
+          <p className="text-sm font-medium text-slate-600">Включена</p>
           <p className="mt-2 text-sm font-semibold text-slate-950">
-            {new Date(enabledAt).toLocaleString()}
+            {new Date(enabledAt).toLocaleString("ru-RU")}
           </p>
         </div>
       </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-slate-950">
-          Two-factor safety
+          Безопасность двухфакторной аутентификации
         </h2>
         <div className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
           <p>
-            Authenticator codes require your device and the server to have
-            synchronized time.
+            Для проверки кодов время на вашем устройстве и сервере должно быть
+            синхронизировано.
           </p>
           <p>
-            Recovery codes are one-time fallback codes. New codes are shown
-            only once and should be stored in a secure password manager.
+            Коды восстановления — одноразовый резервный способ входа. Новые
+            коды показываются только один раз; сохраните их в надёжном
+            менеджере паролей.
           </p>
           <p>
-            Self-disable is not available. Contact an administrator if account
-            recovery is required.
+            Самостоятельное отключение недоступно. Если необходимо восстановить
+            доступ, обратитесь к администратору.
           </p>
         </div>
       </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-slate-950">
-          Regenerate recovery codes
+          Создать новые коды восстановления
         </h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Confirm your current password and enter either the current
-          authenticator code or one unused recovery code. All other unused old
-          recovery codes will stop working.
+          Подтвердите текущий пароль и введите текущий код из
+          приложения-аутентификатора или один неиспользованный код
+          восстановления. Все остальные неиспользованные старые коды перестанут
+          работать.
         </p>
 
         <form className="mt-5 max-w-lg space-y-4" onSubmit={handleRegenerate}>
           <PasswordField
             autoComplete="current-password"
             id="two-factor-current-password"
-            label="Current password"
+            label="Текущий пароль"
             onChange={setPassword}
             value={password}
           />
@@ -144,7 +150,7 @@ export function TwoFactorManagement({
               className="text-sm font-medium text-slate-800"
               htmlFor="two-factor-verification-code"
             >
-              Current authenticator or recovery code
+              Текущий код из приложения-аутентификатора или код восстановления
             </label>
             <input
               autoComplete="one-time-code"
@@ -169,18 +175,19 @@ export function TwoFactorManagement({
             disabled={isPending}
             type="submit"
           >
-            {isPending ? "Verifying..." : "Regenerate recovery codes"}
+            {isPending ? "Проверка..." : "Создать новые коды восстановления"}
           </button>
         </form>
 
         {recoveryCodes ? (
           <div className="mt-6 rounded-lg border border-teal-200 bg-teal-50 p-4">
             <h3 className="text-sm font-semibold text-teal-950">
-              Save your new recovery codes
+              Сохраните новые коды восстановления
             </h3>
             <p className="mt-2 text-sm leading-6 text-teal-900">
-              These codes will not be shown again after you leave or refresh
-              this page.
+              После ухода с этой страницы или её обновления коды больше не
+              будут показаны. Не отправляйте их по email и не передавайте в
+              сообщениях.
             </p>
             <ul className="mt-4 grid gap-2 rounded-md border border-teal-200 bg-white p-4 font-mono text-sm text-slate-950 sm:grid-cols-2">
               {recoveryCodes.map((recoveryCode) => (

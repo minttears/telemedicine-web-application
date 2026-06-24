@@ -6,7 +6,7 @@ import {
 import { forbidden, unauthorized } from "@/lib/auth/responses";
 import { prisma } from "@/lib/prisma";
 
-const invalidDoctorMessage = "Doctor not found.";
+const invalidDoctorMessage = "Врач не найден.";
 class TwoFactorNotEnabledError extends Error {}
 
 type DoctorTwoFactorResetRouteContext = {
@@ -70,7 +70,7 @@ export async function POST(
 
   if (!doctor.user.twoFactorSecret?.enabledAt) {
     return Response.json(
-      { error: "Doctor two-factor authentication is not enabled." },
+      { error: "Двухфакторная аутентификация врача не включена." },
       { status: 409 },
     );
   }
@@ -129,7 +129,7 @@ export async function POST(
   } catch (error) {
     if (error instanceof TwoFactorNotEnabledError) {
       return Response.json(
-        { error: "Doctor two-factor authentication is not enabled." },
+        { error: "Двухфакторная аутентификация врача не включена." },
         { status: 409 },
       );
     }

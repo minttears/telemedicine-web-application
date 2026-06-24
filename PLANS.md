@@ -2,7 +2,27 @@
 
 ## Current Plan
 
-Phase 15C Two-Factor Manual QA Record is completed. Owner QA confirmed doctor/admin setup and login challenge behavior, recovery-code saving, and strict rejection of old TOTP windows. Destructive management flows remain explicit pre-deployment re-check items.
+Phase 16B Russian Auth, 2FA, And Account UI is completed. Authentication, password recovery, doctor onboarding, 2FA, account-security controls, and password-reset email copy use formal Russian without changing behavior or technical contracts.
+
+## Phase 16B: Russian Auth, 2FA, And Account UI
+
+Status: Completed
+
+Completed:
+
+- Translated login, patient registration, forgot/reset password, doctor invite password setup, logout, and related loading/success/error states.
+- Translated 2FA setup, challenge, recovery-code display/regeneration, doctor/admin security headings, and admin doctor invite/password-reset/2FA-reset controls.
+- Translated matching user-visible auth and 2FA API errors while preserving generic account-enumeration-safe responses.
+- Translated password-reset email subject, HTML, and plain-text copy without changing recipient or reset-link behavior.
+- Used formal Russian `вы`; kept brands, routes, API fields, enum values, role constants, environment names, and the `RESET 2FA` confirmation token unchanged.
+- Preserved patient login behavior and all doctor/admin 2FA enforcement, strict TOTP, recovery-code, session, cookie, redirect, and status-code behavior.
+
+Remaining translation phases:
+
+- Phase 16C patient workspace.
+- Phase 16D doctor workspace.
+- Phase 16E admin workspace.
+- Phase 16F public, legal, shared UI, metadata, final accessibility, and seed-visible medical copy.
 
 ## Phase 15C: Two-Factor Manual QA Record
 

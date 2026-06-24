@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { PasswordField } from "@/components/auth/password-field";
 
-const genericLoginError = "Invalid email or password.";
+const genericLoginError = "Неверный email или пароль.";
 
 type LoginResponse = {
   redirectTo?: string;
@@ -33,12 +33,12 @@ export function LoginForm() {
     setSubmitError(null);
 
     if (!normalizedEmail || !password) {
-      setFieldError("Email and password are required.");
+      setFieldError("Введите email и пароль.");
       return;
     }
 
     if (!isValidEmail(normalizedEmail)) {
-      setFieldError("Enter a valid email address.");
+      setFieldError("Введите корректный email.");
       return;
     }
 
@@ -64,7 +64,7 @@ export function LoginForm() {
       const result = (await response.json()) as LoginResponse;
       router.replace(result.redirectTo ?? "/patient/dashboard");
     } catch {
-      setSubmitError("Unable to sign in right now. Try again.");
+      setSubmitError("Сейчас не удалось войти. Повторите попытку.");
     } finally {
       setIsPending(false);
     }
@@ -77,12 +77,12 @@ export function LoginForm() {
     setSubmitError(null);
 
     if (!normalizedEmail) {
-      setFieldError("Please enter your email first.");
+      setFieldError("Сначала введите email.");
       return;
     }
 
     if (!isValidEmail(normalizedEmail)) {
-      setFieldError("Enter a valid email address.");
+      setFieldError("Введите корректный email.");
       return;
     }
 
@@ -95,13 +95,13 @@ export function LoginForm() {
       onSubmit={handleSubmit}
     >
       <div className="space-y-2">
-        <p className="text-sm font-medium text-teal-700">Secure access</p>
+        <p className="text-sm font-medium text-teal-700">Безопасный доступ</p>
         <h1 className="text-2xl font-semibold tracking-normal text-slate-950">
-          Sign in to Telemedicine
+          Вход в Telemedicine
         </h1>
         <p className="text-sm leading-6 text-slate-600">
-          Access your secure workspace for consultations, messages, files, and
-          care history.
+          Войдите в защищённый кабинет для работы с консультациями,
+          сообщениями, файлами и историей обращений.
         </p>
       </div>
 
@@ -127,7 +127,7 @@ export function LoginForm() {
           <PasswordField
             autoComplete="current-password"
             id="password"
-            label="Password"
+            label="Пароль"
             name="password"
             onChange={setPassword}
             value={password}
@@ -137,7 +137,7 @@ export function LoginForm() {
             onClick={handleForgotPassword}
             type="button"
           >
-            Forgot password?
+            Забыли пароль?
           </button>
         </div>
       </div>
@@ -156,16 +156,16 @@ export function LoginForm() {
         disabled={isPending}
         type="submit"
       >
-        {isPending ? "Signing in..." : "Sign in"}
+        {isPending ? "Вход..." : "Войти"}
       </button>
 
       <p className="mt-4 text-sm leading-6 text-slate-600">
-        Don&apos;t have an account?{" "}
+        Нет аккаунта?{" "}
         <Link
           className="font-medium text-teal-700 hover:text-teal-800"
           href="/register"
         >
-          Create a patient account.
+          Создать аккаунт пациента
         </Link>
       </p>
     </form>

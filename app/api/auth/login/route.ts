@@ -16,7 +16,8 @@ import {
   getSessionCookie,
 } from "@/lib/auth/session";
 
-const invalidCredentialsResponse = () => unauthorized("Invalid email or password.");
+const invalidCredentialsResponse = () =>
+  unauthorized("Неверный email или пароль.");
 
 function isLoginBody(value: unknown): value is {
   email: string;

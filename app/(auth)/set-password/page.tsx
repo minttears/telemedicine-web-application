@@ -29,13 +29,13 @@ export default async function SetPasswordPage({
         <SetPasswordForm token={normalizedToken} />
       ) : (
         <section className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 text-center shadow-sm">
-          <p className="text-sm font-medium text-teal-700">Doctor invite</p>
+          <p className="text-sm font-medium text-teal-700">Приглашение врача</p>
           <h1 className="mt-3 text-2xl font-semibold tracking-normal text-slate-950">
-            Invite link unavailable
+            Ссылка-приглашение недоступна
           </h1>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            This invite link is invalid or expired. Contact an administrator for
-            a new invite.
+            Эта ссылка-приглашение недействительна или устарела. Обратитесь к
+            администратору за новым приглашением.
           </p>
         </section>
       )}

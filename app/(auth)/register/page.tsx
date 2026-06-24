@@ -15,32 +15,32 @@ export default async function RegisterPage() {
       <section className="grid w-full max-w-5xl gap-8 lg:grid-cols-[1fr_440px] lg:items-center">
         <div className="max-w-xl">
           <p className="text-sm font-medium text-teal-700">
-            Patient onboarding
+            Регистрация пациента
           </p>
           <h1 className="mt-3 text-4xl font-semibold tracking-normal text-slate-950">
-            Start with a secure patient account
+            Создайте защищённый аккаунт пациента
           </h1>
           <p className="mt-4 text-base leading-7 text-slate-600">
-            Create a patient account to access your protected workspace. Doctor
-            and admin accounts are managed separately.
+            Создайте аккаунт пациента, чтобы получить доступ к защищённому
+            кабинету. Аккаунты врачей и администраторов создаются отдельно.
           </p>
           <p className="mt-6 text-sm leading-6 text-slate-500">
-            Review the{" "}
+            Перед регистрацией ознакомьтесь с{" "}
             <a className="font-medium text-teal-700 hover:text-teal-800" href="/terms">
-              Terms
+              Условиями использования
             </a>
             ,{" "}
             <a className="font-medium text-teal-700 hover:text-teal-800" href="/privacy">
-              Privacy Policy
+              Политикой конфиденциальности
             </a>
-            , and{" "}
+            {" "}и{" "}
             <a
               className="font-medium text-teal-700 hover:text-teal-800"
               href="/telemedicine-consent"
             >
-              Telemedicine Consent
+              Согласием на телемедицинскую консультацию
             </a>
-            before registering.
+            .
           </p>
         </div>
 

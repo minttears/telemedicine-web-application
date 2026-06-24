@@ -32,7 +32,7 @@ export function DoctorInviteAction({ doctorId }: DoctorInviteActionProps) {
       const result = (await response.json().catch(() => ({}))) as InviteResponse;
 
       if (!response.ok || !result.inviteUrl || !result.inviteExpiresAt) {
-        setError(result.error ?? "Unable to create invite link.");
+        setError(result.error ?? "Не удалось создать ссылку-приглашение.");
         return;
       }
 
@@ -41,7 +41,7 @@ export function DoctorInviteAction({ doctorId }: DoctorInviteActionProps) {
         url: result.inviteUrl,
       });
     } catch {
-      setError("Unable to create invite link right now.");
+      setError("Сейчас не удалось создать ссылку-приглашение.");
     } finally {
       setIsPending(false);
     }
@@ -49,25 +49,28 @@ export function DoctorInviteAction({ doctorId }: DoctorInviteActionProps) {
 
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-slate-950">Doctor invite</h2>
+      <h2 className="text-xl font-semibold text-slate-950">
+        Приглашение врача
+      </h2>
       <p className="mt-2 text-sm leading-6 text-slate-600">
-        Generate a one-time onboarding link so this doctor can set an initial
-        password. Any unused active invite link for this doctor will be
-        invalidated.
+        Создайте одноразовую ссылку, по которой врач сможет задать первый
+        пароль. Все ранее созданные неиспользованные приглашения для этого врача
+        будут аннулированы.
       </p>
 
       {invite ? (
         <div className="mt-5 rounded-lg border border-teal-200 bg-teal-50 p-4">
           <h3 className="text-sm font-semibold text-teal-950">
-            One-time invite link
+            Одноразовая ссылка-приглашение
           </h3>
           <p className="mt-2 text-sm leading-6 text-teal-900">
-            Copy this link now and share it through an approved secure process.
-            It will not be shown again after you leave this page.
+            Скопируйте ссылку сейчас и передайте её по согласованному
+            защищённому каналу. После ухода с этой страницы ссылка больше не
+            будет показана.
           </p>
           <label className="mt-3 block">
             <span className="text-xs font-medium uppercase tracking-normal text-teal-900">
-              Invite link
+              Ссылка-приглашение
             </span>
             <input
               className="mt-2 w-full rounded-md border border-teal-200 bg-white px-3 py-2 text-sm text-slate-950"
@@ -76,7 +79,8 @@ export function DoctorInviteAction({ doctorId }: DoctorInviteActionProps) {
             />
           </label>
           <p className="mt-2 text-xs text-teal-900">
-            Expires {new Date(invite.expiresAt).toLocaleString()}.
+            Действует до{" "}
+            {new Date(invite.expiresAt).toLocaleString("ru-RU")}.
           </p>
         </div>
       ) : null}
@@ -93,7 +97,7 @@ export function DoctorInviteAction({ doctorId }: DoctorInviteActionProps) {
         onClick={handleGenerateInvite}
         type="button"
       >
-        {isPending ? "Generating..." : "Generate invite link"}
+        {isPending ? "Создание..." : "Создать ссылку-приглашение"}
       </button>
     </section>
   );

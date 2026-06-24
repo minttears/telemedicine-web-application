@@ -19,7 +19,9 @@ export function TwoFactorChallengeForm() {
     setError(null);
 
     if (!code.trim()) {
-      setError("Enter an authenticator code or recovery code.");
+      setError(
+        "Введите код из приложения-аутентификатора или код восстановления.",
+      );
       return;
     }
 
@@ -36,13 +38,13 @@ export function TwoFactorChallengeForm() {
       const result = (await response.json().catch(() => ({}))) as VerifyResponse;
 
       if (!response.ok) {
-        setError(result.error ?? "The verification code is invalid.");
+        setError(result.error ?? "Код подтверждения недействителен.");
         return;
       }
 
       router.replace(result.redirectTo ?? "/login");
     } catch {
-      setError("Unable to verify the code right now.");
+      setError("Сейчас не удалось проверить код.");
     } finally {
       setIsPending(false);
     }
@@ -53,17 +55,19 @@ export function TwoFactorChallengeForm() {
       className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
       onSubmit={handleSubmit}
     >
-      <p className="text-sm font-medium text-teal-700">Security verification</p>
+      <p className="text-sm font-medium text-teal-700">
+        Проверка безопасности
+      </p>
       <h1 className="mt-2 text-2xl font-semibold text-slate-950">
-        Enter your two-factor code
+        Введите код двухфакторной аутентификации
       </h1>
       <p className="mt-3 text-sm leading-6 text-slate-600">
-        Use the 6-digit code from your authenticator app or one unused recovery
-        code.
+        Используйте текущий 6-значный код из приложения-аутентификатора или
+        один неиспользованный код восстановления.
       </p>
       <div className="mt-6 space-y-2">
         <label className="text-sm font-medium text-slate-800" htmlFor="challenge-code">
-          Authenticator or recovery code
+          Код из приложения-аутентификатора или код восстановления
         </label>
         <input
           autoComplete="one-time-code"
@@ -83,7 +87,7 @@ export function TwoFactorChallengeForm() {
         disabled={isPending}
         type="submit"
       >
-        {isPending ? "Verifying..." : "Verify and continue"}
+        {isPending ? "Проверка..." : "Проверить и продолжить"}
       </button>
     </form>
   );

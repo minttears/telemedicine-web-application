@@ -136,7 +136,7 @@ export async function POST(request: Request) {
   if (!challenge || !challenge.user.twoFactorSecret?.enabledAt) {
     await clearTwoFactorChallengeCookie();
     return Response.json(
-      { error: "Sign in again to continue." },
+      { error: "Войдите снова, чтобы продолжить." },
       { status: 401 },
     );
   }
@@ -178,8 +178,8 @@ export async function POST(request: Request) {
     return Response.json(
       {
         error: denied
-          ? "Sign in again to continue."
-          : "The verification code is invalid.",
+          ? "Войдите снова, чтобы продолжить."
+          : "Код подтверждения недействителен.",
       },
       { status: 400 },
     );

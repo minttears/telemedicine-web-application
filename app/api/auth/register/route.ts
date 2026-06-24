@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth/password";
 import { createSession, setSessionCookie } from "@/lib/auth/session";
 
-const duplicateEmailMessage = "An account with this email cannot be registered.";
+const duplicateEmailMessage =
+  "Не удалось зарегистрировать аккаунт с этим email.";
 const legalConsentVersion = "2026-05-31";
 
 type RegisterBody = {
@@ -65,7 +66,10 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
 
   if (!isRegisterBody(body)) {
-    return Response.json({ error: "Invalid registration details." }, { status: 400 });
+    return Response.json(
+      { error: "Некорректные регистрационные данные." },
+      { status: 400 },
+    );
   }
 
   const email = body.email.trim().toLowerCase();
@@ -74,39 +78,42 @@ export async function POST(request: Request) {
   const dateOfBirth = parseDateOfBirth(body.dateOfBirth);
 
   if (!email || !isValidEmail(email)) {
-    return Response.json({ error: "Enter a valid email address." }, { status: 400 });
+    return Response.json({ error: "Введите корректный email." }, { status: 400 });
   }
 
   if (email.length > 254) {
-    return Response.json({ error: "Email address is too long." }, { status: 400 });
+    return Response.json({ error: "Email слишком длинный." }, { status: 400 });
   }
 
   if (name && name.length > 100) {
-    return Response.json({ error: "Name is too long." }, { status: 400 });
+    return Response.json({ error: "Имя слишком длинное." }, { status: 400 });
   }
 
   if (gender && gender.length > 50) {
-    return Response.json({ error: "Gender value is too long." }, { status: 400 });
+    return Response.json({ error: "Значение пола слишком длинное." }, { status: 400 });
   }
 
   if (dateOfBirth === undefined) {
-    return Response.json({ error: "Enter a valid date of birth." }, { status: 400 });
+    return Response.json(
+      { error: "Введите корректную дату рождения." },
+      { status: 400 },
+    );
   }
 
   if (body.password.length < 8) {
     return Response.json(
-      { error: "Password must be at least 8 characters." },
+      { error: "Пароль должен содержать не менее 8 символов." },
       { status: 400 },
     );
   }
 
   if (body.password !== body.confirmPassword) {
-    return Response.json({ error: "Passwords must match." }, { status: 400 });
+    return Response.json({ error: "Пароли должны совпадать." }, { status: 400 });
   }
 
   if (body.legalConsentAccepted !== true) {
     return Response.json(
-      { error: "You must accept the legal terms before registration." },
+      { error: "Перед регистрацией необходимо принять правовые условия." },
       { status: 400 },
     );
   }

@@ -28,15 +28,15 @@ export default async function ForgotPasswordPage({
       <section className="grid w-full max-w-5xl gap-8 lg:grid-cols-[1fr_440px] lg:items-center">
         <div className="max-w-xl">
           <p className="text-sm font-medium text-teal-700">
-            Account recovery
+            Восстановление доступа
           </p>
           <h1 className="mt-3 text-4xl font-semibold tracking-normal text-slate-950">
-            Reset access securely
+            Безопасно восстановите доступ
           </h1>
           <p className="mt-4 text-base leading-7 text-slate-600">
-            Confirm the account email from the sign-in page. Reset instructions
-            are sent only to the matching account email when the account is
-            eligible.
+            Подтвердите email аккаунта, указанный на странице входа. Инструкции
+            отправляются только на email соответствующего аккаунта, если для
+            него доступно восстановление.
           </p>
         </div>
 

@@ -25,30 +25,30 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <section className="grid w-full max-w-5xl gap-8 lg:grid-cols-[1fr_440px] lg:items-center">
         <div className="max-w-xl">
           <p className="text-sm font-medium text-teal-700">
-            Remote consultation platform
+            Платформа дистанционных консультаций
           </p>
           <h1 className="mt-3 text-4xl font-semibold tracking-normal text-slate-950">
-            Secure telemedicine access
+            Безопасный доступ к телемедицине
           </h1>
           <p className="mt-4 text-base leading-7 text-slate-600">
-            Sign in to manage consultations, messages, files, schedules, and
-            care history.
+            Войдите, чтобы управлять консультациями, сообщениями, файлами,
+            расписанием и историей обращений.
           </p>
           <p className="mt-6 text-sm leading-6 text-slate-500">
-            Legal information: {" "}
+            Правовая информация:{" "}
             <a className="font-medium text-teal-700 hover:text-teal-800" href="/terms">
-              Terms
+              Условия использования
             </a>
             , {" "}
             <a className="font-medium text-teal-700 hover:text-teal-800" href="/privacy">
-              Privacy
+              Политика конфиденциальности
             </a>
-            , and {" "}
+            {" "}и{" "}
             <a
               className="font-medium text-teal-700 hover:text-teal-800"
               href="/telemedicine-consent"
             >
-              Telemedicine Consent
+              Согласие на телемедицинскую консультацию
             </a>
             .
           </p>
@@ -57,12 +57,12 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <div>
           {passwordSet ? (
             <p className="mb-4 rounded-md border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800">
-              Password set. Sign in with your new password.
+              Пароль задан. Войдите с новым паролем.
             </p>
           ) : null}
           {passwordReset ? (
             <p className="mb-4 rounded-md border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800">
-              Password reset. Sign in with your new password.
+              Пароль сброшен. Войдите с новым паролем.
             </p>
           ) : null}
           <LoginForm />

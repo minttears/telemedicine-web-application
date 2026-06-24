@@ -2,7 +2,8 @@ import { hashPassword } from "@/lib/auth/password";
 import { findValidAccountAccessToken } from "@/lib/auth/access-tokens";
 import { prisma } from "@/lib/prisma";
 
-const invalidResetMessage = "This password reset link is invalid or expired.";
+const invalidResetMessage =
+  "Ссылка для сброса пароля недействительна или устарела.";
 
 type ResetPasswordBody = {
   confirmPassword?: unknown;
@@ -50,13 +51,13 @@ export async function POST(request: Request) {
 
   if (password.length < 8) {
     return Response.json(
-      { error: "Password must be at least 8 characters." },
+      { error: "Пароль должен содержать не менее 8 символов." },
       { status: 400 },
     );
   }
 
   if (password !== confirmPassword) {
-    return Response.json({ error: "Passwords must match." }, { status: 400 });
+    return Response.json({ error: "Пароли должны совпадать." }, { status: 400 });
   }
 
   const resetToken = await findValidAccountAccessToken({

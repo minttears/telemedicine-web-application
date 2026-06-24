@@ -22,7 +22,7 @@ export function PasswordField({
   value,
 }: PasswordFieldProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const buttonLabel = isVisible ? "Hide password" : "Show password";
+  const buttonLabel = isVisible ? "Скрыть пароль" : "Показать пароль";
 
   return (
     <div className="space-y-2">

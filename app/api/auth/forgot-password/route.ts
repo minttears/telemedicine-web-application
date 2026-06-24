@@ -10,7 +10,7 @@ const PASSWORD_RESET_EXPIRATION_HOURS = 1;
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT_MAX_ATTEMPTS = 5;
 const genericForgotPasswordMessage =
-  "If an account exists for this email, reset instructions have been sent.";
+  "Если аккаунт с этим email существует, инструкции для сброса пароля отправлены.";
 
 type ForgotPasswordBody = {
   email?: unknown;
@@ -120,7 +120,7 @@ export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as ForgotPasswordBody | null;
 
   if (!body || typeof body !== "object") {
-    return Response.json({ error: "Invalid request." }, { status: 400 });
+    return Response.json({ error: "Некорректный запрос." }, { status: 400 });
   }
 
   if (hasForbiddenIdentityFields(body as Record<string, unknown>)) {
@@ -132,7 +132,7 @@ export async function POST(request: Request) {
 
   if (!accountEmail || !isValidEmail(accountEmail)) {
     return Response.json(
-      { error: "Enter a valid email address." },
+      { error: "Введите корректный email." },
       { status: 400 },
     );
   }

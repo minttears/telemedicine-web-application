@@ -11,7 +11,8 @@ type RegisterResponse = {
   error?: string;
 };
 
-const duplicateEmailMessage = "An account with this email cannot be registered.";
+const duplicateEmailMessage =
+  "Не удалось зарегистрировать аккаунт с этим email.";
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -39,27 +40,27 @@ export function RegisterForm() {
     setSubmitError(null);
 
     if (!normalizedEmail || !password || !confirmPassword) {
-      setFieldError("Email, password, and confirmation are required.");
+      setFieldError("Введите email, пароль и подтверждение пароля.");
       return;
     }
 
     if (!isValidEmail(normalizedEmail)) {
-      setFieldError("Enter a valid email address.");
+      setFieldError("Введите корректный email.");
       return;
     }
 
     if (password.length < 8) {
-      setFieldError("Password must be at least 8 characters.");
+      setFieldError("Пароль должен содержать не менее 8 символов.");
       return;
     }
 
     if (password !== confirmPassword) {
-      setFieldError("Passwords must match.");
+      setFieldError("Пароли должны совпадать.");
       return;
     }
 
     if (!legalConsentAccepted) {
-      setFieldError("Accept the legal terms before creating an account.");
+      setFieldError("Примите правовые условия перед созданием аккаунта.");
       return;
     }
 
@@ -88,14 +89,14 @@ export function RegisterForm() {
         setSubmitError(
           response.status === 409
             ? duplicateEmailMessage
-            : result.error ?? "Unable to register with these details.",
+            : result.error ?? "Не удалось зарегистрироваться с этими данными.",
         );
         return;
       }
 
       router.replace(result.redirectTo ?? "/patient/dashboard");
     } catch {
-      setSubmitError("Unable to register right now. Try again.");
+      setSubmitError("Сейчас не удалось зарегистрироваться. Повторите попытку.");
     } finally {
       setIsPending(false);
     }
@@ -108,19 +109,21 @@ export function RegisterForm() {
       onSubmit={handleSubmit}
     >
       <div className="space-y-2">
-        <p className="text-sm font-medium text-teal-700">Patient registration</p>
+        <p className="text-sm font-medium text-teal-700">
+          Регистрация пациента
+        </p>
         <h1 className="text-2xl font-semibold tracking-normal text-slate-950">
-          Create your patient account
+          Создайте аккаунт пациента
         </h1>
         <p className="text-sm leading-6 text-slate-600">
-          Registration is currently available for patients only.
+          Самостоятельная регистрация доступна только пациентам.
         </p>
       </div>
 
       <div className="mt-6 space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-800" htmlFor="name">
-            Full name
+            ФИО
           </label>
           <input
             autoComplete="name"
@@ -129,7 +132,7 @@ export function RegisterForm() {
             maxLength={100}
             name="name"
             onChange={(event) => setName(event.target.value)}
-            placeholder="Your name"
+            placeholder="Ваше имя"
             type="text"
             value={name}
           />
@@ -158,7 +161,7 @@ export function RegisterForm() {
               className="text-sm font-medium text-slate-800"
               htmlFor="dateOfBirth"
             >
-              Date of birth
+              Дата рождения
             </label>
             <input
               className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
@@ -175,7 +178,7 @@ export function RegisterForm() {
               className="text-sm font-medium text-slate-800"
               htmlFor="gender"
             >
-              Gender
+              Пол
             </label>
             <select
               className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
@@ -184,19 +187,19 @@ export function RegisterForm() {
               onChange={(event) => setGender(event.target.value)}
               value={gender}
             >
-              <option value="">Prefer not to say</option>
-              <option value="Female">Female</option>
-              <option value="Male">Male</option>
-              <option value="Other">Other</option>
+              <option value="">Не указывать</option>
+              <option value="Female">Женский</option>
+              <option value="Male">Мужской</option>
+              <option value="Other">Другой</option>
             </select>
           </div>
         </div>
 
         <PasswordField
           autoComplete="new-password"
-          helpText="Use at least 8 characters."
+          helpText="Используйте не менее 8 символов."
           id="password"
-          label="Password"
+          label="Пароль"
           name="password"
           onChange={setPassword}
           value={password}
@@ -205,7 +208,7 @@ export function RegisterForm() {
         <PasswordField
           autoComplete="new-password"
           id="confirmPassword"
-          label="Confirm password"
+          label="Подтвердите пароль"
           name="confirmPassword"
           onChange={setConfirmPassword}
           value={confirmPassword}
@@ -221,20 +224,20 @@ export function RegisterForm() {
             type="checkbox"
           />
           <span>
-            I have read and agree to the{" "}
+            Я ознакомился(-ась) и принимаю{" "}
             <Link className="font-medium text-teal-700 hover:text-teal-800" href="/terms">
-              Terms of Use
+              Условия использования
             </Link>
             ,{" "}
             <Link className="font-medium text-teal-700 hover:text-teal-800" href="/privacy">
-              Privacy Policy
+              Политику конфиденциальности
             </Link>
-            , and{" "}
+            {" "}и{" "}
             <Link
               className="font-medium text-teal-700 hover:text-teal-800"
               href="/telemedicine-consent"
             >
-              Telemedicine Consent
+              Согласие на телемедицинскую консультацию
             </Link>
             .
           </span>
@@ -255,13 +258,13 @@ export function RegisterForm() {
         disabled={isPending}
         type="submit"
       >
-        {isPending ? "Creating account..." : "Create patient account"}
+        {isPending ? "Создание аккаунта..." : "Создать аккаунт пациента"}
       </button>
 
       <p className="mt-4 text-sm leading-6 text-slate-600">
-        Already have an account?{" "}
+        Уже есть аккаунт?{" "}
         <Link className="font-medium text-teal-700 hover:text-teal-800" href="/login">
-          Sign in
+          Войти
         </Link>
       </p>
     </form>

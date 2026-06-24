@@ -17,7 +17,7 @@ function isValidEmail(value: string) {
 }
 
 function buildGenericMessage(email: string) {
-  return `If an account exists for ${email}, reset instructions have been sent.`;
+  return `Если аккаунт с email ${email} существует, инструкции для сброса пароля отправлены.`;
 }
 
 export function ForgotPasswordForm({ email }: ForgotPasswordFormProps) {
@@ -37,7 +37,7 @@ export function ForgotPasswordForm({ email }: ForgotPasswordFormProps) {
     setSuccessMessage(null);
 
     if (!normalizedEmail || !isValidEmail(normalizedEmail)) {
-      setFieldError("Enter a valid email address.");
+      setFieldError("Введите корректный email.");
       return;
     }
 
@@ -59,13 +59,13 @@ export function ForgotPasswordForm({ email }: ForgotPasswordFormProps) {
         | undefined;
 
       if (!response.ok) {
-        setSubmitError(result?.error ?? "Unable to process this request.");
+        setSubmitError(result?.error ?? "Не удалось обработать запрос.");
         return;
       }
 
       setSuccessMessage(buildGenericMessage(normalizedEmail));
     } catch {
-      setSubmitError("Unable to process this request right now.");
+      setSubmitError("Сейчас не удалось обработать запрос.");
     } finally {
       setIsPending(false);
     }
@@ -77,22 +77,22 @@ export function ForgotPasswordForm({ email }: ForgotPasswordFormProps) {
       onSubmit={handleSubmit}
     >
       <div className="space-y-2">
-        <p className="text-sm font-medium text-teal-700">Password reset</p>
+        <p className="text-sm font-medium text-teal-700">Сброс пароля</p>
         <h1 className="text-2xl font-semibold tracking-normal text-slate-950">
-          Forgot your password?
+          Забыли пароль?
         </h1>
         <p className="text-sm leading-6 text-slate-600">
-          Reset instructions will be sent only to this account email if the
-          account exists and is eligible.
+          Если аккаунт существует и для него доступно восстановление,
+          инструкции будут отправлены только на указанный email.
         </p>
       </div>
 
       <div className="mt-6 rounded-md border border-slate-200 bg-slate-50 px-3 py-3">
         <p className="text-xs font-medium uppercase tracking-normal text-slate-500">
-          Account email
+          Email аккаунта
         </p>
         <p className="mt-1 break-words text-sm font-medium text-slate-950">
-          {normalizedEmail || "No email selected"}
+          {normalizedEmail || "Email не выбран"}
         </p>
       </div>
 
@@ -116,13 +116,13 @@ export function ForgotPasswordForm({ email }: ForgotPasswordFormProps) {
         disabled={isPending || !canSubmit}
         type="submit"
       >
-        {isPending ? "Sending..." : "Send reset instructions"}
+        {isPending ? "Отправка..." : "Отправить инструкции"}
       </button>
 
       <p className="mt-4 text-sm leading-6 text-slate-600">
-        Need to use a different email?{" "}
+        Нужно указать другой email?{" "}
         <Link className="font-medium text-teal-700 hover:text-teal-800" href="/login">
-          Return to sign in.
+          Вернуться ко входу
         </Link>
       </p>
     </form>

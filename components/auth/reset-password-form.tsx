@@ -30,12 +30,12 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     setSubmitError(null);
 
     if (password.length < 8) {
-      setFieldError("Password must be at least 8 characters.");
+      setFieldError("Пароль должен содержать не менее 8 символов.");
       return;
     }
 
     if (password !== confirmPassword) {
-      setFieldError("Passwords must match.");
+      setFieldError("Пароли должны совпадать.");
       return;
     }
 
@@ -57,14 +57,14 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
       if (!response.ok) {
         setSubmitError(
-          result.error ?? "This password reset link is invalid or expired.",
+          result.error ?? "Ссылка для сброса пароля недействительна или устарела.",
         );
         return;
       }
 
       router.replace(result.redirectTo ?? "/login?passwordReset=1");
     } catch {
-      setSubmitError("Unable to reset password right now.");
+      setSubmitError("Сейчас не удалось сбросить пароль.");
     } finally {
       setIsPending(false);
     }
@@ -76,22 +76,22 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       onSubmit={handleSubmit}
     >
       <div className="space-y-2">
-        <p className="text-sm font-medium text-teal-700">Password reset</p>
+        <p className="text-sm font-medium text-teal-700">Сброс пароля</p>
         <h1 className="text-2xl font-semibold tracking-normal text-slate-950">
-          Reset your password
+          Сбросьте пароль
         </h1>
         <p className="text-sm leading-6 text-slate-600">
-          Create a new password for your account. You will sign in after the
-          reset is complete.
+          Создайте новый пароль для аккаунта. После сброса вы сможете войти с
+          новым паролем.
         </p>
       </div>
 
       <div className="mt-6 space-y-4">
         <PasswordField
           autoComplete="new-password"
-          helpText="Use at least 8 characters."
+          helpText="Используйте не менее 8 символов."
           id="password"
-          label="Password"
+          label="Пароль"
           onChange={setPassword}
           value={password}
         />
@@ -99,7 +99,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         <PasswordField
           autoComplete="new-password"
           id="confirmPassword"
-          label="Confirm password"
+          label="Подтвердите пароль"
           onChange={setConfirmPassword}
           value={confirmPassword}
         />
@@ -119,13 +119,13 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         disabled={isPending}
         type="submit"
       >
-        {isPending ? "Saving..." : "Reset password"}
+        {isPending ? "Сохранение..." : "Сбросить пароль"}
       </button>
 
       <p className="mt-4 text-sm leading-6 text-slate-600">
-        Already reset your password?{" "}
+        Пароль уже сброшен?{" "}
         <Link className="font-medium text-teal-700 hover:text-teal-800" href="/login">
-          Sign in
+          Войти
         </Link>
       </p>
     </form>

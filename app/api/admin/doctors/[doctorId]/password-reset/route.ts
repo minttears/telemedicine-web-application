@@ -11,7 +11,7 @@ import { forbidden, unauthorized } from "@/lib/auth/responses";
 import { prisma } from "@/lib/prisma";
 
 const PASSWORD_RESET_EXPIRATION_HOURS = 1;
-const invalidDoctorMessage = "Doctor not found.";
+const invalidDoctorMessage = "Врач не найден.";
 
 type DoctorPasswordResetRouteContext = {
   params: Promise<{

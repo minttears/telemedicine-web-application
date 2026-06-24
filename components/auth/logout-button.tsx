@@ -30,7 +30,7 @@ export function LogoutButton() {
       onClick={handleLogout}
       type="button"
     >
-      {isPending ? "Signing out..." : "Sign out"}
+      {isPending ? "Выход..." : "Выйти"}
     </button>
   );
 }

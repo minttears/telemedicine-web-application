@@ -37,14 +37,16 @@ export function TwoFactorSetupForm() {
       const result = (await response.json().catch(() => ({}))) as SetupStartResponse;
 
       if (!response.ok || !result.manualKey || !result.qrDataUrl) {
-        setError(result.error ?? "Unable to start two-factor setup.");
+        setError(
+          result.error ?? "Не удалось начать настройку двухфакторной аутентификации.",
+        );
         return;
       }
 
       setManualKey(result.manualKey);
       setQrDataUrl(result.qrDataUrl);
     } catch {
-      setError("Unable to start two-factor setup.");
+      setError("Не удалось начать настройку двухфакторной аутентификации.");
     } finally {
       setIsStarting(false);
     }
@@ -55,7 +57,7 @@ export function TwoFactorSetupForm() {
     setError(null);
 
     if (!/^\d{6}$/.test(code)) {
-      setError("Enter the 6-digit code from your authenticator app.");
+      setError("Введите 6-значный код из приложения-аутентификатора.");
       return;
     }
 
@@ -72,7 +74,10 @@ export function TwoFactorSetupForm() {
       const result = (await response.json().catch(() => ({}))) as SetupConfirmResponse;
 
       if (!response.ok || !result.recoveryCodes) {
-        setError(result.error ?? "Unable to complete two-factor setup.");
+        setError(
+          result.error ??
+            "Не удалось завершить настройку двухфакторной аутентификации.",
+        );
         return;
       }
 
@@ -81,7 +86,7 @@ export function TwoFactorSetupForm() {
       setRecoveryCodes(result.recoveryCodes);
       setRedirectTo(result.redirectTo ?? "/login");
     } catch {
-      setError("Unable to complete two-factor setup.");
+      setError("Не удалось завершить настройку двухфакторной аутентификации.");
     } finally {
       setIsConfirming(false);
     }
@@ -90,13 +95,16 @@ export function TwoFactorSetupForm() {
   if (recoveryCodes) {
     return (
       <section className="w-full max-w-lg rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">Setup complete</p>
+        <p className="text-sm font-medium text-teal-700">
+          Настройка завершена
+        </p>
         <h1 className="mt-2 text-2xl font-semibold text-slate-950">
-          Save your recovery codes
+          Сохраните коды восстановления
         </h1>
         <p className="mt-3 text-sm leading-6 text-slate-600">
-          Store these codes in a secure password manager. Each code works once,
-          and they will not be shown again.
+          Сохраните коды в надёжном менеджере паролей. Каждый код можно
+          использовать только один раз. После ухода с этой страницы коды
+          больше не будут показаны.
         </p>
         <ul className="mt-5 grid gap-2 rounded-md border border-slate-200 bg-slate-50 p-4 font-mono text-sm text-slate-900 sm:grid-cols-2">
           {recoveryCodes.map((recoveryCode) => (
@@ -108,7 +116,7 @@ export function TwoFactorSetupForm() {
           onClick={() => router.replace(redirectTo)}
           type="button"
         >
-          Continue to workspace
+          Перейти в кабинет
         </button>
       </section>
     );
@@ -116,13 +124,16 @@ export function TwoFactorSetupForm() {
 
   return (
     <section className="w-full max-w-lg rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-      <p className="text-sm font-medium text-teal-700">Required security setup</p>
+      <p className="text-sm font-medium text-teal-700">
+        Обязательная настройка безопасности
+      </p>
       <h1 className="mt-2 text-2xl font-semibold text-slate-950">
-        Set up two-factor authentication
+        Настройте двухфакторную аутентификацию
       </h1>
       <p className="mt-3 text-sm leading-6 text-slate-600">
-        Use a TOTP authenticator app. This is required before you can access
-        your workspace.
+        Используйте приложение-аутентификатор с поддержкой TOTP. Настройка
+        обязательна для доступа к кабинету. Не передавайте QR-код и ключ
+        настройки другим лицам.
       </p>
 
       {!manualKey || !qrDataUrl ? (
@@ -132,24 +143,31 @@ export function TwoFactorSetupForm() {
           onClick={startSetup}
           type="button"
         >
-          {isStarting ? "Preparing setup..." : "Begin setup"}
+          {isStarting ? "Подготовка..." : "Начать настройку"}
         </button>
       ) : (
         <form className="mt-6 space-y-5" onSubmit={confirmSetup}>
           <div className="flex justify-center rounded-md border border-slate-200 bg-white p-4">
             {/* The QR data URL is returned once by the authenticated setup API. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img alt="Authenticator setup QR code" height={240} src={qrDataUrl} width={240} />
+            <img
+              alt="QR-код для настройки приложения-аутентификатора"
+              height={240}
+              src={qrDataUrl}
+              width={240}
+            />
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-800">Manual setup key</p>
+            <p className="text-sm font-medium text-slate-800">
+              Ключ для ручной настройки
+            </p>
             <p className="mt-2 break-all rounded-md bg-slate-100 px-3 py-2 font-mono text-sm text-slate-900">
               {manualKey}
             </p>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-slate-800" htmlFor="setup-code">
-              Verification code
+              Код подтверждения
             </label>
             <input
               autoComplete="one-time-code"
@@ -166,7 +184,9 @@ export function TwoFactorSetupForm() {
             disabled={isConfirming}
             type="submit"
           >
-            {isConfirming ? "Verifying..." : "Enable two-factor authentication"}
+            {isConfirming
+              ? "Проверка..."
+              : "Включить двухфакторную аутентификацию"}
           </button>
         </form>
       )}

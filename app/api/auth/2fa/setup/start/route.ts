@@ -15,14 +15,14 @@ export async function POST() {
 
   if (!challenge) {
     return Response.json(
-      { error: "Sign in again to continue." },
+      { error: "Войдите снова, чтобы продолжить." },
       { status: 401 },
     );
   }
 
   if (challenge.user.twoFactorSecret?.enabledAt) {
     return Response.json(
-      { error: "Two-factor authentication is already enabled." },
+      { error: "Двухфакторная аутентификация уже включена." },
       { status: 409 },
     );
   }

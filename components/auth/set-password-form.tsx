@@ -30,12 +30,12 @@ export function SetPasswordForm({ token }: SetPasswordFormProps) {
     setSubmitError(null);
 
     if (password.length < 8) {
-      setFieldError("Password must be at least 8 characters.");
+      setFieldError("Пароль должен содержать не менее 8 символов.");
       return;
     }
 
     if (password !== confirmPassword) {
-      setFieldError("Passwords must match.");
+      setFieldError("Пароли должны совпадать.");
       return;
     }
 
@@ -57,14 +57,14 @@ export function SetPasswordForm({ token }: SetPasswordFormProps) {
 
       if (!response.ok) {
         setSubmitError(
-          result.error ?? "This invite link is invalid or expired.",
+          result.error ?? "Ссылка-приглашение недействительна или устарела.",
         );
         return;
       }
 
       router.replace(result.redirectTo ?? "/login?passwordSet=1");
     } catch {
-      setSubmitError("Unable to set password right now.");
+      setSubmitError("Сейчас не удалось задать пароль.");
     } finally {
       setIsPending(false);
     }
@@ -76,22 +76,22 @@ export function SetPasswordForm({ token }: SetPasswordFormProps) {
       onSubmit={handleSubmit}
     >
       <div className="space-y-2">
-        <p className="text-sm font-medium text-teal-700">Doctor invite</p>
+        <p className="text-sm font-medium text-teal-700">Приглашение врача</p>
         <h1 className="text-2xl font-semibold tracking-normal text-slate-950">
-          Set your password
+          Задайте пароль
         </h1>
         <p className="text-sm leading-6 text-slate-600">
-          Create a password for your doctor workspace. You will sign in after
-          setup is complete.
+          Создайте пароль для кабинета врача. После завершения настройки вы
+          сможете войти.
         </p>
       </div>
 
       <div className="mt-6 space-y-4">
         <PasswordField
           autoComplete="new-password"
-          helpText="Use at least 8 characters."
+          helpText="Используйте не менее 8 символов."
           id="password"
-          label="Password"
+          label="Пароль"
           onChange={setPassword}
           value={password}
         />
@@ -99,7 +99,7 @@ export function SetPasswordForm({ token }: SetPasswordFormProps) {
         <PasswordField
           autoComplete="new-password"
           id="confirmPassword"
-          label="Confirm password"
+          label="Подтвердите пароль"
           onChange={setConfirmPassword}
           value={confirmPassword}
         />
@@ -119,13 +119,13 @@ export function SetPasswordForm({ token }: SetPasswordFormProps) {
         disabled={isPending}
         type="submit"
       >
-        {isPending ? "Saving..." : "Set password"}
+        {isPending ? "Сохранение..." : "Задать пароль"}
       </button>
 
       <p className="mt-4 text-sm leading-6 text-slate-600">
-        Already set your password?{" "}
+        Пароль уже задан?{" "}
         <Link className="font-medium text-teal-700 hover:text-teal-800" href="/login">
-          Sign in
+          Войти
         </Link>
       </p>
     </form>
