@@ -19,7 +19,7 @@ export function AttachmentForm({ consultationId }: AttachmentFormProps) {
     const file = fileInputRef.current?.files?.[0];
 
     if (!file) {
-      setError("Choose a file to upload.");
+      setError("Выберите файл для отправки.");
       return;
     }
 
@@ -41,7 +41,7 @@ export function AttachmentForm({ consultationId }: AttachmentFormProps) {
       } | null;
 
       if (!response.ok) {
-        setError(payload?.error ?? "Unable to upload file.");
+        setError(payload?.error ?? "Не удалось отправить файл.");
         return;
       }
 
@@ -51,7 +51,7 @@ export function AttachmentForm({ consultationId }: AttachmentFormProps) {
 
       router.refresh();
     } catch {
-      setError("Unable to upload file.");
+      setError("Не удалось отправить файл. Повторите попытку.");
     } finally {
       setIsSubmitting(false);
     }
@@ -64,7 +64,7 @@ export function AttachmentForm({ consultationId }: AttachmentFormProps) {
           className="text-sm font-medium text-slate-700"
           htmlFor="attachment"
         >
-          Attachment
+          Файл
         </label>
         <input
           accept=".pdf,.jpg,.jpeg,.png,.docx,application/pdf,image/jpeg,image/png,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -76,7 +76,7 @@ export function AttachmentForm({ consultationId }: AttachmentFormProps) {
           type="file"
         />
         <p className="mt-2 text-xs text-slate-500">
-          PDF, JPG, JPEG, PNG, or DOCX. Maximum size 10 MB.
+          PDF, JPG, JPEG, PNG или DOCX. Максимальный размер — 10 MB.
         </p>
       </div>
 
@@ -91,7 +91,7 @@ export function AttachmentForm({ consultationId }: AttachmentFormProps) {
         disabled={isSubmitting}
         type="submit"
       >
-        {isSubmitting ? "Uploading" : "Upload file"}
+        {isSubmitting ? "Отправка..." : "Отправить файл"}
       </button>
     </form>
   );

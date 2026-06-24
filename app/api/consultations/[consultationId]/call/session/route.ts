@@ -36,7 +36,7 @@ type CallSessionRouteContext = {
 };
 
 function notFound() {
-  return Response.json({ error: "Consultation not found." }, { status: 404 });
+  return Response.json({ error: "Консультация не найдена." }, { status: 404 });
 }
 
 function conflict(message: string) {
@@ -58,7 +58,7 @@ function getParticipantName({
     return userName.trim();
   }
 
-  return role === "DOCTOR" ? "Doctor" : "Patient";
+  return role === "DOCTOR" ? "Врач" : "Пациент";
 }
 
 async function findActiveCallSession(consultationId: string) {
@@ -178,15 +178,15 @@ export async function POST(
     }
 
     if (consultation.status === ConsultationStatus.COMPLETED) {
-      return conflict("Completed consultations cannot start video calls.");
+      return conflict("Для завершённых консультаций видеозвонок недоступен.");
     }
 
     if (consultation.status === ConsultationStatus.CANCELLED) {
-      return conflict("Cancelled consultations cannot start video calls.");
+      return conflict("Для отменённых консультаций видеозвонок недоступен.");
     }
 
     if (!CALL_ENABLED_STATUSES.includes(consultation.status)) {
-      return conflict("Video calls are not available for this consultation status.");
+      return conflict("Видеозвонок недоступен при текущем статусе консультации.");
     }
 
     if (
@@ -198,7 +198,7 @@ export async function POST(
       })
     ) {
       return conflict(
-        "Video calls are available from the scheduled start time until the consultation end time.",
+        "Видеозвонок доступен с запланированного начала до окончания консультации.",
       );
     }
 
@@ -294,7 +294,7 @@ export async function POST(
     }
 
     return Response.json(
-      { error: "Unable to create video call session." },
+      { error: "Не удалось создать сеанс видеозвонка." },
       { status: 500 },
     );
   }

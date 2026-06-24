@@ -28,7 +28,7 @@ function badRequest(message: string) {
 }
 
 function notFound() {
-  return Response.json({ error: "Consultation not found." }, { status: 404 });
+  return Response.json({ error: "Консультация не найдена." }, { status: 404 });
 }
 
 export async function POST(request: NextRequest) {
@@ -40,11 +40,11 @@ export async function POST(request: NextRequest) {
     try {
       payload = await request.json();
     } catch {
-      return badRequest("Invalid request body.");
+      return badRequest("Некорректные данные запроса.");
     }
 
     if (!payload || typeof payload !== "object") {
-      return badRequest("Invalid request body.");
+      return badRequest("Некорректные данные запроса.");
     }
 
     const { consultationId, body } = payload as {
@@ -53,22 +53,22 @@ export async function POST(request: NextRequest) {
     };
 
     if (typeof consultationId !== "string" || consultationId.trim() === "") {
-      return badRequest("Consultation is required.");
+      return badRequest("Укажите консультацию.");
     }
 
     if (typeof body !== "string") {
-      return badRequest("Message text is required.");
+      return badRequest("Введите текст сообщения.");
     }
 
     const trimmedBody = body.trim();
 
     if (trimmedBody.length === 0) {
-      return badRequest("Message text is required.");
+      return badRequest("Введите текст сообщения.");
     }
 
     if (trimmedBody.length > MAX_MESSAGE_LENGTH) {
       return badRequest(
-        `Message text must be ${MAX_MESSAGE_LENGTH} characters or fewer.`,
+        `Текст сообщения должен содержать не более ${MAX_MESSAGE_LENGTH} символов.`,
       );
     }
 
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
 
     if (consultation.status === "COMPLETED") {
       return Response.json(
-        { error: "Completed consultations are read-only." },
+        { error: "Чат завершённой консультации доступен только для чтения." },
         { status: 409 },
       );
     }
@@ -126,6 +126,9 @@ export async function POST(request: NextRequest) {
       return forbidden();
     }
 
-    return Response.json({ error: "Unable to send message." }, { status: 500 });
+    return Response.json(
+      { error: "Не удалось отправить сообщение." },
+      { status: 500 },
+    );
   }
 }

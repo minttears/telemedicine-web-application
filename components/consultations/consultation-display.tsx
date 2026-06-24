@@ -19,6 +19,14 @@ const statusStyles: Record<string, string> = {
   CANCELLED: "border-slate-200 bg-slate-100 text-slate-600",
 };
 
+const statusLabels: Record<string, string> = {
+  REQUESTED: "Ожидает подтверждения",
+  SCHEDULED: "Запланирована",
+  IN_PROGRESS: "Идёт сейчас",
+  COMPLETED: "Завершена",
+  CANCELLED: "Отменена",
+};
+
 export function ConsultationStatusBadge({
   status,
 }: ConsultationStatusBadgeProps) {
@@ -28,7 +36,7 @@ export function ConsultationStatusBadge({
         statusStyles[status] ?? "border-slate-200 bg-slate-100 text-slate-600"
       }`}
     >
-      {status}
+      {statusLabels[status] ?? status}
     </span>
   );
 }
@@ -60,17 +68,17 @@ type ConsultationSummaryPanelProps = {
 };
 
 const diagnosisStatusLabels: Record<string, string> = {
-  NOT_IDENTIFIED: "No diagnosis identified",
-  PRELIMINARY: "Preliminary diagnosis",
-  REQUIRES_FURTHER_EXAMINATION: "Requires further examination",
-  CONFIRMED: "Confirmed diagnosis",
-  CANNOT_DETERMINE_ONLINE: "Cannot determine online",
-  REFERRED_TO_SPECIALIST: "Referred to specialist",
-  NOT_APPLICABLE: "Not applicable",
+  NOT_IDENTIFIED: "Диагноз не установлен",
+  PRELIMINARY: "Предварительный диагноз",
+  REQUIRES_FURTHER_EXAMINATION: "Требуется дополнительное обследование",
+  CONFIRMED: "Подтверждённый диагноз",
+  CANNOT_DETERMINE_ONLINE: "Невозможно определить онлайн",
+  REFERRED_TO_SPECIALIST: "Направление к специалисту",
+  NOT_APPLICABLE: "Не применимо",
 };
 
 function formatSummaryDate(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
@@ -88,11 +96,11 @@ export function ConsultationSummaryPanel({
   title,
 }: ConsultationSummaryPanelProps) {
   const outcomeSections = [
-    { body: diagnosisDetails, title: "Diagnosis details" },
-    { body: recommendations, title: "Doctor recommendations" },
-    { body: medicationNotes, title: "Medication notes" },
-    { body: followUpInstructions, title: "Follow-up instructions" },
-    { body: additionalNotes, title: "Additional notes" },
+    { body: diagnosisDetails, title: "Сведения о диагнозе" },
+    { body: recommendations, title: "Рекомендации" },
+    { body: medicationNotes, title: "Рекомендации по лекарствам" },
+    { body: followUpInstructions, title: "Дальнейшие действия" },
+    { body: additionalNotes, title: "Дополнительные примечания" },
   ].filter((section) => section.body?.trim());
 
   return (
@@ -101,7 +109,7 @@ export function ConsultationSummaryPanel({
         <div>
           <p className="text-sm font-medium text-teal-700">{title}</p>
           <h2 className="mt-2 text-lg font-semibold text-slate-950">
-            Consultation outcome
+            Итоги консультации
           </h2>
         </div>
         {completedAt ? (
@@ -115,7 +123,7 @@ export function ConsultationSummaryPanel({
       </div>
       <div className="mt-5 rounded-md border border-slate-200 bg-slate-50 p-4">
         <p className="text-sm font-medium text-slate-950">
-          Conclusion / summary
+          Заключение
         </p>
         <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
           {doctorNotes}
@@ -123,7 +131,7 @@ export function ConsultationSummaryPanel({
       </div>
       {diagnosisStatus ? (
         <div className="mt-3 rounded-md border border-teal-100 bg-teal-50 p-4">
-          <p className="text-sm font-medium text-slate-950">Diagnosis status</p>
+          <p className="text-sm font-medium text-slate-950">Статус диагноза</p>
           <p className="mt-2 text-sm leading-6 text-teal-800">
             {diagnosisStatusLabels[diagnosisStatus] ?? diagnosisStatus}
           </p>
@@ -186,7 +194,7 @@ type ConsultationMessagesPanelProps = {
 };
 
 function formatMessageDate(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
@@ -198,14 +206,14 @@ function getSenderName(message: ConsultationMessage) {
   }
 
   if (message.sender.role === "DOCTOR") {
-    return "Doctor";
+    return "Врач";
   }
 
   if (message.sender.role === "PATIENT") {
-    return "Patient";
+    return "Пациент";
   }
 
-  return "User";
+  return "Пользователь";
 }
 
 function getInitials(name: string | null, role: string) {
@@ -232,7 +240,7 @@ function MessageAvatar({ message }: { message: ConsultationMessage }) {
 
   return (
     <ProfileImage
-      alt={`${senderName} avatar`}
+      alt={`Аватар: ${senderName}`}
       className="h-9 w-9 shrink-0"
       initials={getInitials(message.sender.name, message.sender.role)}
       src={getSenderImageSrc(message)}
@@ -261,7 +269,11 @@ function FileAttachmentBubble({
             {attachment.fileName}
           </p>
           <p className="mt-1 text-xs leading-5 text-slate-500">
-            {getAttachmentTypeLabel(attachment.fileType)} - {formatFileSize(attachment.fileSize)} - Uploaded by {attachment.uploadedBy.name ?? attachment.uploadedBy.role} - {formatMessageDate(attachment.createdAt)}
+            {getAttachmentTypeLabel(attachment.fileType)} -{" "}
+            {formatFileSize(attachment.fileSize)} - Отправил(а):{" "}
+            {attachment.uploadedBy.name ??
+              (attachment.uploadedBy.role === "DOCTOR" ? "Врач" : "Пациент")}{" "}
+            - {formatMessageDate(attachment.createdAt)}
           </p>
         </div>
         <a
@@ -272,7 +284,7 @@ function FileAttachmentBubble({
           }`}
           href={`/api/files/${attachment.id}`}
         >
-          Download
+          Скачать
         </a>
       </div>
     </div>
@@ -289,9 +301,9 @@ export function ConsultationMessagesPanel({
     <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
       <MessageRefresh />
       <div>
-        <p className="text-sm font-medium text-teal-700">Consultation chat</p>
+        <p className="text-sm font-medium text-teal-700">Чат консультации</p>
         <h2 className="mt-2 text-lg font-semibold text-slate-950">
-          Messages
+          Сообщения
         </h2>
       </div>
 
@@ -321,7 +333,7 @@ export function ConsultationMessagesPanel({
                   >
                     <span className="font-medium">{senderName}</span>
                     <span className="rounded-full border border-slate-200 bg-white px-2 py-0.5 font-medium text-slate-600">
-                      {message.sender.role}
+                      {message.sender.role === "DOCTOR" ? "Врач" : "Пациент"}
                     </span>
                     <time dateTime={message.createdAt.toISOString()}>
                       {formatMessageDate(message.createdAt)}
@@ -351,13 +363,13 @@ export function ConsultationMessagesPanel({
                           ))
                         ) : (
                           <p className="text-sm leading-6 text-slate-600">
-                            File metadata is not available.
+                            Информация о файле недоступна.
                           </p>
                         )}
                       </div>
                     ) : (
                       <p className="text-sm leading-6 text-slate-600">
-                        This message type is not available in the chat view yet.
+                        Этот тип сообщения пока недоступен в чате.
                       </p>
                     )}
                   </div>
@@ -370,12 +382,12 @@ export function ConsultationMessagesPanel({
       ) : (
         <div className="mt-5 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-5">
           <h3 className="text-sm font-semibold text-slate-950">
-            No messages yet
+            Сообщений пока нет
           </h3>
           <p className="mt-2 text-sm leading-6 text-slate-600">
             {readOnly
-              ? "No messages were recorded before this consultation was completed."
-              : "Messages and shared files will appear here after the consultation chat starts."}
+              ? "До завершения консультации сообщений не было."
+              : "Сообщения и отправленные файлы появятся здесь после начала общения."}
           </p>
         </div>
       )}
@@ -383,11 +395,11 @@ export function ConsultationMessagesPanel({
       {readOnly ? (
         <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
           <h3 className="text-sm font-semibold text-slate-950">
-            Chat is read-only
+            Чат доступен только для чтения
           </h3>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            This consultation has been completed. The chat history remains
-            available, but new messages cannot be sent.
+            Консультация завершена. История чата сохранена, но отправка новых
+            сообщений недоступна.
           </p>
         </div>
       ) : (

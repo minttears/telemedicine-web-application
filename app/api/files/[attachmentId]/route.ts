@@ -14,7 +14,7 @@ type FileDownloadRouteContext = {
 };
 
 function notFound() {
-  return Response.json({ error: "File not found." }, { status: 404 });
+  return Response.json({ error: "Файл не найден." }, { status: 404 });
 }
 
 function getContentDisposition(fileName: string) {
@@ -89,6 +89,9 @@ export async function GET(_request: Request, context: FileDownloadRouteContext) 
       return forbidden();
     }
 
-    return Response.json({ error: "Unable to download file." }, { status: 500 });
+    return Response.json(
+      { error: "Не удалось скачать файл." },
+      { status: 500 },
+    );
   }
 }

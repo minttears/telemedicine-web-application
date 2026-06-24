@@ -55,21 +55,21 @@ export function getVideoCallAvailability({
   if (status === "COMPLETED") {
     return {
       isEligible: false,
-      reason: "Completed consultations cannot start video calls.",
+      reason: "Для завершённых консультаций видеозвонок недоступен.",
     };
   }
 
   if (status === "CANCELLED") {
     return {
       isEligible: false,
-      reason: "Cancelled consultations cannot start video calls.",
+      reason: "Для отменённых консультаций видеозвонок недоступен.",
     };
   }
 
   if (!CALL_ENABLED_STATUSES.includes(status)) {
     return {
       isEligible: false,
-      reason: "Video calls are not available for this consultation status.",
+      reason: "Видеозвонок недоступен при текущем статусе консультации.",
     };
   }
 
@@ -83,7 +83,7 @@ export function getVideoCallAvailability({
     return {
       isEligible: false,
       reason:
-        "Video calls are available from the scheduled start time until the consultation end time.",
+        "Видеозвонок доступен с запланированного начала до окончания консультации.",
     };
   }
 

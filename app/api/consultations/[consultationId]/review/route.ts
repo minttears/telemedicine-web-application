@@ -26,7 +26,7 @@ function conflict(message: string) {
 }
 
 function notFound() {
-  return Response.json({ error: "Consultation not found." }, { status: 404 });
+  return Response.json({ error: "Консультация не найдена." }, { status: 404 });
 }
 
 export async function POST(request: NextRequest, context: ReviewRouteContext) {
@@ -43,11 +43,11 @@ export async function POST(request: NextRequest, context: ReviewRouteContext) {
     try {
       payload = await request.json();
     } catch {
-      return badRequest("Invalid request body.");
+      return badRequest("Некорректные данные запроса.");
     }
 
     if (!payload || typeof payload !== "object") {
-      return badRequest("Invalid request body.");
+      return badRequest("Некорректные данные запроса.");
     }
 
     const { comment, rating } = payload as {
@@ -61,18 +61,18 @@ export async function POST(request: NextRequest, context: ReviewRouteContext) {
       rating < 1 ||
       rating > 5
     ) {
-      return badRequest("Rating must be an integer from 1 to 5.");
+      return badRequest("Оценка должна быть целым числом от 1 до 5.");
     }
 
     if (comment !== undefined && comment !== null && typeof comment !== "string") {
-      return badRequest("Review comment must be text.");
+      return badRequest("Комментарий к отзыву должен быть текстом.");
     }
 
     const trimmedComment = typeof comment === "string" ? comment.trim() : "";
 
     if (trimmedComment.length > MAX_REVIEW_COMMENT_LENGTH) {
       return badRequest(
-        `Review comment must be ${MAX_REVIEW_COMMENT_LENGTH} characters or fewer.`,
+        `Комментарий должен содержать не более ${MAX_REVIEW_COMMENT_LENGTH} символов.`,
       );
     }
 
@@ -101,11 +101,11 @@ export async function POST(request: NextRequest, context: ReviewRouteContext) {
     }
 
     if (consultation.status !== "COMPLETED") {
-      return conflict("Only completed consultations can be reviewed.");
+      return conflict("Отзыв можно оставить только после завершения консультации.");
     }
 
     if (consultation.doctorReview) {
-      return conflict("This consultation already has a review.");
+      return conflict("Для этой консультации отзыв уже оставлен.");
     }
 
     try {
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest, context: ReviewRouteContext) {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === "P2002"
       ) {
-        return conflict("This consultation already has a review.");
+        return conflict("Для этой консультации отзыв уже оставлен.");
       }
 
       throw error;
@@ -150,6 +150,9 @@ export async function POST(request: NextRequest, context: ReviewRouteContext) {
       return forbidden();
     }
 
-    return Response.json({ error: "Unable to submit review." }, { status: 500 });
+    return Response.json(
+      { error: "Не удалось отправить отзыв." },
+      { status: 500 },
+    );
   }
 }

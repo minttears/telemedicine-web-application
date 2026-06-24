@@ -2,7 +2,8 @@ import { requireRole, UnauthorizedError, ForbiddenError } from "@/lib/auth/curre
 import { forbidden, unauthorized } from "@/lib/auth/responses";
 import { prisma } from "@/lib/prisma";
 
-const slotUnavailableMessage = "This time is no longer available. Please choose another slot.";
+const slotUnavailableMessage =
+  "Это время больше недоступно. Выберите другое доступное время.";
 const MIN_BOOKING_LEAD_TIME_MS = 30 * 60 * 1000;
 
 function isBookingBody(value: unknown): value is {
@@ -62,14 +63,20 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
 
   if (!isBookingBody(body)) {
-    return Response.json({ error: "Invalid booking details." }, { status: 400 });
+    return Response.json(
+      { error: "Некорректные данные записи." },
+      { status: 400 },
+    );
   }
 
   const doctorId = body.doctorId.trim();
   const scheduleSlotId = body.scheduleSlotId.trim();
 
   if (!doctorId || !scheduleSlotId) {
-    return Response.json({ error: "Invalid booking details." }, { status: 400 });
+    return Response.json(
+      { error: "Некорректные данные записи." },
+      { status: 400 },
+    );
   }
 
   try {
@@ -150,7 +157,7 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof Error && error.message === "PATIENT_PROFILE_MISSING") {
       return Response.json(
-        { error: "Patient profile is required before booking." },
+        { error: "Для записи на консультацию требуется профиль пациента." },
         { status: 400 },
       );
     }

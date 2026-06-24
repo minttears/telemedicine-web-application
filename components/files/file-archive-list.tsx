@@ -33,7 +33,7 @@ type FileArchiveListProps = {
 };
 
 function formatDateTime(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
@@ -60,7 +60,7 @@ function getStatusClassName(status: string) {
 }
 
 function getUploaderLabel(file: ArchiveFile) {
-  const roleLabel = file.uploadedBy.role === "DOCTOR" ? "Doctor" : "Patient";
+  const roleLabel = file.uploadedBy.role === "DOCTOR" ? "Врач" : "Пациент";
 
   if (!file.uploadedBy.name) {
     return roleLabel;
@@ -95,13 +95,13 @@ export function FileArchiveList({
   }
 
   return (
-    <section aria-label="Consultation files" className="grid gap-4">
+    <section aria-label="Файлы консультаций" className="grid gap-4">
       <div className="hidden rounded-lg border border-slate-200 bg-white px-5 py-3 text-xs font-medium uppercase tracking-normal text-slate-500 shadow-sm lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1.1fr)_minmax(0,1.1fr)_minmax(0,1.1fr)_auto] lg:gap-4">
-        <span>File</span>
+        <span>Файл</span>
         <span>{personHeader}</span>
-        <span>Consultation</span>
-        <span>Uploaded</span>
-        <span className="text-right">Actions</span>
+        <span>Консультация</span>
+        <span>Отправлен</span>
+        <span className="text-right">Действия</span>
       </div>
 
       {files.map((file) => (
@@ -130,7 +130,7 @@ export function FileArchiveList({
 
             <div>
               <p className="text-xs font-medium uppercase tracking-normal text-slate-500 lg:hidden">
-                Consultation
+                Консультация
               </p>
               <p className="mt-1 text-sm text-slate-700 lg:mt-0">
                 {formatDateTime(file.consultation.scheduledAt)}
@@ -140,13 +140,19 @@ export function FileArchiveList({
                   file.consultation.status,
                 )}`}
               >
-                {file.consultation.status}
+                {{
+                  CANCELLED: "Отменена",
+                  COMPLETED: "Завершена",
+                  IN_PROGRESS: "Идёт сейчас",
+                  REQUESTED: "Ожидает подтверждения",
+                  SCHEDULED: "Запланирована",
+                }[file.consultation.status] ?? file.consultation.status}
               </span>
             </div>
 
             <div>
               <p className="text-xs font-medium uppercase tracking-normal text-slate-500 lg:hidden">
-                Uploaded
+                Отправлен
               </p>
               <p className="mt-1 text-sm text-slate-700 lg:mt-0">
                 {formatDateTime(file.createdAt)}
@@ -161,13 +167,13 @@ export function FileArchiveList({
                 className="inline-flex min-h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
                 href={file.consultation.href}
               >
-                Open consultation
+                Открыть консультацию
               </Link>
               <a
                 className="inline-flex min-h-10 items-center justify-center rounded-md bg-teal-700 px-3 text-sm font-medium text-white transition hover:bg-teal-800"
                 href={`/api/files/${file.id}`}
               >
-                Download
+                Скачать
               </a>
             </div>
           </div>

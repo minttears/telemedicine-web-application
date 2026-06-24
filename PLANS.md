@@ -2,7 +2,26 @@
 
 ## Current Plan
 
-Phase 16B Russian Auth, 2FA, And Account UI is completed. Authentication, password recovery, doctor onboarding, 2FA, account-security controls, and password-reset email copy use formal Russian without changing behavior or technical contracts.
+Phase 16C Russian Patient Workspace UI is completed. Patient navigation, dashboard, profile, doctor discovery, booking, consultations, chat, files, reviews, and video-call copy use formal Russian without changing behavior or technical contracts.
+
+## Phase 16C: Russian Patient Workspace UI
+
+Status: Completed
+
+Completed:
+
+- Translated patient navigation, dashboard, profile/settings, avatar upload, placeholder states, and patient-facing date/time formatting.
+- Translated doctor directory filters, curated symptom display labels, doctor cards/details, ratings/reviews, schedule preview, and booking copy.
+- Translated patient consultation lists/details, outcome display, chat, attachments, files archive, review form, and LiveKit call UI.
+- Translated matching safe patient-facing validation and API errors without changing response keys or HTTP status codes.
+- Preserved patient login without 2FA and all booking, consultation, chat, file, video, session, redirect, authorization, and privileged-account 2FA behavior.
+- Kept specialty slugs, database values, seed/demo doctor medical text, user-generated content, routes, enum values, role constants, brands, and technical identifiers unchanged.
+
+Remaining translation phases:
+
+- Phase 16D doctor workspace.
+- Phase 16E admin workspace.
+- Phase 16F public, legal, remaining shared UI, metadata, final accessibility, and seed-visible medical copy.
 
 ## Phase 16B: Russian Auth, 2FA, And Account UI
 
@@ -16,13 +35,6 @@ Completed:
 - Translated password-reset email subject, HTML, and plain-text copy without changing recipient or reset-link behavior.
 - Used formal Russian `вы`; kept brands, routes, API fields, enum values, role constants, environment names, and the `RESET 2FA` confirmation token unchanged.
 - Preserved patient login behavior and all doctor/admin 2FA enforcement, strict TOTP, recovery-code, session, cookie, redirect, and status-code behavior.
-
-Remaining translation phases:
-
-- Phase 16C patient workspace.
-- Phase 16D doctor workspace.
-- Phase 16E admin workspace.
-- Phase 16F public, legal, shared UI, metadata, final accessibility, and seed-visible medical copy.
 
 ## Phase 15C: Two-Factor Manual QA Record
 

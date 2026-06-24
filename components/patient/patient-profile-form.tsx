@@ -48,17 +48,17 @@ export function PatientProfileForm({
     setSuccessMessage(null);
 
     if (normalizedName.length > 100) {
-      setFieldError("Name is too long.");
+      setFieldError("Имя слишком длинное.");
       return;
     }
 
     if (dateOfBirth && !isPastDate(dateOfBirth)) {
-      setFieldError("Enter a valid date of birth.");
+      setFieldError("Укажите корректную дату рождения.");
       return;
     }
 
     if (normalizedGender.length > 50) {
-      setFieldError("Gender value is too long.");
+      setFieldError("Значение поля «Пол» слишком длинное.");
       return;
     }
 
@@ -80,14 +80,14 @@ export function PatientProfileForm({
       const result = (await response.json().catch(() => ({}))) as ProfileResponse;
 
       if (!response.ok) {
-        setSubmitError(result.error ?? "Unable to update profile.");
+        setSubmitError(result.error ?? "Не удалось обновить профиль.");
         return;
       }
 
-      setSuccessMessage("Profile updated.");
+      setSuccessMessage("Профиль обновлён.");
       router.refresh();
     } catch {
-      setSubmitError("Unable to update profile right now.");
+      setSubmitError("Сейчас не удалось обновить профиль. Повторите попытку.");
     } finally {
       setIsPending(false);
     }
@@ -99,25 +99,24 @@ export function PatientProfileForm({
       onSubmit={handleSubmit}
     >
       <div>
-        <p className="text-sm font-medium text-teal-700">Editable details</p>
+        <p className="text-sm font-medium text-teal-700">Редактируемые данные</p>
         <h2 className="mt-2 text-xl font-semibold text-slate-950">
-          Personal information
+          Личная информация
         </h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Email, role, and account status are protected and cannot be changed
-          here.
+          Email, роль и статус аккаунта защищены и не могут быть изменены здесь.
         </p>
       </div>
 
       <div className="mt-5 grid gap-5">
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Name</span>
+          <span className="text-sm font-medium text-slate-800">Имя</span>
           <input
             autoComplete="name"
             className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             maxLength={100}
             onChange={(event) => setName(event.target.value)}
-            placeholder="Your full name"
+            placeholder="Ваше полное имя"
             type="text"
             value={name}
           />
@@ -125,7 +124,7 @@ export function PatientProfileForm({
 
         <label className="block">
           <span className="text-sm font-medium text-slate-800">
-            Date of birth
+            Дата рождения
           </span>
           <input
             className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
@@ -137,12 +136,12 @@ export function PatientProfileForm({
         </label>
 
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Gender</span>
+          <span className="text-sm font-medium text-slate-800">Пол</span>
           <input
             className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             maxLength={50}
             onChange={(event) => setGender(event.target.value)}
-            placeholder="Optional"
+            placeholder="Необязательно"
             type="text"
             value={gender}
           />
@@ -170,7 +169,7 @@ export function PatientProfileForm({
           disabled={isPending}
           type="submit"
         >
-          {isPending ? "Saving..." : "Save profile"}
+          {isPending ? "Сохранение..." : "Сохранить изменения"}
         </button>
       </div>
     </form>

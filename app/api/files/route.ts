@@ -26,7 +26,7 @@ function badRequest(message: string) {
 }
 
 function notFound() {
-  return Response.json({ error: "Consultation not found." }, { status: 404 });
+  return Response.json({ error: "Консультация не найдена." }, { status: 404 });
 }
 
 function isFile(value: FormDataEntryValue | null): value is File {
@@ -61,24 +61,24 @@ export async function POST(request: NextRequest) {
     try {
       formData = await request.formData();
     } catch {
-      return badRequest("Invalid form data.");
+      return badRequest("Некорректные данные формы.");
     }
 
     const consultationId = formData.get("consultationId");
     const file = formData.get("file");
 
     if (typeof consultationId !== "string" || consultationId.trim() === "") {
-      return badRequest("Consultation is required.");
+      return badRequest("Укажите консультацию.");
     }
 
     if (!isFile(file)) {
-      return badRequest("File is required.");
+      return badRequest("Выберите файл.");
     }
 
     const validation = validateAttachmentFile(file);
 
     if (validation.error || !validation.value) {
-      return badRequest(validation.error ?? "Invalid file.");
+      return badRequest(validation.error ?? "Некорректный файл.");
     }
 
     const validatedFile = validation.value;
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
 
     if (!WRITABLE_CONSULTATION_STATUSES.includes(consultation.status)) {
       return Response.json(
-        { error: "This consultation is read-only." },
+        { error: "Эта консультация доступна только для чтения." },
         { status: 409 },
       );
     }
@@ -130,7 +130,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (uploadResult.error) {
-      return Response.json({ error: "Unable to upload file." }, { status: 500 });
+      return Response.json(
+        { error: "Не удалось отправить файл." },
+        { status: 500 },
+      );
     }
 
     uploadedStoragePath = storagePath;
@@ -200,6 +203,9 @@ export async function POST(request: NextRequest) {
       return forbidden();
     }
 
-    return Response.json({ error: "Unable to upload file." }, { status: 500 });
+    return Response.json(
+      { error: "Не удалось отправить файл." },
+      { status: 500 },
+    );
   }
 }

@@ -3,7 +3,7 @@ import { requireRole } from "@/lib/auth/current-user";
 import { prisma } from "@/lib/prisma";
 
 function getDoctorLabel(name: string | null) {
-  return name ?? "Doctor profile";
+  return name ?? "Профиль врача";
 }
 
 export default async function PatientFilesPage() {
@@ -69,26 +69,26 @@ export default async function PatientFilesPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">Files</p>
+        <p className="text-sm font-medium text-teal-700">Файлы</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-          Consultation files
+          Файлы консультаций
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Files are uploaded inside consultation chats. This page collects them
-          for quick access.
+          Файлы отправляются в чатах консультаций. На этой странице они собраны
+          для быстрого доступа.
         </p>
         <p className="mt-4 text-sm font-medium text-slate-700">
-          {files.length} {files.length === 1 ? "file" : "files"} available
+          Доступно файлов: {files.length}
         </p>
       </section>
 
       <FileArchiveList
         emptyActionHref="/patient/consultations"
-        emptyActionLabel="View consultations"
-        emptyBody="Files shared during your consultations will appear here. You can also browse doctors to book a consultation."
-        emptyTitle="No files shared yet"
+        emptyActionLabel="Открыть консультации"
+        emptyBody="Файлы, отправленные во время консультаций, появятся здесь. Чтобы начать, выберите врача и запишитесь на консультацию."
+        emptyTitle="Файлов пока нет"
         files={files}
-        personHeader="Doctor"
+        personHeader="Врач"
       />
     </div>
   );

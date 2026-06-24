@@ -13,18 +13,18 @@ export function VideoCallPanel({
   isEligible,
   role,
 }: VideoCallPanelProps) {
-  const buttonLabel = role === "DOCTOR" ? "Start video call" : "Join video call";
+  const buttonLabel =
+    role === "DOCTOR" ? "Начать видеозвонок" : "Присоединиться к видеозвонку";
 
   return (
     <section className="rounded-lg border border-teal-100 bg-teal-50 p-6 shadow-sm">
-      <p className="text-sm font-medium text-teal-800">Video consultation</p>
+      <p className="text-sm font-medium text-teal-800">Онлайн-консультация</p>
       <h2 className="mt-2 text-lg font-semibold text-slate-950">
-        LiveKit video call
+        Видеозвонок LiveKit
       </h2>
       <p className="mt-3 text-sm leading-6 text-slate-700">
-        Private LiveKit rooms and short-lived server-issued participant tokens
-        are used for eligible scheduled consultations. Tokens are never shown on
-        this page.
+        Для запланированных консультаций используется защищённая комната
+        LiveKit. Доступ к звонку предоставляется только участникам консультации.
       </p>
       {isEligible ? (
         <Link

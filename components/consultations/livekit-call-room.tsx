@@ -38,7 +38,8 @@ export function LiveKitCallRoom({
     token: string;
   } | null>(null);
 
-  const actionLabel = role === "DOCTOR" ? "Start video call" : "Join video call";
+  const actionLabel =
+    role === "DOCTOR" ? "Начать видеозвонок" : "Присоединиться к видеозвонку";
   const isStarting = callState === "loading";
 
   async function joinCall() {
@@ -60,13 +61,13 @@ export function LiveKitCallRoom({
 
       if (!response.ok) {
         setCallState("error");
-        setError(payload?.error ?? "Unable to prepare the video call.");
+        setError(payload?.error ?? "Не удалось подготовить видеозвонок.");
         return;
       }
 
       if (!payload?.livekitUrl || !payload.participantToken) {
         setCallState("error");
-        setError("Video provider returned incomplete join information.");
+        setError("Сервис видеосвязи вернул неполные данные для подключения.");
         return;
       }
 
@@ -77,7 +78,7 @@ export function LiveKitCallRoom({
       setCallState("joined");
     } catch {
       setCallState("error");
-      setError("Unable to start the video call.");
+      setError("Не удалось начать видеозвонок.");
     }
   }
 
@@ -90,20 +91,22 @@ export function LiveKitCallRoom({
     <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="text-sm font-medium text-teal-700">Video consultation</p>
+          <p className="text-sm font-medium text-teal-700">
+            Онлайн-консультация
+          </p>
           <h1 className="mt-2 text-2xl font-semibold text-slate-950">
-            LiveKit video call
+            Видеозвонок LiveKit
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-            Join from a private LiveKit room with a short-lived server-issued
-            token. Your browser may ask for camera and microphone permission.
+            Подключитесь к защищённой комнате LiveKit. Браузер может запросить
+            разрешение на использование камеры и микрофона.
           </p>
         </div>
         <Link
           className="inline-flex min-h-10 w-fit items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
           href={backHref}
         >
-          Back to consultation
+          Вернуться к консультации
         </Link>
       </div>
 
@@ -120,12 +123,12 @@ export function LiveKitCallRoom({
                 setJoinInfo(null);
                 setCallState("error");
                 setError(
-                  "LiveKit could not start the call. Check camera and microphone permissions, then try again.",
+                  "LiveKit не удалось начать звонок. Проверьте разрешения камеры и микрофона, затем повторите попытку.",
                 );
               }}
               onMediaDeviceFailure={() => {
                 setError(
-                  "Camera or microphone permission was blocked. Update browser permissions, then rejoin the call.",
+                  "Доступ к камере или микрофону заблокирован. Измените разрешения браузера и подключитесь снова.",
                 );
               }}
               screen={false}
@@ -146,11 +149,12 @@ export function LiveKitCallRoom({
             <div className="flex min-h-[28rem] flex-col items-center justify-center p-6 text-center sm:min-h-[36rem]">
               <div className="max-w-md rounded-xl border border-white/10 bg-white p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-slate-950">
-                  Ready to connect
+                  Готово к подключению
                 </h2>
                 <p className="mt-3 text-sm leading-6 text-slate-600">
-                  LiveKit will open inside this panel. Use the call controls to
-                  mute, turn the camera on or off, and leave the call.
+                  LiveKit откроется в этой панели. Используйте элементы
+                  управления, чтобы включать и выключать микрофон и камеру или
+                  выйти из звонка.
                 </p>
                 <button
                   className="mt-5 inline-flex min-h-10 w-full items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-600"
@@ -158,7 +162,9 @@ export function LiveKitCallRoom({
                   onClick={joinCall}
                   type="button"
                 >
-                  {callState === "loading" ? "Preparing call..." : actionLabel}
+                  {callState === "loading"
+                    ? "Подготовка звонка..."
+                    : actionLabel}
                 </button>
                 {!isEligible && disabledReason ? (
                   <p className="mt-3 text-sm leading-6 text-slate-600">
@@ -167,8 +173,8 @@ export function LiveKitCallRoom({
                 ) : null}
                 {callState === "ended" ? (
                   <p className="mt-3 text-sm leading-6 text-teal-800">
-                    The call has ended. You can rejoin while the consultation is
-                    still eligible.
+                    Звонок завершён. Вы можете подключиться снова, пока доступно
+                    время консультации.
                   </p>
                 ) : null}
                 {error ? (

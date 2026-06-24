@@ -40,7 +40,7 @@ export function ProfileImageUploadForm({
     setSuccessMessage(null);
 
     if (!file) {
-      setError("Choose an image to upload.");
+      setError("Выберите изображение для загрузки.");
       return;
     }
 
@@ -56,7 +56,7 @@ export function ProfileImageUploadForm({
       const result = (await response.json().catch(() => ({}))) as UploadResponse;
 
       if (!response.ok) {
-        setError(result.error ?? "Unable to upload image.");
+        setError(result.error ?? "Не удалось загрузить изображение.");
         return;
       }
 
@@ -64,10 +64,10 @@ export function ProfileImageUploadForm({
         fileInputRef.current.value = "";
       }
 
-      setSuccessMessage("Image updated.");
+      setSuccessMessage("Изображение обновлено.");
       router.refresh();
     } catch {
-      setError("Unable to upload image right now.");
+      setError("Сейчас не удалось загрузить изображение. Повторите попытку.");
     } finally {
       setIsPending(false);
     }
@@ -79,7 +79,9 @@ export function ProfileImageUploadForm({
       onSubmit={handleSubmit}
     >
       <div>
-        <p className="text-sm font-medium text-teal-700">Profile image</p>
+        <p className="text-sm font-medium text-teal-700">
+          Изображение профиля
+        </p>
         <h2 className="mt-2 text-xl font-semibold text-slate-950">{title}</h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
       </div>
@@ -98,14 +100,14 @@ export function ProfileImageUploadForm({
           </div>
         )}
         <div className="text-sm leading-6 text-slate-600">
-          <p>JPEG, PNG, or WEBP.</p>
-          <p>Maximum size 2 MB.</p>
+          <p>JPEG, PNG или WEBP.</p>
+          <p>Максимальный размер — 2 MB.</p>
         </div>
       </div>
 
       <div className="mt-5">
         <label className="text-sm font-medium text-slate-800" htmlFor={inputId}>
-          Upload image
+          Загрузить изображение
         </label>
         <input
           accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
@@ -136,7 +138,7 @@ export function ProfileImageUploadForm({
           disabled={isPending}
           type="submit"
         >
-          {isPending ? "Uploading..." : "Upload image"}
+          {isPending ? "Загрузка..." : "Загрузить изображение"}
         </button>
       </div>
     </form>

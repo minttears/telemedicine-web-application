@@ -50,7 +50,7 @@ export function validateProfileImageFile(file: File): {
   const extension = getExtension(file.name);
 
   if (!allowedType) {
-    return { error: "Image must be a JPEG, PNG, or WEBP file." };
+    return { error: "Изображение должно быть в формате JPEG, PNG или WEBP." };
   }
 
   if (
@@ -59,16 +59,16 @@ export function validateProfileImageFile(file: File): {
       (type) => type.extension === extension && type.mimeType === file.type,
     )
   ) {
-    return { error: "Image extension does not match the file type." };
+    return { error: "Расширение изображения не соответствует типу файла." };
   }
 
   if (file.size <= 0) {
-    return { error: "Image is required." };
+    return { error: "Выберите изображение." };
   }
 
   if (file.size > MAX_PROFILE_IMAGE_SIZE_BYTES) {
     return {
-      error: `Image must be ${formatProfileImageSize(MAX_PROFILE_IMAGE_SIZE_BYTES)} or smaller.`,
+      error: `Размер изображения не должен превышать ${formatProfileImageSize(MAX_PROFILE_IMAGE_SIZE_BYTES)}.`,
     };
   }
 

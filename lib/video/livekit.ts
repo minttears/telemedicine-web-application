@@ -28,7 +28,7 @@ export type LiveKitParticipantToken = {
 
 function getLiveKitConfig(): LiveKitResult<LiveKitConfig> {
   if (process.env.VIDEO_PROVIDER !== "livekit") {
-    return { error: "Video provider is not configured.", ok: false };
+    return { error: "Сервис видеосвязи не настроен.", ok: false };
   }
 
   const apiKey = process.env.LIVEKIT_API_KEY?.trim();
@@ -36,7 +36,7 @@ function getLiveKitConfig(): LiveKitResult<LiveKitConfig> {
   const url = process.env.LIVEKIT_URL?.trim();
 
   if (!apiKey || !apiSecret || !url) {
-    return { error: "Video provider is not configured.", ok: false };
+    return { error: "Сервис видеосвязи не настроен.", ok: false };
   }
 
   return {

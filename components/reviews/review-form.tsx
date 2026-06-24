@@ -23,13 +23,13 @@ export function ReviewForm({ consultationId }: ReviewFormProps) {
     const trimmedComment = comment.trim();
 
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
-      setError("Choose a rating from 1 to 5.");
+      setError("Выберите оценку от 1 до 5.");
       return;
     }
 
     if (trimmedComment.length > MAX_REVIEW_COMMENT_LENGTH) {
       setError(
-        `Review comment must be ${MAX_REVIEW_COMMENT_LENGTH} characters or fewer.`,
+        `Комментарий должен содержать не более ${MAX_REVIEW_COMMENT_LENGTH} символов.`,
       );
       return;
     }
@@ -57,14 +57,14 @@ export function ReviewForm({ consultationId }: ReviewFormProps) {
       } | null;
 
       if (!response.ok) {
-        setError(payload?.error ?? "Unable to submit review.");
+        setError(payload?.error ?? "Не удалось отправить отзыв.");
         return;
       }
 
       setComment("");
       router.refresh();
     } catch {
-      setError("Unable to submit review.");
+      setError("Не удалось отправить отзыв. Повторите попытку.");
     } finally {
       setIsSubmitting(false);
     }
@@ -73,20 +73,20 @@ export function ReviewForm({ consultationId }: ReviewFormProps) {
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
       <div>
-        <p className="text-sm font-medium text-teal-700">Doctor review</p>
+        <p className="text-sm font-medium text-teal-700">Отзыв о враче</p>
         <h2 className="mt-2 text-lg font-semibold text-slate-950">
-          Review this completed consultation
+          Оцените завершённую консультацию
         </h2>
         <p className="mt-3 text-sm leading-6 text-slate-600">
-          Your review helps other patients understand this doctor&apos;s care.
-          Public review displays use the label Verified patient.
+          Ваш отзыв поможет другим пациентам выбрать врача. Публично автор
+          отображается как «Подтверждённый пациент».
         </p>
       </div>
 
       <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
         <fieldset disabled={isSubmitting}>
           <legend className="text-sm font-medium text-slate-700">
-            Rating
+            Оценка
           </legend>
           <div className="mt-2 flex flex-wrap gap-2">
             {ratingOptions.map((option) => (
@@ -114,7 +114,7 @@ export function ReviewForm({ consultationId }: ReviewFormProps) {
 
         <div>
           <label className="text-sm font-medium text-slate-700" htmlFor="comment">
-            Comment optional
+            Комментарий (необязательно)
           </label>
           <textarea
             className="mt-2 min-h-32 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
@@ -123,11 +123,11 @@ export function ReviewForm({ consultationId }: ReviewFormProps) {
             maxLength={MAX_REVIEW_COMMENT_LENGTH}
             name="comment"
             onChange={(event) => setComment(event.target.value)}
-            placeholder="Share a brief note about the consultation"
+            placeholder="Кратко расскажите о консультации"
             value={comment}
           />
           <p className="mt-2 text-xs text-slate-500">
-            {comment.trim().length}/{MAX_REVIEW_COMMENT_LENGTH} characters
+            {comment.trim().length}/{MAX_REVIEW_COMMENT_LENGTH} символов
           </p>
         </div>
 
@@ -142,7 +142,7 @@ export function ReviewForm({ consultationId }: ReviewFormProps) {
           disabled={isSubmitting}
           type="submit"
         >
-          {isSubmitting ? "Submitting" : "Submit review"}
+          {isSubmitting ? "Отправка..." : "Отправить отзыв"}
         </button>
       </form>
     </section>

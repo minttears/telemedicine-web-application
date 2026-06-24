@@ -85,25 +85,25 @@ export function validateAttachmentFile(file: File): {
 
   if (!allowedType) {
     return {
-      error: "File type must be PDF, JPG, JPEG, PNG, or DOCX.",
+      error: "Файл должен быть в формате PDF, JPG, JPEG, PNG или DOCX.",
     };
   }
 
   if (file.type !== allowedType.mimeType) {
     return {
-      error: "File type does not match the file extension.",
+      error: "Тип файла не соответствует его расширению.",
     };
   }
 
   if (file.size <= 0) {
     return {
-      error: "File is required.",
+      error: "Выберите файл.",
     };
   }
 
   if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
     return {
-      error: `File must be ${formatFileSize(MAX_ATTACHMENT_SIZE_BYTES)} or smaller.`,
+      error: `Размер файла не должен превышать ${formatFileSize(MAX_ATTACHMENT_SIZE_BYTES)}.`,
     };
   }
 
@@ -120,6 +120,6 @@ export function validateAttachmentFile(file: File): {
 export function getAttachmentTypeLabel(fileType: string) {
   return (
     ALLOWED_ATTACHMENT_TYPES.find((type) => type.mimeType === fileType)?.label ??
-    "File"
+    "Файл"
   );
 }

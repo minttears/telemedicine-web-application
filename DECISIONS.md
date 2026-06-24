@@ -258,6 +258,14 @@ Translate user-facing copy directly in the existing pages, components, email tem
 
 Reason: The current product targets a Russian interface and has no active multi-language requirement. Direct copy changes minimize refactoring risk and preserve existing auth, routing, API, session, and security behavior. Brands and technical identifiers remain untranslated.
 
+### D033: Keep Database And User-Generated Medical Text Unchanged During UI Translation
+
+Status: Accepted
+
+Phase 16C translates patient-facing presentation copy and curated in-code symptom labels, but does not translate specialty slugs, database values, seed doctor text, personal names, messages, reviews, consultation outcomes, or uploaded filenames.
+
+Reason: Translating persisted or user-generated content would exceed a copy-only UI phase and could change data semantics. Seed/demo medical text remains a separate Phase 16F final-pass task.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

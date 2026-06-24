@@ -54,7 +54,7 @@ export async function PATCH(request: Request) {
       | null;
 
     if (!body || typeof body !== "object") {
-      return badRequest("Invalid profile details.");
+      return badRequest("Некорректные данные профиля.");
     }
 
     const name = typeof body.name === "string" ? body.name.trim() : "";
@@ -62,23 +62,23 @@ export async function PATCH(request: Request) {
     const dateOfBirth = parseDateOfBirth(body.dateOfBirth);
 
     if (typeof body.name !== "string") {
-      return badRequest("Invalid profile details.");
+      return badRequest("Некорректные данные профиля.");
     }
 
     if (body.gender !== undefined && typeof body.gender !== "string") {
-      return badRequest("Invalid profile details.");
+      return badRequest("Некорректные данные профиля.");
     }
 
     if (name.length > 100) {
-      return badRequest("Name is too long.");
+      return badRequest("Имя слишком длинное.");
     }
 
     if (dateOfBirth === undefined) {
-      return badRequest("Enter a valid date of birth.");
+      return badRequest("Укажите корректную дату рождения.");
     }
 
     if (gender.length > 50) {
-      return badRequest("Gender value is too long.");
+      return badRequest("Значение поля «Пол» слишком длинное.");
     }
 
     const patientProfile = await prisma.patientProfile.findUnique({
@@ -91,7 +91,7 @@ export async function PATCH(request: Request) {
     });
 
     if (!patientProfile) {
-      return badRequest("Patient profile is required before updating settings.");
+      return badRequest("Для изменения настроек требуется профиль пациента.");
     }
 
     await prisma.$transaction([

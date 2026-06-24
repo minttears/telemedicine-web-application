@@ -10,7 +10,7 @@ function getInitials(name: string | null, email: string) {
 }
 
 function formatDateTime(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
@@ -133,7 +133,7 @@ export default async function PatientDashboardPage() {
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
           <ProfileImage
-            alt="Patient avatar"
+            alt="Аватар пациента"
             className="h-20 w-20 shrink-0"
             initials={getInitials(user.name, user.email)}
             src={
@@ -143,40 +143,40 @@ export default async function PatientDashboardPage() {
             }
           />
           <div>
-            <p className="text-sm font-medium text-teal-700">Patient dashboard</p>
+            <p className="text-sm font-medium text-teal-700">Кабинет пациента</p>
             <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-              Welcome{user.name ? `, ${user.name}` : ""}
+              Добро пожаловать{user.name ? `, ${user.name}` : ""}
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-              Manage your consultations, messages, files, doctor access, and care
-              history from one protected workspace.
+              Управляйте консультациями, сообщениями, файлами, записями к
+              врачам и историей обращений в защищённом кабинете.
             </p>
           </div>
         </div>
       </section>
 
       <section
-        aria-label="Patient overview"
+        aria-label="Обзор кабинета пациента"
         className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
       >
         <StatCard
-          detail="Scheduled or requested consultations with a future time."
-          label="Upcoming"
+          detail="Запланированные или ожидающие консультации на будущее время."
+          label="Предстоящие"
           value={upcomingConsultations}
         />
         <StatCard
-          detail="Consultations currently marked as in progress."
-          label="Active"
+          detail="Консультации, которые сейчас проходят."
+          label="Активные"
           value={activeConsultations}
         />
         <StatCard
-          detail="All consultations linked to your patient profile."
-          label="Total consultations"
+          detail="Все консультации, связанные с вашим профилем пациента."
+          label="Всего консультаций"
           value={totalConsultations}
         />
         <StatCard
-          detail="Based on name, email, date of birth, and gender."
-          label="Profile completion"
+          detail="Рассчитывается по имени, email, дате рождения и полу."
+          label="Заполнение профиля"
           value={`${profileCompletion}%`}
         />
       </section>
@@ -184,7 +184,7 @@ export default async function PatientDashboardPage() {
       <section className="grid gap-4 lg:grid-cols-[1fr_1fr]">
         <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-950">
-            Next consultation
+            Ближайшая консультация
           </h2>
           {nextConsultation ? (
             <div className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
@@ -192,7 +192,7 @@ export default async function PatientDashboardPage() {
                 {formatDateTime(nextConsultation.scheduledAt)}
               </p>
               <p>
-                {nextConsultation.doctor.user.name ?? "Doctor profile"}
+                {nextConsultation.doctor.user.name ?? "Профиль врача"}
                 {nextConsultation.doctor.specialty?.name
                   ? `, ${nextConsultation.doctor.specialty.name}`
                   : ""}
@@ -201,36 +201,36 @@ export default async function PatientDashboardPage() {
                 className="inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-600 hover:text-teal-700"
                 href={`/patient/consultations/${nextConsultation.id}`}
               >
-                Open consultation
+                Открыть консультацию
               </Link>
             </div>
           ) : (
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              You do not have an upcoming consultation. Browse available doctors
-              to choose a time and book your next visit.
+              У вас нет предстоящих консультаций. Выберите врача и доступное
+              время, чтобы записаться на консультацию.
             </p>
           )}
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-950">
-            Next actions
+            Следующие действия
           </h2>
           <div className="mt-4 grid gap-3">
             <ActionLink
-              description="Review and complete basic patient details."
+              description="Проверьте и заполните основные данные пациента."
               href="/patient/profile"
-              label="Complete profile"
+              label="Заполнить профиль"
             />
             <ActionLink
-              description="Find active doctors by name or specialty and book an available time."
+              description="Найдите врача по имени или специальности и выберите доступное время."
               href="/patient/doctors"
-              label="Browse doctors"
+              label="Найти врача"
             />
             <ActionLink
-              description="View consultation history when records exist."
+              description="Просмотрите предстоящие и завершённые консультации."
               href="/patient/consultations"
-              label="View consultations"
+              label="Открыть консультации"
             />
           </div>
         </div>

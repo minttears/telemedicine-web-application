@@ -10,10 +10,10 @@ function getInitials(name: string | null, email: string) {
 
 function formatDate(value: Date | null | undefined) {
   if (!value) {
-    return "Not specified";
+    return "Не указано";
   }
 
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
   }).format(value);
 }
@@ -53,13 +53,13 @@ export default async function PatientProfilePage() {
   return (
     <div className="space-y-6">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">Patient profile</p>
+        <p className="text-sm font-medium text-teal-700">Профиль пациента</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-          Profile settings
+          Настройки профиля
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Review your account details and update basic personal information used
-          in your patient workspace.
+          Проверьте данные аккаунта и обновите основную личную информацию,
+          используемую в кабинете пациента.
         </p>
       </section>
 
@@ -68,46 +68,46 @@ export default async function PatientProfilePage() {
           <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <p className="text-sm font-medium text-teal-700">Account</p>
+                <p className="text-sm font-medium text-teal-700">Аккаунт</p>
                 <h2 className="mt-2 text-xl font-semibold text-slate-950">
-                  Read-only details
+                  Данные только для просмотра
                 </h2>
               </div>
               <span className="inline-flex w-fit rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-medium text-teal-700">
-                {user.isActive ? "Active" : "Inactive"}
+                {user.isActive ? "Активен" : "Неактивен"}
               </span>
             </div>
 
             <dl className="mt-5 grid gap-4">
               <FieldValue label="Email" value={user.email} />
-              <FieldValue label="Role" value="Patient" />
+              <FieldValue label="Роль" value="Пациент" />
               <FieldValue
-                label="Account status"
-                value={user.isActive ? "Active" : "Inactive"}
+                label="Статус аккаунта"
+                value={user.isActive ? "Активен" : "Неактивен"}
               />
-              <FieldValue label="Name" value={user.name ?? "Not specified"} />
+              <FieldValue label="Имя" value={user.name ?? "Не указано"} />
               <FieldValue
-                label="Date of birth"
+                label="Дата рождения"
                 value={formatDate(patientProfile?.dateOfBirth)}
               />
               <FieldValue
-                label="Gender"
-                value={patientProfile?.gender ?? "Not specified"}
+                label="Пол"
+                value={patientProfile?.gender ?? "Не указано"}
               />
             </dl>
           </div>
 
           <ProfileImageUploadForm
-            description="Your patient avatar is private to your patient workspace in this phase."
+            description="Ваш аватар доступен только в защищённых разделах приложения."
             endpoint="/api/patient/avatar"
-            imageAlt="Patient avatar"
+            imageAlt="Аватар пациента"
             imageSrc={
               user.avatarStoragePath
                 ? `/api/profile-images/patient/${user.id}`
                 : undefined
             }
             initials={getInitials(user.name, user.email)}
-            title="Patient avatar"
+            title="Аватар пациента"
           />
         </div>
 

@@ -20,7 +20,7 @@ type PatientConsultationPageProps = {
 };
 
 function formatDateTime(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
@@ -52,13 +52,17 @@ function SubmittedReview({
 }) {
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-      <p className="text-sm font-medium text-teal-700">Doctor review</p>
+      <p className="text-sm font-medium text-teal-700">Отзыв о враче</p>
       <h2 className="mt-2 text-lg font-semibold text-slate-950">
-        Your submitted review
+        Ваш отзыв
       </h2>
       <div className="mt-4 rounded-md border border-slate-200 bg-slate-50 p-4">
         <p className="text-sm font-semibold text-slate-950">
-          {review.rating.toFixed(1)} out of 5
+          {review.rating.toLocaleString("ru-RU", {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1,
+          })}{" "}
+          из 5
         </p>
         {review.comment ? (
           <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-700">
@@ -66,11 +70,11 @@ function SubmittedReview({
           </p>
         ) : (
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            No written comment was added.
+            Текстовый комментарий не добавлен.
           </p>
         )}
         <p className="mt-3 text-xs text-slate-500">
-          Submitted {formatDateTime(review.createdAt)}
+          Отправлен {formatDateTime(review.createdAt)}
         </p>
       </div>
     </section>
@@ -178,17 +182,18 @@ export default async function PatientConsultationPage({
         className="inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
         href="/patient/consultations"
       >
-        Back to consultations
+        Вернуться к консультациям
       </Link>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-medium text-teal-700">
-              {consultation.doctor.specialty?.name ?? "Specialty not assigned"}
+              {consultation.doctor.specialty?.name ??
+                "Специальность не назначена"}
             </p>
             <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-              {consultation.doctor.user.name ?? "Doctor profile"}
+              {consultation.doctor.user.name ?? "Профиль врача"}
             </h1>
             {consultation.doctor.title ? (
               <p className="mt-2 text-base text-slate-600">
@@ -218,7 +223,7 @@ export default async function PatientConsultationPage({
               followUpInstructions={consultation.followUpInstructions}
               medicationNotes={consultation.medicationNotes}
               recommendations={consultation.recommendations}
-              title="Doctor summary"
+              title="Заключение врача"
             />
           ) : null}
           {consultation.status === "COMPLETED" ? (
@@ -238,34 +243,50 @@ export default async function PatientConsultationPage({
 
         <aside className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-medium text-teal-700">
-            Consultation summary
+            Информация о консультации
           </p>
           <dl className="mt-5 grid gap-4 text-sm">
             <DetailItem
-              label="Scheduled time"
+              label="Время приёма"
               value={formatDateTime(consultation.scheduledAt)}
             />
             <DetailItem
-              label="Consultation status"
-              value={consultation.status}
+              label="Статус консультации"
+              value={
+                {
+                  CANCELLED: "Отменена",
+                  COMPLETED: "Завершена",
+                  IN_PROGRESS: "Идёт сейчас",
+                  REQUESTED: "Ожидает подтверждения",
+                  SCHEDULED: "Запланирована",
+                }[consultation.status] ?? consultation.status
+              }
             />
             {consultation.completedAt ? (
               <DetailItem
-                label="Completed time"
+                label="Время завершения"
                 value={formatDateTime(consultation.completedAt)}
               />
             ) : null}
             <DetailItem
-              label="Slot status"
-              value={consultation.scheduleSlot?.status ?? "Not linked"}
+              label="Статус времени приёма"
+              value={
+                consultation.scheduleSlot?.status === "BOOKED"
+                  ? "Забронировано"
+                  : consultation.scheduleSlot?.status === "AVAILABLE"
+                    ? "Доступно"
+                    : consultation.scheduleSlot?.status === "CANCELLED"
+                      ? "Отменено"
+                      : "Не связано"
+              }
             />
             <DetailItem
-              label="Doctor"
-              value={consultation.doctor.user.name ?? "Doctor profile"}
+              label="Врач"
+              value={consultation.doctor.user.name ?? "Профиль врача"}
             />
             <DetailItem
-              label="Specialty"
-              value={consultation.doctor.specialty?.name ?? "Not assigned"}
+              label="Специальность"
+              value={consultation.doctor.specialty?.name ?? "Не назначено"}
             />
           </dl>
         </aside>

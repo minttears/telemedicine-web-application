@@ -52,7 +52,7 @@ function buildDirectoryHref({
 }
 
 function getDoctorDisplayName(doctor: DoctorWithDirectoryData) {
-  return doctor.user.name ?? "Doctor profile";
+  return doctor.user.name ?? "Профиль врача";
 }
 
 function getInitials(name: string | null) {
@@ -61,7 +61,7 @@ function getInitials(name: string | null) {
 
 function getShortBio(bio: string | null) {
   if (!bio) {
-    return "Profile details will be expanded in a later phase.";
+    return "Информация о враче пока не добавлена.";
   }
 
   return bio.length > 180 ? `${bio.slice(0, 177).trim()}...` : bio;
@@ -69,12 +69,34 @@ function getShortBio(bio: string | null) {
 
 function formatReviewSummary(averageRating: number | null, reviewCount: number) {
   if (reviewCount === 0 || averageRating === null) {
-    return "No reviews yet";
+    return "Отзывов пока нет";
   }
 
-  return `${averageRating.toFixed(1)} out of 5 (${reviewCount} ${
-    reviewCount === 1 ? "review" : "reviews"
+  return `${averageRating.toLocaleString("ru-RU", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  })} из 5 (${reviewCount} ${
+    reviewCount % 10 === 1 && reviewCount % 100 !== 11
+      ? "отзыв"
+      : reviewCount % 10 >= 2 &&
+          reviewCount % 10 <= 4 &&
+          (reviewCount % 100 < 12 || reviewCount % 100 > 14)
+        ? "отзыва"
+        : "отзывов"
   })`;
+}
+
+function formatDoctorCount(count: number) {
+  const word =
+    count % 10 === 1 && count % 100 !== 11
+      ? "врач"
+      : count % 10 >= 2 &&
+          count % 10 <= 4 &&
+          (count % 100 < 12 || count % 100 > 14)
+        ? "врача"
+        : "врачей";
+
+  return `${count} ${word}`;
 }
 
 async function getDoctors({
@@ -194,7 +216,7 @@ function DoctorCard({ doctor }: { doctor: DoctorWithDirectoryData }) {
     <article className="flex h-full flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-start gap-4">
         <ProfileImage
-          alt={`${getDoctorDisplayName(doctor)} photo`}
+          alt={`Фотография врача: ${getDoctorDisplayName(doctor)}`}
           className="h-16 w-16 shrink-0"
           initials={getInitials(doctor.user.name)}
           src={
@@ -205,7 +227,7 @@ function DoctorCard({ doctor }: { doctor: DoctorWithDirectoryData }) {
         />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-teal-700">
-            {doctor.specialty?.name ?? "Specialty not assigned"}
+            {doctor.specialty?.name ?? "Специальность не назначена"}
           </p>
           <h2 className="mt-2 text-xl font-semibold text-slate-950">
             {getDoctorDisplayName(doctor)}
@@ -222,7 +244,7 @@ function DoctorCard({ doctor }: { doctor: DoctorWithDirectoryData }) {
             : "border-slate-200 bg-slate-100 text-slate-600"
         }`}
       >
-        {doctor.isAvailable ? "Available" : "Unavailable"}
+        {doctor.isAvailable ? "Доступен для записи" : "Недоступен для записи"}
       </span>
       <p className="mt-3 text-sm font-medium text-slate-700">
         {formatReviewSummary(doctor.reviewAverageRating, doctor.reviewCount)}
@@ -234,17 +256,17 @@ function DoctorCard({ doctor }: { doctor: DoctorWithDirectoryData }) {
 
       <dl className="mt-5 grid gap-3 text-sm">
         <div>
-          <dt className="font-medium text-slate-700">Experience</dt>
+          <dt className="font-medium text-slate-700">Стаж</dt>
           <dd className="mt-1 text-slate-600">
             {doctor.experienceYears
-              ? `${doctor.experienceYears} years`
-              : "Not specified"}
+              ? `${doctor.experienceYears} лет`
+              : "Не указано"}
           </dd>
         </div>
         <div>
-          <dt className="font-medium text-slate-700">Education</dt>
+          <dt className="font-medium text-slate-700">Образование</dt>
           <dd className="mt-1 text-slate-600">
-            {doctor.education ?? "Not specified"}
+            {doctor.education ?? "Не указано"}
           </dd>
         </div>
       </dl>
@@ -254,7 +276,7 @@ function DoctorCard({ doctor }: { doctor: DoctorWithDirectoryData }) {
           className="inline-flex min-h-10 w-full items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800"
           href={`/patient/doctors/${doctor.id}`}
         >
-          View profile
+          Открыть профиль
         </Link>
       </div>
     </article>
@@ -307,17 +329,17 @@ export default async function PatientDoctorsPage({
   return (
     <div className="space-y-8">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">Doctor directory</p>
+        <p className="text-sm font-medium text-teal-700">Каталог врачей</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-          Find a doctor
+          Найдите врача
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Browse available doctor profiles by name, specialty, or symptom. Symptoms
-          help suggest relevant specialties and do not replace medical advice.
+          Найдите доступного врача по имени, специальности или симптому.
+          Подбор по симптомам помогает выбрать направление, но не заменяет
+          медицинскую консультацию.
         </p>
         <p className="mt-4 text-sm font-medium text-slate-700">
-          {allDoctorCount} {allDoctorCount === 1 ? "doctor" : "doctors"} in the
-          directory
+          В каталоге: {formatDoctorCount(allDoctorCount)}
         </p>
       </section>
 
@@ -325,27 +347,27 @@ export default async function PatientDoctorsPage({
         <form className="grid gap-4 lg:grid-cols-[1fr_240px_280px_auto]" action="/patient/doctors">
           <label className="block">
             <span className="text-sm font-medium text-slate-700">
-              Search by doctor name
+              Поиск по имени врача
             </span>
             <input
               className="mt-2 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
               defaultValue={query}
               name="q"
-              placeholder="Enter doctor name"
+              placeholder="Введите имя врача"
               type="search"
             />
           </label>
 
           <label className="block">
             <span className="text-sm font-medium text-slate-700">
-              Specialty
+              Специальность
             </span>
             <select
               className="mt-2 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
               defaultValue={specialtySlug ?? ""}
               name="specialty"
             >
-              <option value="">All specialties</option>
+              <option value="">Все специальности</option>
               {specialties.map((item) => (
                 <option key={item.id} value={item.slug}>
                   {item.name}
@@ -356,14 +378,14 @@ export default async function PatientDoctorsPage({
 
           <label className="block">
             <span className="text-sm font-medium text-slate-700">
-              Symptom helper
+              Симптомы
             </span>
             <select
               className="mt-2 min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
               defaultValue={effectiveSymptomSlug ?? ""}
               name="symptom"
             >
-              <option value="">All symptoms</option>
+              <option value="">Все симптомы</option>
               {symptomSpecialtyMappings.map((item) => (
                 <option key={item.slug} value={item.slug}>
                   {item.label}
@@ -377,14 +399,14 @@ export default async function PatientDoctorsPage({
               className="inline-flex min-h-11 items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800"
               type="submit"
             >
-              Apply
+              Применить
             </button>
             {hasFilters ? (
               <Link
                 className="inline-flex min-h-11 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
                 href="/patient/doctors"
               >
-                Clear
+                Сбросить
               </Link>
             ) : null}
           </div>
@@ -393,16 +415,17 @@ export default async function PatientDoctorsPage({
 
       <section className="rounded-lg border border-sky-100 bg-sky-50 p-4 shadow-sm">
         <p className="text-sm font-medium text-slate-950">
-          Symptoms help suggest relevant specialties. This does not replace
-          medical advice.
+          Симптомы помогают подобрать подходящие специальности. Это не заменяет
+          консультацию врача.
         </p>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          This directory filter is not diagnosis, AI triage, or emergency medical
-          advice.
+          Фильтр не ставит диагноз, не выполняет AI-триаж и не предназначен для
+          экстренной медицинской помощи.
         </p>
         {selectedSymptom ? (
           <p className="mt-2 text-sm leading-6 text-slate-700">
-            Selected symptom: {selectedSymptom.label}. Suggested specialties: {" "}
+            Выбранный симптом: {selectedSymptom.label}. Рекомендуемые
+            специальности:{" "}
             {mappedSpecialtyNames.length > 0
               ? mappedSpecialtyNames.join(", ")
               : selectedSymptom.specialtySlugs.join(", ")}.
@@ -410,14 +433,15 @@ export default async function PatientDoctorsPage({
         ) : null}
         {selectedSymptom?.emergencyNotice ? (
           <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900">
-            If this is an emergency, seek urgent local medical care.
+            При экстренной ситуации немедленно обратитесь за неотложной
+            медицинской помощью.
           </p>
         ) : null}
       </section>
 
       {doctors.length > 0 ? (
         <section
-          aria-label="Doctor results"
+          aria-label="Результаты поиска врачей"
           className="grid gap-4 md:grid-cols-2 xl:grid-cols-3"
         >
           {doctors.map((doctor) => (
@@ -428,20 +452,20 @@ export default async function PatientDoctorsPage({
         <section className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
           <h2 className="text-lg font-semibold text-slate-950">
             {allDoctorCount === 0
-              ? "No doctors are available yet"
-              : "No doctors match these filters"}
+              ? "Доступных врачей пока нет"
+              : "По выбранным фильтрам врачи не найдены"}
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-600">
             {allDoctorCount === 0
-              ? "Doctor profiles will appear here after they are created."
-              : "Try changing the doctor name, specialty, or symptom filter."}
+              ? "Профили врачей появятся здесь после их добавления."
+              : "Измените имя врача, специальность или выбранный симптом."}
           </p>
           {hasFilters ? (
             <Link
               className="mt-5 inline-flex min-h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
                 href={buildDirectoryHref({})}
             >
-              Clear filters
+              Сбросить фильтры
             </Link>
           ) : null}
         </section>

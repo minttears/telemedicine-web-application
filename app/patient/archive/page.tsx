@@ -1,3 +1,3 @@
 export default function PatientArchivePage() {
-  return <main className="p-6">Patient archive placeholder.</main>;
+  return <main className="p-6">Архив пациента будет доступен позже.</main>;
 }

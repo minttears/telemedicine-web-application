@@ -43,7 +43,7 @@ export function BookingForm({ doctorId, scheduleSlotId }: BookingFormProps) {
       if (!response.ok) {
         setError(
           result?.error ??
-            "This time could not be booked. Please choose another slot.",
+            "Не удалось записаться на это время. Выберите другое доступное время.",
         );
         setIsSubmitting(false);
         return;
@@ -55,10 +55,12 @@ export function BookingForm({ doctorId, scheduleSlotId }: BookingFormProps) {
         return;
       }
 
-      setError("Booking completed, but the next page could not be opened.");
+      setError(
+        "Запись создана, но страницу консультации не удалось открыть.",
+      );
       setIsSubmitting(false);
     } catch {
-      setError("This time could not be booked. Please try again.");
+      setError("Не удалось записаться на это время. Повторите попытку.");
       setIsSubmitting(false);
     }
   }
@@ -70,7 +72,7 @@ export function BookingForm({ doctorId, scheduleSlotId }: BookingFormProps) {
         disabled={isSubmitting}
         type="submit"
       >
-        {isSubmitting ? "Booking..." : "Book this time"}
+        {isSubmitting ? "Запись..." : "Записаться на это время"}
       </button>
       {error ? (
         <p className="mt-3 text-sm leading-6 text-red-700">{error}</p>

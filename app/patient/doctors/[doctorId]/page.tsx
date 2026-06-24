@@ -15,10 +15,19 @@ const MIN_BOOKING_LEAD_TIME_MS = 30 * 60 * 1000;
 
 function formatExperience(years: number | null) {
   if (!years) {
-    return "Not specified";
+    return "Не указано";
   }
 
-  return `${years} ${years === 1 ? "year" : "years"}`;
+  const word =
+    years % 10 === 1 && years % 100 !== 11
+      ? "год"
+      : years % 10 >= 2 &&
+          years % 10 <= 4 &&
+          (years % 100 < 12 || years % 100 > 14)
+        ? "года"
+        : "лет";
+
+  return `${years} ${word}`;
 }
 
 function getInitials(name: string | null) {
@@ -26,7 +35,7 @@ function getInitials(name: string | null) {
 }
 
 function formatSlotDate(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -34,25 +43,34 @@ function formatSlotDate(value: Date) {
 }
 
 function formatSlotTime(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     hour: "numeric",
     minute: "2-digit",
   }).format(value);
 }
 
 function formatReviewDate(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
   }).format(value);
 }
 
 function formatReviewSummary(averageRating: number | null, reviewCount: number) {
   if (reviewCount === 0 || averageRating === null) {
-    return "No reviews yet";
+    return "Отзывов пока нет";
   }
 
-  return `${averageRating.toFixed(1)} out of 5 (${reviewCount} ${
-    reviewCount === 1 ? "review" : "reviews"
+  return `${averageRating.toLocaleString("ru-RU", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  })} из 5 (${reviewCount} ${
+    reviewCount % 10 === 1 && reviewCount % 100 !== 11
+      ? "отзыв"
+      : reviewCount % 10 >= 2 &&
+          reviewCount % 10 <= 4 &&
+          (reviewCount % 100 < 12 || reviewCount % 100 > 14)
+        ? "отзыва"
+        : "отзывов"
   })`;
 }
 
@@ -132,14 +150,14 @@ export default async function PatientDoctorProfilePage({
         className="inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
         href="/patient/doctors"
       >
-        Back to doctors
+        Вернуться к врачам
       </Link>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
             <ProfileImage
-              alt={`${doctor.user.name ?? "Doctor profile"} photo`}
+              alt={`Фотография врача: ${doctor.user.name ?? "Профиль врача"}`}
               className="h-24 w-24 shrink-0"
               initials={getInitials(doctor.user.name)}
               src={
@@ -150,10 +168,10 @@ export default async function PatientDoctorProfilePage({
             />
             <div>
               <p className="text-sm font-medium text-teal-700">
-                {doctor.specialty?.name ?? "Specialty not assigned"}
+                {doctor.specialty?.name ?? "Специальность не назначена"}
               </p>
               <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-                {doctor.user.name ?? "Doctor profile"}
+                {doctor.user.name ?? "Профиль врача"}
               </h1>
               {doctor.title ? (
                 <p className="mt-2 text-base text-slate-600">{doctor.title}</p>
@@ -170,38 +188,44 @@ export default async function PatientDoctorProfilePage({
                 : "border-slate-200 bg-slate-100 text-slate-600"
             }`}
           >
-            {doctor.isAvailable ? "Available" : "Unavailable"}
+            {doctor.isAvailable
+              ? "Доступен для записи"
+              : "Недоступен для записи"}
           </span>
         </div>
 
         <p className="mt-5 max-w-3xl text-sm leading-6 text-slate-600">
-          {doctor.bio ?? "Profile details have not been added yet."}
+          {doctor.bio ?? "Информация о враче пока не добавлена."}
         </p>
       </section>
 
       <section className="grid gap-4 md:grid-cols-4">
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Experience</p>
+          <p className="text-sm font-medium text-slate-600">Стаж</p>
           <p className="mt-2 text-lg font-semibold text-slate-950">
             {formatExperience(doctor.experienceYears)}
           </p>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Education</p>
+          <p className="text-sm font-medium text-slate-600">Образование</p>
           <p className="mt-2 text-lg font-semibold text-slate-950">
-            {doctor.education ?? "Not specified"}
+            {doctor.education ?? "Не указано"}
           </p>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Specialty</p>
+          <p className="text-sm font-medium text-slate-600">Специальность</p>
           <p className="mt-2 text-lg font-semibold text-slate-950">
-            {doctor.specialty?.name ?? "Not assigned"}
+            {doctor.specialty?.name ?? "Не назначено"}
           </p>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Availability</p>
+          <p className="text-sm font-medium text-slate-600">
+            Доступность для записи
+          </p>
           <p className="mt-2 text-lg font-semibold text-slate-950">
-            {doctor.isAvailable ? "Available" : "Unavailable"}
+            {doctor.isAvailable
+              ? "Доступен для записи"
+              : "Недоступен для записи"}
           </p>
         </div>
       </section>
@@ -209,13 +233,13 @@ export default async function PatientDoctorProfilePage({
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm font-medium text-teal-700">Patient reviews</p>
+            <p className="text-sm font-medium text-teal-700">Отзывы пациентов</p>
             <h2 className="mt-2 text-xl font-semibold text-slate-950">
               {formatReviewSummary(reviewAverageRating, reviewCount)}
             </h2>
           </div>
           <span className="inline-flex w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
-            Verified patients
+            Подтверждённые пациенты
           </span>
         </div>
 
@@ -228,14 +252,18 @@ export default async function PatientDoctorProfilePage({
               >
                 <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-sm font-semibold text-slate-950">
-                    Verified patient
+                    Подтверждённый пациент
                   </p>
                   <p className="text-xs text-slate-500">
                     {formatReviewDate(review.createdAt)}
                   </p>
                 </div>
                 <p className="mt-2 text-sm font-medium text-teal-800">
-                  {review.rating.toFixed(1)} out of 5
+                  {review.rating.toLocaleString("ru-RU", {
+                    minimumFractionDigits: 1,
+                    maximumFractionDigits: 1,
+                  })}{" "}
+                  из 5
                 </p>
                 {review.comment ? (
                   <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-700">
@@ -247,10 +275,12 @@ export default async function PatientDoctorProfilePage({
           </ul>
         ) : (
           <div className="mt-5 rounded-md border border-dashed border-slate-300 bg-slate-50 p-5">
-            <p className="text-sm font-medium text-slate-950">No reviews yet.</p>
+            <p className="text-sm font-medium text-slate-950">
+              Отзывов пока нет.
+            </p>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              Reviews will appear after verified patients complete consultations
-              and submit feedback.
+              Отзывы появятся после завершённых консультаций, когда пациенты
+              поделятся обратной связью.
             </p>
           </div>
         )}
@@ -261,14 +291,14 @@ export default async function PatientDoctorProfilePage({
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-sm font-medium text-teal-700">
-                Schedule preview
+                Расписание
               </p>
               <h2 className="mt-2 text-xl font-semibold text-slate-950">
-                Upcoming available slots
+                Ближайшее доступное время
               </h2>
             </div>
             <span className="inline-flex w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
-              Available slots
+              Доступное время
             </span>
           </div>
 
@@ -293,33 +323,33 @@ export default async function PatientDoctorProfilePage({
           ) : (
             <div className="mt-5 rounded-md border border-dashed border-slate-300 bg-slate-50 p-5">
               <p className="text-sm font-medium text-slate-950">
-                No upcoming available slots are listed yet.
+                Доступного времени для записи пока нет.
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                New availability will appear here when future schedule slots are
-                available for booking.
+                Новое время появится здесь, когда врач обновит расписание.
               </p>
             </div>
           )}
 
           <p className="mt-4 text-sm leading-6 text-slate-600">
-            Booking creates a scheduled consultation for the selected time. Chat
-            and secure file attachments are available after booking.
+            После подтверждения записи будет создана запланированная
+            консультация. Чат и защищённая отправка файлов станут доступны на
+            странице консультации.
           </p>
         </div>
 
         <aside className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-950">
-            Book a consultation
+            Записаться на консультацию
           </h2>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Choose an available time from the schedule preview. The selected
-            slot will be reserved when the booking is confirmed. Only times at
-            least 30 minutes from now are shown.
+            Выберите доступное время в расписании. После подтверждения оно будет
+            зарезервировано за вами. Отображается время, до которого осталось не
+            менее 30 минут.
           </p>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Consultation chat and secure file attachments are available from the
-            consultation page after booking.
+            После записи на странице консультации будут доступны чат и
+            защищённая отправка файлов.
           </p>
         </aside>
       </section>

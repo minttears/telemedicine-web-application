@@ -34,19 +34,19 @@ export async function POST(request: Request) {
     const formData = await request.formData().catch(() => null);
 
     if (!formData) {
-      return badRequest("Invalid form data.");
+      return badRequest("Некорректные данные формы.");
     }
 
     const file = formData.get("image");
 
     if (!isFile(file)) {
-      return badRequest("Image is required.");
+      return badRequest("Выберите изображение.");
     }
 
     const validation = validateProfileImageFile(file);
 
     if (validation.error || !validation.value) {
-      return badRequest(validation.error ?? "Invalid image.");
+      return badRequest(validation.error ?? "Некорректное изображение.");
     }
 
     const storagePath = `patients/${user.id}/${randomUUID()}.${validation.value.extension}`;
@@ -58,7 +58,10 @@ export async function POST(request: Request) {
     });
 
     if (uploadResult.error) {
-      return Response.json({ error: "Unable to upload image." }, { status: 500 });
+      return Response.json(
+        { error: "Не удалось загрузить изображение." },
+        { status: 500 },
+      );
     }
 
     uploadedStoragePath = storagePath;
@@ -89,6 +92,9 @@ export async function POST(request: Request) {
       return forbidden();
     }
 
-    return Response.json({ error: "Unable to upload image." }, { status: 500 });
+    return Response.json(
+      { error: "Не удалось загрузить изображение." },
+      { status: 500 },
+    );
   }
 }

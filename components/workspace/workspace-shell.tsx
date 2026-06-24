@@ -34,7 +34,7 @@ export function WorkspaceShell({
             </div>
             <LogoutButton />
           </div>
-          <nav aria-label={`${roleLabel} navigation`}>
+          <nav aria-label={`Навигация: ${roleLabel}`}>
             <ul className="flex flex-wrap gap-2">
               {navItems.map((item) => (
                 <li key={item.href}>

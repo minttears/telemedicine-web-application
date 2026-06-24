@@ -20,7 +20,7 @@ type PatientConsultationsPageProps = {
 };
 
 function formatDateTime(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
@@ -38,34 +38,34 @@ function getConsultationFilter(value: string | string[] | undefined) {
 
 function getFilterLabel(filter: ConsultationFilter) {
   if (filter === "completed") {
-    return "Completed";
+    return "Завершённые";
   }
 
   if (filter === "all") {
-    return "All";
+    return "Все";
   }
 
-  return "Upcoming";
+  return "Предстоящие";
 }
 
 function getEmptyState(filter: ConsultationFilter) {
   if (filter === "completed") {
     return {
-      body: "Completed consultations will appear here after your doctor adds a final summary.",
-      title: "No completed consultations yet",
+      body: "Завершённые консультации появятся здесь после того, как врач добавит итоговое заключение.",
+      title: "Завершённых консультаций пока нет",
     };
   }
 
   if (filter === "all") {
     return {
-      body: "Choose a doctor and book an available time to create your first consultation.",
-      title: "No consultations booked yet",
+      body: "Выберите врача и доступное время, чтобы записаться на первую консультацию.",
+      title: "У вас пока нет консультаций",
     };
   }
 
   return {
-    body: "Upcoming consultations will appear here after you book an available doctor time.",
-    title: "No upcoming consultations",
+    body: "Предстоящие консультации появятся здесь после записи к врачу.",
+    title: "Предстоящих консультаций нет",
   };
 }
 
@@ -89,10 +89,32 @@ function getStatusClassName(status: string) {
   return "border-teal-200 bg-teal-50 text-teal-700";
 }
 
+function getStatusLabel(status: string) {
+  const labels: Record<string, string> = {
+    CANCELLED: "Отменена",
+    COMPLETED: "Завершена",
+    IN_PROGRESS: "Идёт сейчас",
+    REQUESTED: "Ожидает подтверждения",
+    SCHEDULED: "Запланирована",
+  };
+
+  return labels[status] ?? status;
+}
+
+function getSlotStatusLabel(status: string | undefined) {
+  const labels: Record<string, string> = {
+    AVAILABLE: "Доступно",
+    BOOKED: "Забронировано",
+    CANCELLED: "Отменено",
+  };
+
+  return status ? (labels[status] ?? status) : "Не связано";
+}
+
 function ConsultationFilterTabs({ activeFilter }: { activeFilter: ConsultationFilter }) {
   return (
     <nav
-      aria-label="Consultation filters"
+      aria-label="Фильтры консультаций"
       className="flex flex-wrap gap-2 rounded-lg border border-slate-200 bg-white p-2 shadow-sm"
     >
       {consultationFilters.map((filter) => (
@@ -172,17 +194,17 @@ export default async function PatientConsultationsPage({
   return (
     <div className="space-y-6">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">Consultations</p>
+        <p className="text-sm font-medium text-teal-700">Консультации</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-          Your consultations
+          Ваши консультации
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Review upcoming visits and completed consultation history. Completed
-          consultations keep their chat history and doctor summary.
+          Просматривайте предстоящие консультации и историю завершённых
+          обращений. Для завершённых консультаций сохраняются чат и заключение
+          врача.
         </p>
         <p className="mt-4 text-sm font-medium text-slate-700">
-          {consultations.length} visible{" "}
-          {consultations.length === 1 ? "consultation" : "consultations"}
+          Найдено консультаций: {consultations.length}
         </p>
       </section>
 
@@ -199,10 +221,10 @@ export default async function PatientConsultationsPage({
                 <div>
                   <p className="text-sm font-medium text-teal-700">
                     {consultation.doctor.specialty?.name ??
-                      "Specialty not assigned"}
+                      "Специальность не назначена"}
                   </p>
                   <h2 className="mt-2 text-xl font-semibold text-slate-950">
-                    {consultation.doctor.user.name ?? "Doctor profile"}
+                    {consultation.doctor.user.name ?? "Профиль врача"}
                   </h2>
                   {consultation.doctor.title ? (
                     <p className="mt-1 text-sm text-slate-600">
@@ -215,27 +237,29 @@ export default async function PatientConsultationsPage({
                     consultation.status,
                   )}`}
                 >
-                  {consultation.status}
+                  {getStatusLabel(consultation.status)}
                 </span>
               </div>
 
               <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
                 <div>
-                  <dt className="font-medium text-slate-700">Scheduled time</dt>
+                  <dt className="font-medium text-slate-700">Время приёма</dt>
                   <dd className="mt-1 text-slate-600">
                     {formatDateTime(consultation.scheduledAt)}
                   </dd>
                 </div>
                 <div>
-                  <dt className="font-medium text-slate-700">Slot status</dt>
+                  <dt className="font-medium text-slate-700">
+                    Статус времени приёма
+                  </dt>
                   <dd className="mt-1 text-slate-600">
-                    {consultation.scheduleSlot?.status ?? "Not linked"}
+                    {getSlotStatusLabel(consultation.scheduleSlot?.status)}
                   </dd>
                 </div>
                 {consultation.completedAt ? (
                   <div>
                     <dt className="font-medium text-slate-700">
-                      Completed time
+                      Время завершения
                     </dt>
                     <dd className="mt-1 text-slate-600">
                       {formatDateTime(consultation.completedAt)}
@@ -245,12 +269,12 @@ export default async function PatientConsultationsPage({
                 {consultation.status === "COMPLETED" ? (
                   <div>
                     <dt className="font-medium text-slate-700">
-                      Doctor summary
+                      Заключение врача
                     </dt>
                     <dd className="mt-1 text-slate-600">
                       {consultation.doctorNotes?.trim()
-                        ? "Available"
-                        : "Not recorded"}
+                        ? "Доступно"
+                        : "Не добавлено"}
                     </dd>
                   </div>
                 ) : null}
@@ -261,7 +285,7 @@ export default async function PatientConsultationsPage({
                   className="inline-flex min-h-10 items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800"
                   href={`/patient/consultations/${consultation.id}`}
                 >
-                  View consultation
+                  Открыть консультацию
                 </Link>
               </div>
             </article>
@@ -280,7 +304,7 @@ export default async function PatientConsultationsPage({
               className="mt-5 inline-flex min-h-10 items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800"
               href="/patient/doctors"
             >
-              Find a doctor
+              Найти врача
             </Link>
           ) : null}
         </section>
