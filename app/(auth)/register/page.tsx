@@ -21,8 +21,8 @@ export default async function RegisterPage() {
             Создайте защищённый аккаунт пациента
           </h1>
           <p className="mt-4 text-base leading-7 text-slate-600">
-            Создайте аккаунт пациента, чтобы получить доступ к защищённому
-            кабинету. Аккаунты врачей и администраторов создаются отдельно.
+            Создайте аккаунт пациента, чтобы получить доступ к личному кабинету.
+            Аккаунты врачей и администраторов создаются отдельно.
           </p>
           <p className="mt-6 text-sm leading-6 text-slate-500">
             Перед регистрацией ознакомьтесь с{" "}
@@ -38,7 +38,7 @@ export default async function RegisterPage() {
               className="font-medium text-teal-700 hover:text-teal-800"
               href="/telemedicine-consent"
             >
-              Согласием на телемедицинскую консультацию
+              Согласием на проведение телемедицинской консультации
             </a>
             .
           </p>

@@ -113,7 +113,7 @@ export function RegisterForm() {
           Регистрация пациента
         </p>
         <h1 className="text-2xl font-semibold tracking-normal text-slate-950">
-          Создайте аккаунт пациента
+          Создание аккаунта пациента
         </h1>
         <p className="text-sm leading-6 text-slate-600">
           Самостоятельная регистрация доступна только пациентам.
@@ -224,7 +224,7 @@ export function RegisterForm() {
             type="checkbox"
           />
           <span>
-            Я ознакомился(-ась) и принимаю{" "}
+            Я ознакомлен(а) и принимаю{" "}
             <Link className="font-medium text-teal-700 hover:text-teal-800" href="/terms">
               Условия использования
             </Link>
@@ -237,7 +237,7 @@ export function RegisterForm() {
               className="font-medium text-teal-700 hover:text-teal-800"
               href="/telemedicine-consent"
             >
-              Согласие на телемедицинскую консультацию
+              Согласие на проведение телемедицинской консультации
             </Link>
             .
           </span>

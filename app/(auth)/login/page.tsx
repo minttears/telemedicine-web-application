@@ -25,17 +25,17 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <section className="grid w-full max-w-5xl gap-8 lg:grid-cols-[1fr_440px] lg:items-center">
         <div className="max-w-xl">
           <p className="text-sm font-medium text-teal-700">
-            Платформа дистанционных консультаций
+            Веб-приложение дистанционного медицинского консультирования
           </p>
           <h1 className="mt-3 text-4xl font-semibold tracking-normal text-slate-950">
-            Безопасный доступ к телемедицине
+            Личный кабинет для онлайн-консультаций
           </h1>
           <p className="mt-4 text-base leading-7 text-slate-600">
-            Войдите, чтобы управлять консультациями, сообщениями, файлами,
+            Войдите, чтобы работать с консультациями, сообщениями, файлами,
             расписанием и историей обращений.
           </p>
           <p className="mt-6 text-sm leading-6 text-slate-500">
-            Правовая информация:{" "}
+            Перед использованием ознакомьтесь с{" "}
             <a className="font-medium text-teal-700 hover:text-teal-800" href="/terms">
               Условия использования
             </a>
@@ -48,7 +48,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               className="font-medium text-teal-700 hover:text-teal-800"
               href="/telemedicine-consent"
             >
-              Согласие на телемедицинскую консультацию
+              Согласием на проведение телемедицинской консультации
             </a>
             .
           </p>

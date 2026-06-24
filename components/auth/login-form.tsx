@@ -97,11 +97,11 @@ export function LoginForm() {
       <div className="space-y-2">
         <p className="text-sm font-medium text-teal-700">Безопасный доступ</p>
         <h1 className="text-2xl font-semibold tracking-normal text-slate-950">
-          Вход в Telemedicine
+          Вход в личный кабинет
         </h1>
         <p className="text-sm leading-6 text-slate-600">
-          Войдите в защищённый кабинет для работы с консультациями,
-          сообщениями, файлами и историей обращений.
+          Введите email и пароль, чтобы продолжить работу с консультациями,
+          сообщениями и файлами.
         </p>
       </div>
 
