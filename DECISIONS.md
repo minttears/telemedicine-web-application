@@ -234,6 +234,14 @@ Require TOTP authenticator-app 2FA for `DOCTOR` and `ADMIN` accounts while leavi
 
 Reason: Higher-privilege accounts need a second authentication factor without introducing SMS, email OTP, or passkey scope. A default-enabled `TWO_FACTOR_ENFORCEMENT_ENABLED` rollback flag allows emergency operational disablement without changing patient authentication.
 
+### D030: Require Strong Verification For 2FA Recovery-Code Management
+
+Status: Accepted
+
+Doctors and admins may regenerate their own recovery codes only after verifying their current password plus either the current TOTP code or one unused recovery code. Admins may reset a doctor's enrollment without viewing any secret or code; the reset revokes doctor sessions and forces re-enrollment.
+
+Reason: Recovery-code replacement and administrative enrollment reset are account-recovery operations. Requiring two independent credentials for self-service and revoking sessions for admin reset preserves Phase 15A enforcement while providing an operational recovery path.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

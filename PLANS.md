@@ -2,7 +2,26 @@
 
 ## Current Plan
 
-Phase 15A Two-Factor Authentication Enforcement is completed. `ADMIN` and `DOCTOR` accounts require TOTP setup or verification before a full session is issued, while `PATIENT` authentication remains unchanged.
+Phase 15B Two-Factor Management And Admin Reset is completed. `ADMIN` and `DOCTOR` accounts can view 2FA status and regenerate their own recovery codes after password plus second-factor verification. Admins can reset a doctor's enrollment without viewing secrets or codes.
+
+## Phase 15B: Two-Factor Management And Admin Reset
+
+Status: Completed
+
+Completed:
+
+- Added self-service 2FA status, enabled date, and remaining unused recovery-code count for doctors and admins.
+- Added recovery-code regeneration requiring the current password plus either the current strict TOTP code or one unused recovery code.
+- Preserved used recovery-code records while deleting all still-unused old codes and creating 10 hashed replacements shown once.
+- Added admin-only doctor 2FA reset on doctor detail pages with explicit confirmation.
+- Admin reset deletes the doctor's enrollment, recovery codes, and pending challenges; revokes active doctor sessions; preserves the active account state; and forces re-enrollment after the next password login.
+- Kept `PATIENT` login and account behavior unchanged.
+
+Deferred:
+
+- Self-disable.
+- Patient 2FA.
+- SMS/email OTP and WebAuthn/passkeys.
 
 ## Phase 15A: Two-Factor Authentication Enforcement
 

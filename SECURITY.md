@@ -66,6 +66,10 @@ Requirements:
 - Temporary login challenges expire after approximately 10 minutes, allow at most five invalid attempts, use an HTTP-only `SameSite=Lax` cookie, and store only a SHA-256 token hash in PostgreSQL.
 - Ten recovery codes are generated after successful setup, shown once, stored only as hashes, and marked with `usedAt` after one successful use.
 - Recovery codes remain the one-time fallback when the authenticator device is unavailable or its time cannot be synchronized.
+- Doctors and admins can view only their own 2FA enabled date and unused recovery-code count; management pages never return the TOTP secret, encrypted payload, QR data, old recovery codes, or hashes.
+- Recovery-code regeneration requires the current password plus either the current strict TOTP code or one unused recovery code. It deletes all remaining unused old codes, preserves used records, stores 10 new hashes, and displays plaintext replacements once.
+- Admin doctor 2FA reset does not reveal secrets or codes. It deletes the doctor's enrollment, recovery codes, and pending challenges, revokes active doctor sessions, preserves account activation, and requires re-enrollment after the next password login.
+- Admin reset is restricted to `ADMIN` users and doctor-profile targets. Self-disable remains unavailable.
 - Setup confirmation revokes existing sessions for the privileged user before issuing a new 2FA-satisfied session.
 - Temporary challenge cookies are not session cookies and are not accepted by `getCurrentUser`, `requireUser`, or `requireRole`.
 - Doctor invite set-password still redirects to login. Password reset preserves 2FA state and still requires the next privileged login challenge.
@@ -450,8 +454,7 @@ Before considering MVP complete:
 
 ## Future Security Work
 
-- Add audited admin reset of doctor 2FA if operationally required.
-- Add self-disable and recovery-code regeneration with reauthentication if approved.
+- Add self-disable with password and second-factor reauthentication if approved.
 - Define session expiration and refresh policy.
 - Define file retention policy.
 - Define data export and deletion policies.

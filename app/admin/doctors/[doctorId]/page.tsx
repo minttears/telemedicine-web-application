@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { DoctorForm } from "@/components/admin/doctor-form";
 import { DoctorInviteAction } from "@/components/admin/doctor-invite-action";
 import { DoctorPasswordResetAction } from "@/components/admin/doctor-password-reset-action";
+import { DoctorTwoFactorResetAction } from "@/components/admin/doctor-two-factor-reset-action";
 import { ProfileImage } from "@/components/profile/profile-image";
 import { prisma } from "@/lib/prisma";
 
@@ -64,6 +65,11 @@ export default async function AdminDoctorDetailPage({
             name: true,
             passwordChangedAt: true,
             role: true,
+            twoFactorSecret: {
+              select: {
+                enabledAt: true,
+              },
+            },
             updatedAt: true,
           },
         },
@@ -225,6 +231,11 @@ export default async function AdminDoctorDetailPage({
       ) : (
         <DoctorPasswordResetAction doctorId={doctor.id} />
       )}
+
+      <DoctorTwoFactorResetAction
+        doctorId={doctor.id}
+        initialEnabled={Boolean(doctor.user.twoFactorSecret?.enabledAt)}
+      />
     </div>
   );
 }

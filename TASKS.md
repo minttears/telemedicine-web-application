@@ -45,6 +45,7 @@
 | T304 | DONE | Add role-based redirects | Login redirects by role; protected workspace layouts enforce role access and wrong-role redirects. |
 | T306 | DONE | Add account access token, doctor invite, and admin reset flows | Phase 11A added hashed, expiring, one-time token storage and helpers. Phase 11B added the Admin Doctor Invite MVP and doctor set-password flow. Phase 11C added admin-generated doctor password reset links. Phase 11F added the server-only Resend email provider foundation. Phase 11G added public forgot-password email reset for eligible active patients and completed/setup doctors. A critical Phase 11G account-targeting bug was fixed so recovery starts from the login email, `/forgot-password` has no editable recipient field, reset email goes only to the matched `User.email`, and reset completion targets only the token user. Phase 11H manually rechecked the corrected recovery UX. Phase 15A now requires doctor/admin 2FA after invite or password reset login. |
 | T307 | DONE | Enforce TOTP 2FA for doctors and admins | Phase 15A adds encrypted TOTP secrets, QR/manual setup, hashed one-time recovery codes, hashed short-lived challenges, five-attempt challenge limits, privileged session gating, and a default-enabled rollback flag. Patient login is unchanged. |
+| T308 | DONE | Add 2FA management and admin doctor reset | Phase 15B adds doctor/admin status pages, strong-verification recovery-code regeneration, and admin-only doctor enrollment reset with session revocation and forced re-enrollment. Self-disable and patient 2FA remain deferred. |
 | T305 | DONE | Add basic auth validation states | Auth forms now include field-level errors, submission errors, disabled submit states, and Phase 12B show/hide password controls. Broader forbidden/unauthorized route-state polish remains part of quality work. |
 
 ## Milestone 4: Public Pages And SEO
@@ -110,7 +111,7 @@
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| D001 | DONE | 2FA enforcement for doctors and admins | Completed in Phase 15A. Admin reset, self-disable, recovery-code regeneration, patient-required 2FA, SMS/email OTP, and passkeys remain deferred. |
+| D001 | DONE | 2FA enforcement and management for doctors and admins | Enforcement completed in Phase 15A; self-management and admin doctor reset completed in Phase 15B. Self-disable, patient-required 2FA, SMS/email OTP, and passkeys remain deferred. |
 | D002 | DEFERRED | Video call hardening | LiveKit call UI is implemented for the MVP and Phase 14E added local QA helpers. Full production device/network QA, call end persistence, recording, transcription, group calls, admin call access, and built-in LiveKit chat cleanup remain deferred. Screen sharing remains disabled. |
 | D003 | DEFERRED | Patient intake questionnaire | Add after core consultation flow works. |
 | D004 | DEFERRED | Consultation archive download | Export chat, files, final diagnosis/notes. |

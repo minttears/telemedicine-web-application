@@ -10,6 +10,7 @@ const doctorNavItems = [
   { href: "/doctor/files", label: "Files" },
   { href: "/doctor/patients", label: "Patients" },
   { href: "/doctor/profile", label: "Profile" },
+  { href: "/doctor/security", label: "Security" },
 ];
 
 export default async function DoctorLayout({
