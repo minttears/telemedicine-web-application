@@ -224,7 +224,7 @@ Status: Accepted
 
 Video calls are available from the scheduled consultation start time until the consultation end time. When a linked schedule slot exists, its `startsAt` and `endsAt` define the window; otherwise the fallback end is 60 minutes after `Consultation.scheduledAt`.
 
-Reason: This avoids pre-start joining and matches the expected appointment window. Local QA should create near-now dev consultations instead of changing system time because LiveKit participant tokens depend on real clock time. Built-in LiveKit chat is disabled because the app already has persisted consultation chat in PostgreSQL.
+Reason: This avoids pre-start joining and matches the expected appointment window. Local QA should create near-now dev consultations instead of changing system time because LiveKit participant tokens depend on real clock time. The app's persisted PostgreSQL consultation chat remains the source of truth; built-in LiveKit chat is a known limitation and should not be used for consultation records.
 
 ## Pending Decisions
 

@@ -119,10 +119,12 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Patient and doctor consultation detail pages show a LiveKit video call panel that links to role-scoped call pages.
 - Phase 14D keeps `/patient/consultations/[consultationId]/call` and `/doctor/consultations/[consultationId]/call` with LiveKit official React components.
 - The LiveKit call UI requests the existing authenticated call-session API only after the participant clicks join/start and keeps the short-lived token in memory only.
-- LiveKit components handle camera/microphone permissions, mute, camera toggle, local/remote video, and leave controls. Screen sharing is disabled in token grants and UI controls, and built-in LiveKit chat is hidden because the app uses its own persisted consultation chat. Leave returns to a safe ended state with a back-to-consultation action.
+- LiveKit components handle camera/microphone permissions, mute, camera toggle, local/remote video, and leave controls. Screen sharing is disabled in token grants and UI controls. Leave returns to a safe ended state with a back-to-consultation action.
 - Phase 14E added a development-only doctor QA action on the schedule page to create a near-now test consultation starting now or in 5 minutes. It is unavailable in production and requires an authenticated doctor.
 - LiveKit video calls were confirmed working locally after restoring correct system time; the earlier invalid-token behavior was caused by testing with modified system time.
+- Manual QA confirmed assigned doctor and owning patient can join the same LiveKit call, camera/microphone work, Leave works, access is limited to the consultation start-through-end window, completed/cancelled consultations reject video access, and admin/wrong patient/wrong doctor cannot join.
 - Local video QA must not change system time because LiveKit participant tokens depend on the real clock. Use the dev-only QA action instead. Local phone testing needs an HTTPS-accessible app URL such as a Vercel preview or HTTPS tunnel because plain LAN HTTP may not allow camera or microphone access.
+- Built-in LiveKit chat remains a known limitation; persisted consultation chat in PostgreSQL remains the source of truth for medical consultation messages.
 - Admin has no attachment content access in this phase.
 - Admin doctor management is implemented for the MVP, while broader operational management remains deferred.
 - Login and patient-facing workflow copy now reflects current MVP behavior for patient registration, doctor discovery, booking, chat, file attachments, consultation history, and admin-created doctor/specialty management.

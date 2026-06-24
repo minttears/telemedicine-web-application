@@ -254,7 +254,7 @@ Video call boundaries:
 - Patient and doctor call pages are role-scoped under `/patient/consultations/[consultationId]/call` and `/doctor/consultations/[consultationId]/call` and reuse the same server-side ownership/assignment checks as the consultation detail pages.
 - Call APIs must not return LiveKit provider secrets, unrelated consultation data, chat content, attachment data, storage paths, medical outcome fields, password hashes, token hashes, cookies, raw invite/reset tokens, reset/invite URLs, or environment values.
 - Audit logs for video calls may include safe metadata such as consultation id, call session id, provider, role, and action, but must not include meeting tokens, provider API keys, cookies, passwords, hashes, or secret-bearing URLs.
-- Built-in LiveKit chat/data messaging is disabled because the application has its own persisted consultation chat backed by PostgreSQL.
+- Built-in LiveKit chat remains a known limitation. It must not be treated as the consultation record; PostgreSQL-backed app chat remains the source of truth for medical consultation messages.
 - Recording, transcription, egress, screen sharing, persistent media storage, group calls, raw WebRTC signaling, Supabase Realtime signaling, public call links, and admin call access are not implemented in Phase 14E. Screen sharing is disabled in LiveKit token grants and UI controls.
 - Local video QA must not change system time because provider participant tokens depend on real clock time. Use the dev-only video QA action instead.
 - The dev-only video QA action is unavailable in production, requires an authenticated `DOCTOR`, creates development-labeled test data only, and must not expose public call links or provider secrets.
