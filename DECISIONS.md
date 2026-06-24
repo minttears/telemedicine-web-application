@@ -242,6 +242,14 @@ Doctors and admins may regenerate their own recovery codes only after verifying 
 
 Reason: Recovery-code replacement and administrative enrollment reset are account-recovery operations. Requiring two independent credentials for self-service and revoking sessions for admin reset preserves Phase 15A enforcement while providing an operational recovery path.
 
+### D031: Keep The 2FA Encryption Key Stable
+
+Status: Accepted
+
+`TWO_FACTOR_ENCRYPTION_KEY` must remain stable after any account enrolls in 2FA. `TWO_FACTOR_ENFORCEMENT_ENABLED="false"` is reserved for emergency local development or recovery use and is not the normal production posture.
+
+Reason: Enrolled TOTP secrets are encrypted with the configured key and cannot be verified if that key is replaced. The enforcement flag provides a controlled temporary recovery path without weakening the default requirement for doctor and admin accounts.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

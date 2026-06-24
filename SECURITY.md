@@ -74,7 +74,11 @@ Requirements:
 - Temporary challenge cookies are not session cookies and are not accepted by `getCurrentUser`, `requireUser`, or `requireRole`.
 - Doctor invite set-password still redirects to login. Password reset preserves 2FA state and still requires the next privileged login challenge.
 - TOTP secrets, setup URIs, QR data, recovery codes, verification codes, challenge tokens, session tokens, cookies, encryption keys, and token/password hashes must never be logged.
-- Admin reset, self-disable, recovery-code regeneration, SMS/email OTP, WebAuthn/passkeys, and patient-required 2FA are deferred.
+- Recovery codes must not be screenshotted, logged, emailed, or pasted into chat. QR codes and manual setup keys must not be shared.
+- `TWO_FACTOR_ENCRYPTION_KEY` must remain stable after enrollment. Rotating it without a dedicated migration/re-enrollment process makes stored TOTP secrets unusable.
+- `TWO_FACTOR_ENFORCEMENT_ENABLED="false"` is an emergency local development/recovery fallback only; normal operation keeps enforcement enabled.
+- Owner manual QA confirmed doctor/admin setup and login behavior, recovery-code saving, and strict rejection of old TOTP windows. Authenticated recovery-code regeneration and admin doctor reset remain pre-deployment re-check items.
+- Self-disable, SMS/email OTP, WebAuthn/passkeys, and patient-required 2FA are deferred.
 
 ## Authorization
 
@@ -339,7 +343,7 @@ Rules:
 - Public reset password accepts only token, password, and confirmation; identity fields such as email, account email, recipient email, target email, and user id are rejected with a generic invalid-link error.
 - Public forgot-password uses simple in-memory route-level rate limiting as MVP abuse protection. Persistent distributed rate limiting remains a production hardening TODO.
 - Phase 11H manually rechecked the previous account takeover issue and confirmed the corrected UX is acceptable. Full testing to arbitrary recipient emails is deferred until a verified sender domain is configured in Resend.
-- Required doctor/admin TOTP 2FA is implemented; operational reset and self-service management remain deferred.
+- Required doctor/admin TOTP 2FA, self-service recovery-code regeneration, and admin doctor enrollment reset are implemented.
 
 ## Chat Privacy
 

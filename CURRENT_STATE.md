@@ -55,6 +55,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 14E Video Call QA Polish
 - Phase 15A Two-Factor Authentication Enforcement
 - Phase 15B Two-Factor Management And Admin Reset
+- Phase 15C Two-Factor Manual QA Record
 
 ## Current MVP Behavior
 
@@ -68,6 +69,9 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Doctors and admins can regenerate 10 recovery codes after verifying their current password plus the current TOTP code or one unused recovery code. New plaintext codes are shown once; old unused codes are invalidated and used records remain for audit history.
 - Admin doctor detail pages can reset a doctor's 2FA enrollment without revealing any secret or code. Reset removes enrollment, recovery codes, and pending challenges, revokes doctor sessions, preserves account activation, and forces setup at the next login.
 - Self-disable remains deferred; `PATIENT` authentication and account behavior remain unchanged.
+- Owner manual QA confirmed doctor/admin 2FA setup and password-login challenge behavior, confirmed recovery codes were saved, and confirmed old TOTP windows were rejected after strict current-step verification was added.
+- Authenticated destructive management flows, including recovery-code regeneration and admin doctor 2FA reset, remain deployment-readiness QA items to re-check with controlled test accounts.
+- Emergency local recovery may explicitly set `TWO_FACTOR_ENFORCEMENT_ENABLED="false"` temporarily. This is not the normal production posture. `TWO_FACTOR_ENCRYPTION_KEY` must remain stable after accounts enroll or stored TOTP secrets cannot be decrypted.
 - Patient doctor directory supports name, specialty, and symptom-helper filtering. Symptom filtering maps curated symptom slugs to active specialty slugs and is a doctor-discovery helper only, not diagnosis, AI triage, or emergency medical advice.
 - Patient doctor directory still shows only active `DOCTOR` users with `DoctorProfile.isAvailable=true` and active specialties.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with structured consultation outcome fields.
@@ -186,7 +190,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 15B: Two-Factor Management And Admin Reset.
+Phase 15C: Two-Factor Manual QA Record.
 
 Latest known commit:
 

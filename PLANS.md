@@ -2,7 +2,29 @@
 
 ## Current Plan
 
-Phase 15B Two-Factor Management And Admin Reset is completed. `ADMIN` and `DOCTOR` accounts can view 2FA status and regenerate their own recovery codes after password plus second-factor verification. Admins can reset a doctor's enrollment without viewing secrets or codes.
+Phase 15C Two-Factor Manual QA Record is completed. Owner QA confirmed doctor/admin setup and login challenge behavior, recovery-code saving, and strict rejection of old TOTP windows. Destructive management flows remain explicit pre-deployment re-check items.
+
+## Phase 15C: Two-Factor Manual QA Record
+
+Status: Completed
+
+Recorded:
+
+- `ADMIN` and `DOCTOR` require 2FA; `PATIENT` login remains unchanged.
+- New invited doctors set their password, then must enroll in 2FA after their first password login.
+- Existing doctors/admins without enrollment are redirected to setup before workspace access; enrolled accounts receive a challenge after password verification.
+- TOTP accepts only the current 30-second code, so device and server clocks must remain synchronized.
+- Recovery codes are one-time fallback login codes. Regeneration requires the current password plus the current TOTP code or one unused recovery code.
+- Admins can reset doctor enrollment without seeing secrets or codes; reset revokes doctor sessions and forces re-enrollment.
+- Password reset does not disable 2FA. Self-disable and patient 2FA remain deferred.
+- `TWO_FACTOR_ENFORCEMENT_ENABLED="false"` is an emergency local development/recovery fallback only. `TWO_FACTOR_ENCRYPTION_KEY` must remain stable after enrollment.
+
+Manual QA:
+
+- Owner manually checked doctor/admin setup and login behavior.
+- Owner confirmed recovery codes were saved.
+- Owner confirmed old TOTP windows were rejected after the strict-code fix.
+- Recovery-code regeneration and admin doctor reset remain authenticated destructive flows to re-check with controlled accounts before deployment.
 
 ## Phase 15B: Two-Factor Management And Admin Reset
 
