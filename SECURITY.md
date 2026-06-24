@@ -62,8 +62,10 @@ Requirements:
 
 - TOTP secrets are generated server-side and encrypted at rest with AES-256-GCM using `TWO_FACTOR_ENCRYPTION_KEY`.
 - Plaintext TOTP secrets and QR setup payloads are returned only during authenticated initial setup and are never stored or logged.
+- TOTP verification accepts only the current 30-second time-step code for setup and login; previous and future time-step codes are rejected. Server and authenticator-device clocks must remain synchronized.
 - Temporary login challenges expire after approximately 10 minutes, allow at most five invalid attempts, use an HTTP-only `SameSite=Lax` cookie, and store only a SHA-256 token hash in PostgreSQL.
 - Ten recovery codes are generated after successful setup, shown once, stored only as hashes, and marked with `usedAt` after one successful use.
+- Recovery codes remain the one-time fallback when the authenticator device is unavailable or its time cannot be synchronized.
 - Setup confirmation revokes existing sessions for the privileged user before issuing a new 2FA-satisfied session.
 - Temporary challenge cookies are not session cookies and are not accepted by `getCurrentUser`, `requireUser`, or `requireRole`.
 - Doctor invite set-password still redirects to login. Password reset preserves 2FA state and still requires the next privileged login challenge.

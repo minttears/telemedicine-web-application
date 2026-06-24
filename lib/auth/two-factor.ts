@@ -120,7 +120,9 @@ export async function verifyTotpCode(secret: string, code: string) {
   }
 
   const result = await verify({
-    epochTolerance: 30,
+    // Accept only the current 30-second TOTP step. Device and server clocks
+    // must remain synchronized; recovery codes are the fallback when needed.
+    epochTolerance: 0,
     secret,
     token: code,
   });
