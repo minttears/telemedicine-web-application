@@ -21,6 +21,8 @@
     "livekit-client": "^2.19.1",
     "livekit-server-sdk": "^2.15.4",
     "next": "latest",
+    "otplib": "^13.4.1",
+    "qrcode": "^1.5.4",
     "react": "latest",
     "react-dom": "latest"
   },

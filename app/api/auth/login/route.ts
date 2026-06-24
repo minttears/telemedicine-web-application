@@ -3,6 +3,18 @@ import { verifyPassword } from "@/lib/auth/password";
 import { unauthorized } from "@/lib/auth/responses";
 import { createSession, setSessionCookie } from "@/lib/auth/session";
 import { getRedirectPathForRole } from "@/lib/auth/current-user";
+import {
+  clearTwoFactorChallengeCookie,
+  createTwoFactorChallenge,
+  isTwoFactorEnforcementEnabled,
+  isTwoFactorRequiredRole,
+  setTwoFactorChallengeCookie,
+} from "@/lib/auth/two-factor";
+import {
+  clearSessionCookie,
+  destroySession,
+  getSessionCookie,
+} from "@/lib/auth/session";
 
 const invalidCredentialsResponse = () => unauthorized("Invalid email or password.");
 
@@ -35,6 +47,13 @@ export async function POST(request: Request) {
 
   const user = await prisma.user.findUnique({
     where: { email },
+    include: {
+      twoFactorSecret: {
+        select: {
+          enabledAt: true,
+        },
+      },
+    },
   });
 
   if (!user || !user.isActive) {
@@ -47,6 +66,33 @@ export async function POST(request: Request) {
     return invalidCredentialsResponse();
   }
 
+  if (
+    isTwoFactorEnforcementEnabled() &&
+    isTwoFactorRequiredRole(user.role)
+  ) {
+    const existingSessionToken = await getSessionCookie();
+
+    if (existingSessionToken) {
+      await destroySession(existingSessionToken);
+    }
+
+    await clearSessionCookie();
+    await clearTwoFactorChallengeCookie();
+
+    const challenge = await createTwoFactorChallenge(user.id);
+    await setTwoFactorChallengeCookie(
+      challenge.rawToken,
+      challenge.expiresAt,
+    );
+
+    return Response.json({
+      redirectTo: user.twoFactorSecret?.enabledAt
+        ? "/two-factor/challenge"
+        : "/two-factor/setup",
+    });
+  }
+
+  await clearTwoFactorChallengeCookie();
   const session = await createSession(user.id);
   await setSessionCookie(session.token, session.expiresAt);
 

@@ -3,6 +3,7 @@ import {
   destroySession,
   getSessionCookie,
 } from "@/lib/auth/session";
+import { clearTwoFactorChallengeCookie } from "@/lib/auth/two-factor";
 
 export async function POST() {
   const sessionToken = await getSessionCookie();
@@ -12,6 +13,7 @@ export async function POST() {
   }
 
   await clearSessionCookie();
+  await clearTwoFactorChallengeCookie();
 
   return Response.json({ success: true });
 }

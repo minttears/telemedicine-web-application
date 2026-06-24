@@ -23,7 +23,9 @@ Requirements:
 - Show generic login UI errors only.
 - Do not log passwords, cookies, session tokens, or password/session hashes from the login UI.
 - Do not use Auth.js unless explicitly requested later.
-- 2FA remains deferred until a later approved phase.
+- `ADMIN` and `DOCTOR` accounts require TOTP 2FA when enforcement is enabled; `PATIENT` accounts remain unchanged.
+- Full sessions for privileged accounts are created only after initial TOTP setup or a valid TOTP/recovery-code challenge.
+- `TWO_FACTOR_ENFORCEMENT_ENABLED` defaults to enabled unless explicitly set to `"false"`.
 - Public registration is patient-only.
 - Public doctor and admin registration are not allowed.
 - Public registration cannot create `DOCTOR` or `ADMIN` users.
@@ -55,6 +57,18 @@ Requirements:
 - Phase 11H manual QA confirmed the corrected recovery UX requires the login email first, validates an empty login email before recovery starts, removes separate recipient selection, sends reset email only for the intended Resend account email test case, and no reset URL, raw token, email API key, or secret was shared.
 - Doctor set-password activates the invited doctor account, updates `User.passwordChangedAt`, revokes existing sessions for that doctor, and does not auto-login the doctor.
 - Doctor password reset updates `User.passwordChangedAt`, revokes existing sessions for that doctor, preserves the current `User.isActive` value, preserves `DoctorProfile.isAvailable`, and does not auto-login the doctor.
+
+## Two-Factor Authentication
+
+- TOTP secrets are generated server-side and encrypted at rest with AES-256-GCM using `TWO_FACTOR_ENCRYPTION_KEY`.
+- Plaintext TOTP secrets and QR setup payloads are returned only during authenticated initial setup and are never stored or logged.
+- Temporary login challenges expire after approximately 10 minutes, allow at most five invalid attempts, use an HTTP-only `SameSite=Lax` cookie, and store only a SHA-256 token hash in PostgreSQL.
+- Ten recovery codes are generated after successful setup, shown once, stored only as hashes, and marked with `usedAt` after one successful use.
+- Setup confirmation revokes existing sessions for the privileged user before issuing a new 2FA-satisfied session.
+- Temporary challenge cookies are not session cookies and are not accepted by `getCurrentUser`, `requireUser`, or `requireRole`.
+- Doctor invite set-password still redirects to login. Password reset preserves 2FA state and still requires the next privileged login challenge.
+- TOTP secrets, setup URIs, QR data, recovery codes, verification codes, challenge tokens, session tokens, cookies, encryption keys, and token/password hashes must never be logged.
+- Admin reset, self-disable, recovery-code regeneration, SMS/email OTP, WebAuthn/passkeys, and patient-required 2FA are deferred.
 
 ## Authorization
 
@@ -319,7 +333,7 @@ Rules:
 - Public reset password accepts only token, password, and confirmation; identity fields such as email, account email, recipient email, target email, and user id are rejected with a generic invalid-link error.
 - Public forgot-password uses simple in-memory route-level rate limiting as MVP abuse protection. Persistent distributed rate limiting remains a production hardening TODO.
 - Phase 11H manually rechecked the previous account takeover issue and confirmed the corrected UX is acceptable. Full testing to arbitrary recipient emails is deferred until a verified sender domain is configured in Resend.
-- 2FA remains deferred.
+- Required doctor/admin TOTP 2FA is implemented; operational reset and self-service management remain deferred.
 
 ## Chat Privacy
 
@@ -434,8 +448,8 @@ Before considering MVP complete:
 
 ## Future Security Work
 
-- Enforce 2FA for doctors and admins.
-- Add recovery codes for 2FA.
+- Add audited admin reset of doctor 2FA if operationally required.
+- Add self-disable and recovery-code regeneration with reauthentication if approved.
 - Define session expiration and refresh policy.
 - Define file retention policy.
 - Define data export and deletion policies.

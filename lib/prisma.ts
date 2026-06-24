@@ -26,7 +26,7 @@ function createPrismaClient() {
 function isCompatiblePrismaClient(
   client: PrismaClient | undefined,
 ): client is PrismaClient {
-  return Boolean(client && "accountAccessToken" in client);
+  return Boolean(client && "twoFactorChallenge" in client);
 }
 
 const cachedPrisma = globalForPrisma.prisma;

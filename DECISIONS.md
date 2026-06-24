@@ -226,6 +226,14 @@ Video calls are available from the scheduled consultation start time until the c
 
 Reason: This avoids pre-start joining and matches the expected appointment window. Local QA should create near-now dev consultations instead of changing system time because LiveKit participant tokens depend on real clock time. The app's persisted PostgreSQL consultation chat remains the source of truth; built-in LiveKit chat is a known limitation and should not be used for consultation records.
 
+### D029: Require TOTP 2FA For Doctors And Admins
+
+Status: Accepted
+
+Require TOTP authenticator-app 2FA for `DOCTOR` and `ADMIN` accounts while leaving `PATIENT` login unchanged. Store TOTP secrets encrypted with AES-256-GCM, store recovery codes and temporary challenge tokens only as hashes, and issue full sessions only after required setup or verification succeeds.
+
+Reason: Higher-privilege accounts need a second authentication factor without introducing SMS, email OTP, or passkey scope. A default-enabled `TWO_FACTOR_ENFORCEMENT_ENABLED` rollback flag allows emergency operational disablement without changing patient authentication.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

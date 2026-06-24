@@ -2,6 +2,10 @@ import type { UserRole } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import { getSessionCookie, hashSessionToken } from "@/lib/auth/session";
+import {
+  isTwoFactorEnforcementEnabled,
+  isTwoFactorRequiredRole,
+} from "@/lib/auth/two-factor";
 
 export type SafeUser = {
   avatarStoragePath: string | null;
@@ -60,6 +64,11 @@ export async function getCurrentUser() {
           passwordChangedAt: true,
           phone: true,
           role: true,
+          twoFactorSecret: {
+            select: {
+              enabledAt: true,
+            },
+          },
           updatedAt: true,
         },
       },
@@ -70,7 +79,26 @@ export async function getCurrentUser() {
     return null;
   }
 
-  return session.user;
+  if (
+    isTwoFactorEnforcementEnabled() &&
+    isTwoFactorRequiredRole(session.user.role) &&
+    !session.user.twoFactorSecret?.enabledAt
+  ) {
+    return null;
+  }
+
+  return {
+    avatarStoragePath: session.user.avatarStoragePath,
+    createdAt: session.user.createdAt,
+    email: session.user.email,
+    id: session.user.id,
+    isActive: session.user.isActive,
+    name: session.user.name,
+    passwordChangedAt: session.user.passwordChangedAt,
+    phone: session.user.phone,
+    role: session.user.role,
+    updatedAt: session.user.updatedAt,
+  };
 }
 
 export async function requireUser() {

@@ -2,7 +2,31 @@
 
 ## Current Plan
 
-Phase 14E Video Call QA Polish is completed. LiveKit calls use the consultation start-to-end window, local QA uses a dev-only near-now consultation creator instead of system time changes, and built-in LiveKit chat remains a known limitation. Further implementation, commits, pushes, or pull requests should happen only when explicitly approved.
+Phase 15A Two-Factor Authentication Enforcement is completed. `ADMIN` and `DOCTOR` accounts require TOTP setup or verification before a full session is issued, while `PATIENT` authentication remains unchanged.
+
+## Phase 15A: Two-Factor Authentication Enforcement
+
+Status: Completed
+
+Completed:
+
+- Added required TOTP authenticator-app setup for `ADMIN` and `DOCTOR` accounts with QR and manual setup options.
+- Added encrypted TOTP secret storage using AES-256-GCM and `TWO_FACTOR_ENCRYPTION_KEY`.
+- Added short-lived hashed `TwoFactorChallenge` records and an HTTP-only temporary challenge cookie.
+- Added 10 one-time recovery codes shown once after setup and stored only as hashes.
+- Added challenge verification with either a 6-digit TOTP code or an unused recovery code, with a maximum of five invalid attempts.
+- Kept `PATIENT` login unchanged and created normal sessions for privileged accounts only after required 2FA succeeds.
+- Revoked pre-existing privileged sessions when initial setup completes so they cannot bypass 2FA.
+- Kept doctor invite set-password and password-reset behavior intact; both still require 2FA at the next doctor login.
+- Added `TWO_FACTOR_ENFORCEMENT_ENABLED`, default enabled unless explicitly set to `"false"`, as a rollback flag.
+
+Deferred:
+
+- SMS and email OTP.
+- WebAuthn/passkeys.
+- Patient-required 2FA.
+- Admin reset of doctor 2FA.
+- Self-disable and recovery-code regeneration after initial setup.
 
 ## Phase 14E: Video Call QA Polish
 

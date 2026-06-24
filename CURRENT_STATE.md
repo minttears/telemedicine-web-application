@@ -53,10 +53,15 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 14B/14C Daily Video Provider Foundation And UI, superseded by Phase 14D
 - Phase 14D LiveKit Video Provider And Call UI
 - Phase 14E Video Call QA Polish
+- Phase 15A Two-Factor Authentication Enforcement
 
 ## Current MVP Behavior
 
 - Patients can register, log in, browse doctors, open doctor profiles, book future `AVAILABLE` slots at least 30 minutes away, view consultations, send/read text messages, upload/download allowed consultation files, use `/patient/files` as a secure consultation attachment archive, and view a read-only consultation outcome after completion.
+- `ADMIN` and `DOCTOR` password login now requires TOTP setup or a TOTP/recovery-code challenge before a normal session is created; `PATIENT` login remains unchanged.
+- TOTP secrets are encrypted at rest with AES-256-GCM, temporary challenge tokens and recovery codes are stored only as hashes, and recovery codes are one-time use.
+- Doctor invite set-password and doctor/admin password reset do not disable or bypass 2FA. Initial 2FA setup revokes older privileged sessions before creating the first 2FA-satisfied session.
+- `TWO_FACTOR_ENFORCEMENT_ENABLED` defaults to enabled unless explicitly set to `"false"`; admin reset, self-disable, and recovery-code regeneration remain deferred.
 - Patient doctor directory supports name, specialty, and symptom-helper filtering. Symptom filtering maps curated symptom slugs to active specialty slugs and is a doctor-discovery helper only, not diagnosis, AI triage, or emergency medical advice.
 - Patient doctor directory still shows only active `DOCTOR` users with `DoctorProfile.isAvailable=true` and active specialties.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with structured consultation outcome fields.
@@ -149,7 +154,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 ## Deferred Features
 
 - True Supabase Realtime subscriptions and the required custom auth/RLS/JWT security design
-- 2FA enforcement, admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
+- Admin schedule management, admin patient/consultation management, admin break-glass/private consultation access, and billing/payment
 - Broader admin management screens and audit-log workflows beyond Phase 10A doctor management and Phase 10B specialty management
 - Virus scanning, advanced file previews, and production file-handling hardening
 - Doctor profile/specialty management beyond seeded data
@@ -157,7 +162,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Legal prescription workflow, official prescriptions, medication database, PDF generation, e-signature, pharmacy integration, diagnosis automation, medical archives, and doctor outcome editing after completion
 - Review editing/deletion, doctor replies, admin review moderation, and public placeholder `/doctors` review display
 - Time-based chat restrictions beyond completed-status read-only behavior
-- Full production video device/network QA, call end persistence, payments, 2FA enforcement, public SEO polish, and full responsive/browser QA
+- Full production video device/network QA, call end persistence, payments, public SEO polish, and full responsive/browser QA
 - Symptom severity scoring, patient medical questionnaire, AI triage, emergency-care workflow, and advanced doctor availability algorithms
 
 ## Current Workflow Rules
@@ -175,7 +180,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 14E: Video Call QA Polish.
+Phase 15A: Two-Factor Authentication Enforcement.
 
 Latest known commit:
 
