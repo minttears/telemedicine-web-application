@@ -51,13 +51,14 @@
 | T311 | DONE | Translate patient workspace UI to Russian | Phase 16C translates patient navigation, dashboard, profile, doctor discovery, symptom labels, booking, consultation/chat/file/review/video UI, safe visible errors, and patient date/time formatting using formal Russian. Logic, routes, response contracts, sessions, authorization, and 2FA behavior are unchanged; seed/demo medical text remains deferred. |
 | T312 | DONE | Translate doctor workspace UI to Russian | Phase 16D translates doctor navigation, dashboard, profile, schedule, dev-only video QA controls, consultation completion/outcomes, chat/file/video surfaces, placeholders, safe visible errors, and doctor date/time formatting using formal Russian. Schedule, completion, authorization, sessions, routes, contracts, and 2FA behavior are unchanged; seed/demo medical text remains deferred. |
 | T313 | DONE | Translate admin workspace UI to Russian | Phase 16E translates admin navigation, dashboard, doctor and specialty management, user/consultation/audit placeholders, settings context, admin forms, safe visible API errors, accessibility labels, and date/time formatting using formal Russian. Admin authorization and management logic, routes, contracts, sessions, and 2FA behavior are unchanged; persisted seed/demo content remains deferred to Phase 16F. |
+| T314 | DONE | Complete the Russian UI pass | Phase 16F translates public/legal/common UI, root metadata and language, global states, remaining safe visible errors, development QA presentation text, and seeded medical descriptions. Personal names, slugs, identifiers, technical terms, contracts, and application logic remain unchanged; existing database rows require an intentional idempotent reseed to receive seed-copy updates. |
 | T305 | DONE | Add basic auth validation states | Auth forms now include field-level errors, submission errors, disabled submit states, and Phase 12B show/hide password controls. Broader forbidden/unauthorized route-state polish remains part of quality work. |
 
 ## Milestone 4: Public Pages And SEO
 
 | ID | Status | Task | Notes |
 | --- | --- | --- | --- |
-| T401 | TODO | Create public route structure | `/`, `/doctors`, doctor profile, about, contacts, privacy, terms, and telemedicine consent exist. Phase 12C replaced legal placeholders with concise MVP/demo legal pages. Broader public page polish remains TODO. |
+| T401 | DONE | Create public route structure | `/`, `/doctors`, doctor profile, about, contacts, privacy, terms, and telemedicine consent exist. Phase 16F adds Russian public navigation/footer, landing copy, public information states, and translated MVP legal pages. |
 | T402 | TODO | Add SEO metadata plan | Metadata API, Open Graph, canonical where appropriate. |
 | T403 | TODO | Add sitemap and robots routes | Exclude authenticated dashboards. |
 | T404 | TODO | Add favicon and app icon | Clean medical/minimal style. |

@@ -1,40 +1,48 @@
+import type { Metadata } from "next";
+
 import { LegalPage } from "@/components/legal/legal-page";
+
+export const metadata: Metadata = {
+  title: "Согласие на проведение телемедицинской консультации",
+  description:
+    "Информация об особенностях и ограничениях телемедицинской консультации.",
+};
 
 export default function TelemedicineConsentPage() {
   return (
     <LegalPage
-      description="This Telemedicine Consent explains important limitations of remote consultation workflows in the MVP."
+      description="Настоящее Согласие описывает существенные особенности и ограничения дистанционного взаимодействия при проведении телемедицинской консультации в MVP."
       sections={[
         {
-          title: "Remote consultation limitations",
-          body: "Telemedicine can help patients and doctors communicate remotely, but it has limitations compared with in-person care. A doctor may have limited ability to examine you, verify information, or assess conditions that require physical evaluation.",
+          title: "Ограничения дистанционной консультации",
+          body: "Телемедицинская консультация позволяет пациенту и врачу взаимодействовать дистанционно, но имеет ограничения по сравнению с очным приёмом. Возможности врача по осмотру, проверке сведений и оценке состояний, требующих физического обследования, могут быть ограничены.",
         },
         {
-          title: "No emergency care",
-          body: "Do not use this service for emergencies, urgent symptoms, or situations that may require immediate in-person care. Contact emergency services or seek local medical help if you may be experiencing a medical emergency.",
+          title: "Не для экстренной помощи",
+          body: "Не используйте сервис при экстренных состояниях, неотложных симптомах или в ситуациях, когда может потребоваться немедленная очная помощь. Обратитесь в службу экстренной помощи или ближайшую медицинскую организацию.",
         },
         {
-          title: "Accurate information",
-          body: "You are responsible for providing accurate account, profile, symptom, history, message, and file information. Incomplete or inaccurate information may affect the usefulness of a remote consultation.",
+          title: "Достоверность информации",
+          body: "Вы отвечаете за достоверность сведений учётной записи и профиля, информации о симптомах и анамнезе, сообщений и передаваемых файлов. Неполные или неточные сведения могут снизить полезность телемедицинской консультации.",
         },
         {
-          title: "Recommendations and summaries",
-          body: "Doctor recommendations and consultation summaries in this MVP are informational workflow outputs. They are not a full production medical record, diagnosis workflow, prescription workflow, or substitute for emergency or in-person care where needed.",
+          title: "Рекомендации и итоги консультации",
+          body: "Рекомендации врача и итоги консультации в этом MVP являются информационными результатами рабочего процесса. Они не представляют собой полноценную производственную медицинскую документацию или официальный электронный рецепт и не заменяют экстренную либо очную помощь, когда она необходима.",
         },
         {
-          title: "Prescriptions and legal medical workflows",
-          body: "Prescription handling, legal medical documentation workflows, structured diagnosis fields, and production clinical compliance processes are not fully implemented in this phase.",
+          title: "Рецепты и юридически значимые медицинские процессы",
+          body: "Работа с официальными рецептами, юридически значимой медицинской документацией и производственными процессами клинического соответствия пока не реализована полностью.",
         },
         {
-          title: "Video calls deferred",
-          body: "Video calls are not implemented in the current MVP. Consultations currently rely on scheduling, text chat, file sharing, and doctor summaries.",
+          title: "Видеосвязь",
+          body: "MVP поддерживает видеозвонки в пределах времени назначенной консультации. Качество и доступность связи зависят от устройства, разрешений браузера, интернет-соединения и внешнего поставщика видеосвязи.",
         },
         {
-          title: "File sharing consent",
-          body: "By uploading documents or images inside consultation chats, you consent to sharing those files with the assigned doctor for that consultation. File sharing has inherent privacy and security risks, and you should upload only documents relevant to the consultation.",
+          title: "Согласие на передачу файлов",
+          body: "Загружая документы или изображения в чате консультации, вы соглашаетесь передать их назначенному врачу в рамках этой консультации. Передача файлов связана с рисками конфиденциальности и безопасности; загружайте только материалы, относящиеся к консультации.",
         },
       ]}
-      title="Telemedicine Consent"
+      title="Согласие на проведение телемедицинской консультации"
     />
   );
 }

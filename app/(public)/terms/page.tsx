@@ -1,40 +1,48 @@
+import type { Metadata } from "next";
+
 import { LegalPage } from "@/components/legal/legal-page";
+
+export const metadata: Metadata = {
+  title: "Условия использования",
+  description:
+    "Основные условия использования демонстрационного сервиса телемедицинских консультаций.",
+};
 
 export default function TermsPage() {
   return (
     <LegalPage
-      description="These Terms of Use describe the basic MVP rules for using the telemedicine web application."
+      description="Настоящие Условия использования описывают основные правила работы с демонстрационной версией веб-приложения дистанционного медицинского консультирования."
       sections={[
         {
-          title: "Use of the service",
-          body: "The service is an MVP for remote consultation workflows, including patient registration, doctor discovery, booking, messaging, files, and consultation summaries. You agree to use it only for lawful, appropriate healthcare communication and product validation purposes.",
+          title: "Использование сервиса",
+          body: "Сервис представляет собой MVP для дистанционных консультаций, включая регистрацию пациентов, поиск врачей, запись, сообщения, файлы, видеозвонки и итоги консультаций. Вы обязуетесь использовать его только законным образом для допустимого взаимодействия по вопросам здоровья и проверки продукта.",
         },
         {
-          title: "Account responsibility",
-          body: "You are responsible for keeping your account credentials secure and for providing accurate information when registering, booking consultations, sending messages, and sharing documents. Notify the operator if you suspect unauthorized account use.",
+          title: "Ответственность за учётную запись",
+          body: "Вы отвечаете за сохранность данных для входа и точность информации, предоставляемой при регистрации, записи на консультации, отправке сообщений и передаче документов. Сообщите оператору сервиса, если подозреваете несанкционированное использование учётной записи.",
         },
         {
-          title: "Registration and managed accounts",
-          body: "Public registration is available for patients only. Doctor and administrator accounts are created and managed internally by authorized administrators. Public users cannot create doctor or administrator accounts through the registration form.",
+          title: "Регистрация и управляемые учётные записи",
+          body: "Самостоятельная регистрация доступна только пациентам. Учётные записи врачей и администраторов создаются и управляются уполномоченными администраторами. Через публичную форму регистрации нельзя создать учётную запись врача или администратора.",
         },
         {
-          title: "Prohibited misuse",
-          body: "Do not attempt to access another user's account, consultations, messages, files, or administrative functions. Do not upload malicious files, interfere with the service, scrape private data, or use the MVP for abusive, fraudulent, or unlawful activity.",
+          title: "Запрещённое использование",
+          body: "Не пытайтесь получить доступ к чужой учётной записи, консультациям, сообщениям, файлам или административным функциям. Запрещено загружать вредоносные файлы, нарушать работу сервиса, автоматически собирать закрытые данные или использовать MVP для злоупотреблений, мошенничества и иных противоправных действий.",
         },
         {
-          title: "No emergency use",
-          body: "This service is not for emergencies or urgent medical situations. If you may be experiencing a medical emergency, contact local emergency services or seek immediate in-person care.",
+          title: "Не для экстренной помощи",
+          body: "Сервис не предназначен для экстренных или неотложных медицинских ситуаций. Если вам может требоваться экстренная помощь, обратитесь в местную службу экстренной помощи или незамедлительно получите очную медицинскую помощь.",
         },
         {
-          title: "Availability",
-          body: "The MVP may be unavailable, incomplete, or changed without notice during development and testing. Features such as video calls, prescriptions, deletion workflows, and production retention policies are not fully implemented in this phase.",
+          title: "Доступность",
+          body: "Во время разработки и тестирования MVP может временно не работать, содержать неполные функции или изменяться без предварительного уведомления. Официальные электронные рецепты, полноценные процессы удаления данных и производственные правила хранения пока не реализованы.",
         },
         {
-          title: "MVP limitation",
-          body: "The service is provided as an MVP demonstration without production legal, clinical, compliance, or availability guarantees. To the maximum extent allowed by law, liability is limited for testing and demonstration use.",
+          title: "Ограничения MVP",
+          body: "Сервис предоставляется как демонстрационный MVP без гарантий юридической, клинической, нормативной или эксплуатационной готовности к промышленному использованию. Ответственность за тестовое и демонстрационное использование ограничивается в максимально допустимой законом степени.",
         },
       ]}
-      title="Terms of Use"
+      title="Условия использования"
     />
   );
 }

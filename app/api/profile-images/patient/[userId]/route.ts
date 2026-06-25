@@ -12,7 +12,7 @@ type PatientImageRouteContext = {
 };
 
 function notFound() {
-  return Response.json({ error: "Image not found." }, { status: 404 });
+  return Response.json({ error: "Изображение не найдено." }, { status: 404 });
 }
 
 export async function GET(_request: Request, context: PatientImageRouteContext) {
@@ -69,6 +69,9 @@ export async function GET(_request: Request, context: PatientImageRouteContext) 
       return forbidden();
     }
 
-    return Response.json({ error: "Unable to load image." }, { status: 500 });
+    return Response.json(
+      { error: "Не удалось загрузить изображение." },
+      { status: 500 },
+    );
   }
 }

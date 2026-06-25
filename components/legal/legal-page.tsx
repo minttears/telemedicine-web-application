@@ -13,7 +13,9 @@ export function LegalPage({ description, sections, title }: LegalPageProps) {
   return (
     <main className="bg-slate-50 px-4 py-10 sm:px-6 lg:px-8">
       <article className="mx-auto max-w-3xl rounded-lg border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-        <p className="text-sm font-medium text-teal-700">Legal information</p>
+        <p className="text-sm font-medium text-teal-700">
+          Правовая информация
+        </p>
         <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
           {title}
         </h1>
@@ -21,9 +23,10 @@ export function LegalPage({ description, sections, title }: LegalPageProps) {
 
         <div className="mt-6 rounded-md border border-amber-200 bg-amber-50 px-4 py-3">
           <p className="text-sm leading-6 text-amber-900">
-            This is demo MVP legal copy for product validation. It is not legal
-            advice and should be reviewed by a qualified lawyer before any real
-            production launch or use with real patient data.
+            Это демонстрационный правовой текст для проверки MVP-продукта. Он
+            не является юридической консультацией и должен быть проверен
+            квалифицированным юристом до реального запуска или работы с
+            данными реальных пациентов.
           </p>
         </div>
 

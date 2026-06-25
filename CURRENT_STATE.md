@@ -60,6 +60,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 16C Russian Patient Workspace UI
 - Phase 16D Russian Doctor Workspace UI
 - Phase 16E Russian Admin Workspace UI
+- Phase 16F Public, Legal, Common UI And Final Russian Pass
 
 ## Current MVP Behavior
 
@@ -88,6 +89,10 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 16E translates the admin navigation, dashboard, doctor and specialty management, user/consultation/audit placeholders, settings context, admin forms, safe visible API errors, accessibility labels, and admin date/time formatting into formal Russian.
 - Phase 16E changes presentation copy only. Admin authorization, doctor invite/password reset/2FA reset, specialties, audit records, routes, response shapes, status codes, sessions, cookies, redirects, strict TOTP verification, and required doctor/admin 2FA enforcement are unchanged. The typed `RESET 2FA` confirmation phrase remains unchanged.
 - Specialty names, slugs, doctor titles, bios, education, personal names, role constants, audit action enum values, and other persisted or user-generated content remain unchanged. English seed/demo medical text remains deferred to Phase 16F.
+- Phase 16F translates the landing page, public navigation/footer, public information pages, legal pages, root metadata, global error/not-found states, safe remaining API errors, and development video-QA presentation text into formal Russian. The root document language is now `ru`.
+- Phase 16F translates seeded specialty names/descriptions and doctor titles/bios/education while preserving personal names, slugs, IDs, relationships, role constants, and enum values. Existing database rows are updated only if the idempotent seed is intentionally rerun; no database reset or migration was performed.
+- The final English-string audit intentionally preserves vendor and protocol names, `Email`, `Slug`, API/URL/QR/2FA/TOTP/ID/SMS/WebAuthn/passkeys, MIME/image formats, route paths, environment names, package names, enum values, role constants, audit action values, internal server exceptions/log messages, and confirmation contracts such as `RESET 2FA`.
+- Phase 16F changes presentation and seed copy only. Authentication, 2FA, booking, consultation, chat, file, video, review, authorization, route, response, status-code, cookie, session, and redirect behavior remain unchanged.
 - Patient doctor directory supports name, specialty, and symptom-helper filtering. Symptom filtering maps curated symptom slugs to active specialty slugs and is a doctor-discovery helper only, not diagnosis, AI triage, or emergency medical advice.
 - Patient doctor directory still shows only active `DOCTOR` users with `DoctorProfile.isAvailable=true` and active specialties.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with structured consultation outcome fields.
@@ -206,7 +211,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 16E: Russian Admin Workspace UI.
+Phase 16F: Public, Legal, Common UI And Final Russian Pass.
 
 Latest known commit:
 
@@ -214,4 +219,4 @@ Latest known commit:
 
 ## Next Recommended Phase
 
-Complete the remaining public/legal/common Russian-copy final pass and deferred seed/demo content review in Phase 16F, then choose the next MVP gap deliberately. Strong candidates include admin patient/consultation/schedule management, public SEO/deployment readiness including Resend sender domain/DNS verification, broader authenticated browser QA, billing/payment, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.
+Choose the next MVP gap deliberately. Strong candidates include production SEO/branding and deployment readiness, Resend sender domain/DNS verification, broader authenticated and responsive browser QA, admin patient/consultation/schedule management, billing/payment, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.

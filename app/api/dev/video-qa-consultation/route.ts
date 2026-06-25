@@ -125,13 +125,13 @@ export async function POST(request: Request) {
       return tx.consultation.create({
         data: {
           description:
-            "Development-only video QA consultation. Do not use for real medical care.",
+            "Демонстрационная консультация для проверки видеосвязи. Не использовать для реальной медицинской помощи.",
           doctorId: doctorProfile.id,
           patientId: patientProfile.id,
           scheduleSlotId: slot.id,
           scheduledAt: startsAt,
           status: "SCHEDULED",
-          subject: "Development video QA consultation",
+          subject: "Проверка видеосвязи в среде разработки",
         },
         select: {
           id: true,

@@ -440,6 +440,15 @@ Development seed credentials are development-only placeholders and must never be
 Development seed credentials must not be printed in logs, terminal output, documentation, or chat summaries.
 Development seed account hints must not be displayed in the login UI.
 
+## Phase 16F Translation Security Notes
+
+- Public and legal copy remains explicitly identified as MVP/demo material requiring qualified legal review before real production use.
+- The translated error page shows a generic message instead of rendering an arbitrary runtime error message to users.
+- Legal copy continues to state that the service is not for emergency care and does not claim production legal or clinical approval.
+- Seed translation changes medical presentation text only. Personal names, account identifiers, credentials, slugs, roles, enum values, and relationships remain unchanged.
+- No seed command, database reset, migration, authentication change, authorization change, session change, cookie change, or 2FA change was performed.
+- Existing database rows are not changed automatically by editing the seed file; an intentional idempotent reseed or controlled manual update is required.
+
 ## MVP Security Checklist
 
 Before considering MVP complete:

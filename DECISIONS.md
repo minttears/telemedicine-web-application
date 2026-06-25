@@ -274,6 +274,22 @@ Phase 16E translates admin-facing presentation copy, safe visible validation mes
 
 Reason: Admin workflows include security-sensitive doctor onboarding, password recovery, and two-factor reset operations. Keeping their existing contracts unchanged limits the translation phase to presentation while preserving established authorization and audit behavior.
 
+### D035: Use Russian As The Root Document Language
+
+Status: Accepted
+
+Set the root HTML language to `ru` after completing the Russian pass across auth, patient, doctor, admin, public, legal, and shared UI. Continue using direct Russian copy without adding locale routing or an i18n dependency.
+
+Reason: The active MVP interface is now predominantly Russian. Correct document language improves accessibility and browser interpretation without changing routes or application architecture.
+
+### D036: Translate Seed Presentation Data Without Changing Identifiers
+
+Status: Accepted
+
+Translate development seed specialty names/descriptions and doctor titles/bios/education while preserving personal names, emails, slugs, IDs, enum values, roles, and relationships. Do not reset the database automatically.
+
+Reason: Seeded medical presentation text appears directly in the Russian UI. Keeping stable identifiers preserves filters and relationships, while an intentional rerun of the idempotent seed can update existing development rows without a migration or destructive reset.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

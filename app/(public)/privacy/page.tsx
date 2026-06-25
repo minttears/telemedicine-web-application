@@ -1,40 +1,48 @@
+import type { Metadata } from "next";
+
 import { LegalPage } from "@/components/legal/legal-page";
+
+export const metadata: Metadata = {
+  title: "Политика конфиденциальности",
+  description:
+    "Описание обработки данных в демонстрационном сервисе телемедицинских консультаций.",
+};
 
 export default function PrivacyPage() {
   return (
     <LegalPage
-      description="This Privacy Policy explains how the MVP handles account, consultation, chat, and file information."
+      description="Настоящая Политика конфиденциальности описывает обработку сведений об учётных записях, консультациях, сообщениях и файлах в MVP."
       sections={[
         {
-          title: "Data collected",
-          body: "The MVP may collect account information such as email, name, role, account status, registration consent timestamps, and profile details. Patient profiles may include date of birth and gender. Doctor profiles may include title, specialty, bio, education, experience, and availability settings.",
+          title: "Собираемые данные",
+          body: "MVP может обрабатывать email, имя, роль, статус учётной записи, время принятия согласий при регистрации и сведения профиля. Профиль пациента может включать дату рождения и пол. Профиль врача может включать должность, специальность, описание, образование, стаж и настройки доступности.",
         },
         {
-          title: "Consultations, chats, and files",
-          body: "The service stores consultation records, schedule information, chat messages, file metadata, and uploaded consultation documents. File bytes are stored in private Supabase Storage, while PostgreSQL stores metadata needed for authorization and display.",
+          title: "Консультации, сообщения и файлы",
+          body: "Сервис хранит записи о консультациях, расписание, сообщения, метаданные файлов и загруженные документы консультаций. Содержимое файлов хранится в закрытом Supabase Storage, а PostgreSQL содержит метаданные, необходимые для авторизации и отображения.",
         },
         {
-          title: "How data is used",
-          body: "Data is used to create accounts, authenticate users, book consultations, show role-specific workspaces, support secure messaging and file downloads, send password reset messages, and maintain operational audit records for selected actions.",
+          title: "Цели использования данных",
+          body: "Данные используются для создания учётных записей, аутентификации, записи на консультации, работы ролевых личных кабинетов, защищённого обмена сообщениями и файлами, отправки писем для сброса пароля и ведения журнала отдельных операционных действий.",
         },
         {
-          title: "Email messages",
-          body: "The MVP may send transactional email for password recovery. Reset links contain sensitive one-time tokens and should not be shared. Raw reset tokens are not stored by the application.",
+          title: "Сообщения по email",
+          body: "MVP может отправлять служебные письма для восстановления пароля. Ссылки для сброса содержат конфиденциальные одноразовые токены, поэтому их нельзя передавать другим лицам. Приложение не хранит исходные токены сброса.",
         },
         {
-          title: "Role-based access",
-          body: "Patients can access only their own profiles, consultations, messages, and files. Doctors can access only assigned consultations and related patient information. Admins manage operational records, but they do not access chat or file contents unless a future audited break-glass feature is explicitly implemented.",
+          title: "Ролевой доступ",
+          body: "Пациенты имеют доступ только к собственному профилю, консультациям, сообщениям и файлам. Врачи имеют доступ только к назначенным консультациям и связанным сведениям пациентов. Администраторы управляют операционными записями, но не получают доступ к содержимому сообщений и файлов без отдельно реализованного и аудируемого экстренного механизма.",
         },
         {
-          title: "Storage and security basics",
-          body: "The application uses server-side authorization checks, custom session cookies, password hashing, PostgreSQL for source-of-truth records, and private storage for uploaded files. Direct public Supabase Storage URLs are not used for consultation attachments.",
+          title: "Хранение и основные меры безопасности",
+          body: "Приложение использует серверную проверку доступа, собственные сессионные cookie, хеширование паролей, PostgreSQL как основной источник данных и закрытое хранилище загруженных файлов. Для вложений консультаций не используются прямые публичные URL Supabase Storage.",
         },
         {
-          title: "Retention and deletion",
-          body: "Retention, deletion, account export, and formal medical-record policies are future production policy items. They are not fully implemented in this MVP phase.",
+          title: "Хранение и удаление",
+          body: "Сроки хранения, удаление, экспорт учётной записи и формальные правила ведения медицинской документации относятся к будущим производственным политикам и пока не реализованы полностью.",
         },
       ]}
-      title="Privacy Policy"
+      title="Политика конфиденциальности"
     />
   );
 }

@@ -13,7 +13,10 @@ const MAX_MESSAGE_LENGTH = 2000;
 
 export function GET() {
   return Response.json(
-    { error: "GET /api/messages is not supported. Use authorized consultation pages to read messages." },
+    {
+      error:
+        "GET /api/messages не поддерживается. Просматривайте сообщения на доступных вам страницах консультаций.",
+    },
     {
       headers: {
         Allow: "POST",

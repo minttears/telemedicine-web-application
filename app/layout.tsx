@@ -3,10 +3,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Telemedicine",
-    template: "%s | Telemedicine",
+    default: "Онлайн-консультации с врачами",
+    template: "%s | Онлайн-консультации",
   },
-  description: "Remote medical consultation platform.",
+  description:
+    "Веб-приложение дистанционного медицинского консультирования для записи к врачам, сообщений, файлов и видеозвонков.",
 };
 
 export default function RootLayout({
@@ -15,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body>{children}</body>
     </html>
   );

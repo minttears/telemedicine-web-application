@@ -2106,6 +2106,24 @@ Deferred:
 - Seed/demo specialty names and descriptions, doctor titles, bios, education, personal names, and other persisted or user-generated content remain unchanged for Phase 16F.
 - Remaining translation work is the public/legal/common final pass.
 
+### Phase 16F: Public, Legal, Common UI And Final Russian Pass
+
+Status: Completed
+
+Completed:
+
+- Added formal Russian landing, public navigation/footer, public doctor, about, and contact presentation.
+- Translated Terms, Privacy, and Telemedicine Consent while retaining the explicit MVP/legal-review disclaimer.
+- Set the root document language to `ru` and translated root metadata, global error, loading, and not-found states.
+- Translated remaining safe public/shared API errors and development video-QA presentation text without changing response keys or status codes.
+- Translated development seed specialty names/descriptions and doctor titles/bios/education while preserving personal names, slugs, IDs, enum values, roles, and relationships.
+- Completed a repository English-string audit. Technical terms, vendor names, identifiers, internal exceptions/log messages, and security confirmation contracts remain intentionally unchanged.
+
+Operational note:
+
+- No seed command or database reset was run. Existing development rows receive the translated seed copy only when the idempotent seed is intentionally rerun or the rows are updated manually.
+- No authentication, 2FA, booking, consultation, chat, file, video, review, authorization, route, session, cookie, redirect, or status-code logic changed.
+
 ## Phase 6: Quality, SEO, And Deployment Readiness
 
 Status: Not started

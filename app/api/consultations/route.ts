@@ -33,7 +33,10 @@ function isUniqueConstraintError(error: unknown) {
 
 export function GET() {
   return Response.json(
-    { error: "GET /api/consultations is not supported. Use role-scoped consultation pages to read consultations." },
+    {
+      error:
+        "GET /api/consultations не поддерживается. Просматривайте консультации в соответствующем разделе личного кабинета.",
+    },
     {
       headers: {
         Allow: "POST",
