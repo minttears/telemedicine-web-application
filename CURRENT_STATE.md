@@ -62,6 +62,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 16E Russian Admin Workspace UI
 - Phase 16F Public, Legal, Common UI And Final Russian Pass
 - Phase 16G Translate Existing Specialty Data To Russian
+- Phase 16H Russian UI Manual QA And Copy Polish
 
 ## Current MVP Behavior
 
@@ -98,14 +99,16 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - The Phase 16G updater is idempotent, checks for target-name conflicts, runs updates transactionally, reports safe counts only, and verifies that the number of doctor-to-specialty links remains unchanged. It does not change specialty IDs, slugs, status, doctor relations, booking data, consultations, users, sessions, tokens, or 2FA data.
 - Phase 16G execution translated 17 distinct current-database specialty rows in total: 15 seeded specialties and 2 legacy Phase 10B QA specialties. Verification found no remaining Latin specialty display text and confirmed all 25 doctor-to-specialty links remained present.
 - The future development seed uses the same Russian specialty display values, including `Терапия` for `general-medicine`.
-- Patient doctor directory supports name, specialty, and symptom-helper filtering. Symptom filtering maps curated symptom slugs to active specialty slugs and is a doctor-discovery helper only, not diagnosis, AI triage, or emergency medical advice.
+- Phase 16H completed a final Russian UI audit and polished safe wording in consultation files/outcomes, doctor schedule messages, patient doctor discovery, legal pages, and the password-reset email. No application behavior or contracts changed.
+- Remaining English is intentionally limited to technical/vendor terms, stable identifiers, internal diagnostics, data values, and security confirmation contracts such as `RESET 2FA`.
+- Patient doctor directory supports name, specialty, and symptom-helper filtering. Symptom filtering maps curated symptom slugs to active specialty slugs and is a doctor-discovery helper only, not diagnosis, medical triage, or emergency medical advice.
 - Patient doctor directory still shows only active `DOCTOR` users with `DoctorProfile.isAvailable=true` and active specialties.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with structured consultation outcome fields.
 - New structured consultation completion requires only a conclusion/summary in `Consultation.doctorNotes` and an active diagnosis-status selection; diagnosis details, doctor recommendations, medication notes, follow-up instructions, and additional notes are optional and stored as null when empty.
 - Diagnosis status supports no diagnosis identified, preliminary diagnosis, requires further examination, referred to specialist, and not applicable without forcing fake diagnosis text.
 - Consultation outcome is not an official prescription workflow; legal prescription workflows, medication databases, PDF generation, e-signatures, pharmacy integration, and diagnosis automation remain deferred.
 - Patients can submit one doctor review with a required 1-5 rating and optional comment only after their own consultation is completed.
-- Doctor rating summaries appear on patient doctor cards and patient doctor detail pages; patient doctor detail pages show recent reviews with the public author label `Verified patient`.
+- Doctor rating summaries appear on patient doctor cards and patient doctor detail pages; patient doctor detail pages show recent reviews with the public author label `Подтверждённый пациент`.
 - Patient completed consultation detail pages show the review form when eligible and no review exists, then show the submitted review after creation.
 - Doctors can view their rating/recent reviews on authenticated doctor dashboard/profile surfaces, but cannot create, edit, delete, reply to, or moderate reviews.
 - Patients can upload/update a private self-only avatar from `/patient/profile`; the avatar is stored in the private `profile-images` Supabase bucket and served through a server-mediated route.
@@ -216,7 +219,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 16G: Translate Existing Specialty Data To Russian.
+Phase 16H: Russian UI Manual QA And Copy Polish.
 
 Latest known commit:
 

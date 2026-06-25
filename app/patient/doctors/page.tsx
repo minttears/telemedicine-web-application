@@ -419,8 +419,8 @@ export default async function PatientDoctorsPage({
           консультацию врача.
         </p>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Фильтр не ставит диагноз, не выполняет AI-триаж и не предназначен для
-          экстренной медицинской помощи.
+          Фильтр не ставит диагноз, не проводит медицинскую сортировку и не
+          предназначен для экстренной медицинской помощи.
         </p>
         {selectedSymptom ? (
           <p className="mt-2 text-sm leading-6 text-slate-700">

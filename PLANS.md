@@ -2145,6 +2145,22 @@ Preserved:
 - No changes to specialty IDs, slugs, activation status, doctor relations, booking data, consultations, users, sessions, tokens, or 2FA records.
 - Symptom/filter query values continue to use the same stable specialty slugs.
 
+### Phase 16H: Russian UI Manual QA And Copy Polish
+
+Status: Completed
+
+Completed:
+
+- Audited public, auth, workspace, consultation, file, video, review, legal, shared, metadata, accessibility, loading, error, empty, and not-found presentation text for remaining user-facing English.
+- Polished safe Russian wording for attachment attribution, consultation recommendations, doctor schedule intervals, symptom-filter safety guidance, legal limitations, and password-reset email guidance.
+- Kept technical/vendor terms, route and API identifiers, enum and role values, MIME formats, internal diagnostics, user-generated content, and confirmation contracts such as `RESET 2FA` intentionally unchanged.
+- Rechecked public/auth rendering, responsive overflow, console output, and unauthenticated workspace guards in the browser. Authenticated role-specific workflows remain deployment QA items requiring controlled test accounts.
+
+Preserved:
+
+- No auth, 2FA, booking, consultation, chat, file, video, review, admin authorization, route, response-shape, status-code, cookie, session, redirect, database, or dependency behavior changed.
+- No migration, full seed, or `.env.local` edit was performed.
+
 ## Phase 6: Quality, SEO, And Deployment Readiness
 
 Status: Not started

@@ -33,13 +33,13 @@ export function ScheduleSlotActions({ slotId }: ScheduleSlotActionsProps) {
       } | null;
 
       if (!response.ok) {
-        setError(payload?.error ?? "Не удалось отменить временной слот.");
+        setError(payload?.error ?? "Не удалось отменить интервал расписания.");
         return;
       }
 
       router.refresh();
     } catch {
-      setError("Не удалось отменить временной слот. Повторите попытку.");
+      setError("Не удалось отменить интервал расписания. Повторите попытку.");
     } finally {
       setIsCancelling(false);
     }
@@ -53,7 +53,7 @@ export function ScheduleSlotActions({ slotId }: ScheduleSlotActionsProps) {
         onClick={handleCancel}
         type="button"
       >
-        {isCancelling ? "Отмена..." : "Отменить слот"}
+        {isCancelling ? "Отмена..." : "Отменить интервал"}
       </button>
       {error ? (
         <p className="text-sm leading-6 text-red-700">{error}</p>

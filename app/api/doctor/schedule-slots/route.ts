@@ -162,7 +162,7 @@ export async function POST(request: Request) {
       (error instanceof Error && error.message === "SLOT_OVERLAP") ||
       isUniqueConstraintError(error)
     ) {
-      return conflict("Этот временной слот пересекается с существующим.");
+      return conflict("Этот интервал расписания пересекается с существующим.");
     }
 
     return Response.json(
@@ -187,11 +187,11 @@ export async function PATCH(request: Request) {
     } | null;
 
     if (body?.action !== "cancel") {
-      return badRequest("Некорректное действие с временным слотом.");
+      return badRequest("Некорректное действие с интервалом расписания.");
     }
 
     if (typeof body.slotId !== "string" || body.slotId.trim() === "") {
-      return badRequest("Укажите временной слот.");
+      return badRequest("Укажите интервал расписания.");
     }
 
     const updatedSlot = await prisma.doctorScheduleSlot.updateMany({
@@ -209,7 +209,7 @@ export async function PATCH(request: Request) {
     });
 
     if (updatedSlot.count !== 1) {
-      return conflict("Этот временной слот нельзя отменить.");
+      return conflict("Этот интервал расписания нельзя отменить.");
     }
 
     return Response.json({ ok: true });
@@ -221,7 +221,7 @@ export async function PATCH(request: Request) {
     }
 
     return Response.json(
-      { error: "Не удалось обновить временной слот." },
+      { error: "Не удалось обновить интервал расписания." },
       { status: 500 },
     );
   }

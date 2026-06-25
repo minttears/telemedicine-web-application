@@ -35,7 +35,7 @@ export function buildPasswordResetEmail({
     html: `
       <div style="font-family: Arial, sans-serif; color: #0f172a; line-height: 1.6;">
         <h1 style="font-size: 20px; margin: 0 0 16px;">Сброс пароля</h1>
-        <p>Используйте ссылку ниже, чтобы создать новый пароль для аккаунта Telemedicine.</p>
+        <p>Используйте ссылку ниже, чтобы создать новый пароль для учётной записи в сервисе.</p>
         <p>
           <a href="${escapedResetUrl}" style="display: inline-block; background: #0f766e; color: #ffffff; padding: 10px 14px; border-radius: 6px; text-decoration: none;">
             Сбросить пароль
@@ -50,7 +50,7 @@ export function buildPasswordResetEmail({
     text: [
       "Сброс пароля Telemedicine",
       "",
-      "Используйте ссылку ниже, чтобы создать новый пароль для аккаунта Telemedicine.",
+      "Используйте ссылку ниже, чтобы создать новый пароль для учётной записи в сервисе.",
       resetUrl,
       "",
       `Ссылка действует ${expirationText} и может быть использована только один раз.`,

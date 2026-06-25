@@ -162,8 +162,8 @@ export function ConsultationCompletionForm({
           Добавьте итог консультации
         </h2>
         <p className="mt-3 text-sm leading-6 text-slate-600">
-          Добавьте заключение, план лечения и рекомендации. Рекомендации по
-          лекарствам носят информационный характер и не являются официальным
+          Добавьте заключение, рекомендации и дальнейшие действия. Сведения о
+          лекарствах носят информационный характер и не являются официальным
           рецептом.
         </p>
       </div>
@@ -253,7 +253,7 @@ export function ConsultationCompletionForm({
             id="recommendations"
             name="recommendations"
             onChange={(event) => setRecommendations(event.target.value)}
-            placeholder="Добавьте рекомендации или план лечения"
+            placeholder="Добавьте рекомендации и дальнейшие действия"
             value={recommendations}
           />
           <p className="mt-2 text-xs text-slate-500">
