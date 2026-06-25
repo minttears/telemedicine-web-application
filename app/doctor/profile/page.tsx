@@ -24,19 +24,20 @@ function FieldValue({
 }
 
 function formatReviewDate(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
   }).format(value);
 }
 
 function formatReviewSummary(averageRating: number | null, reviewCount: number) {
   if (reviewCount === 0 || averageRating === null) {
-    return "No reviews yet";
+    return "Отзывов пока нет";
   }
 
-  return `${averageRating.toFixed(1)} out of 5 (${reviewCount} ${
-    reviewCount === 1 ? "review" : "reviews"
-  })`;
+  return `${averageRating.toLocaleString("ru-RU", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  })} из 5 (${reviewCount} отзывов)`;
 }
 
 export default async function DoctorProfilePage() {
@@ -94,24 +95,25 @@ export default async function DoctorProfilePage() {
   return (
     <div className="space-y-6">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">Doctor profile</p>
+        <p className="text-sm font-medium text-teal-700">Профиль врача</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-          Profile settings
+          Настройки профиля
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Review your account and public profile details. Admin-controlled
-          account, specialty, experience, and booking settings are read-only.
+          Проверьте данные аккаунта и публичного профиля. Настройки аккаунта,
+          специальность, стаж и доступность для записи управляются
+          администратором и доступны только для просмотра.
         </p>
       </section>
 
       {!doctorProfile ? (
         <section className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
           <h2 className="text-lg font-semibold text-slate-950">
-            Doctor profile required
+            Требуется профиль врача
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-600">
-            Your doctor profile must be configured by an admin before profile
-            settings can be edited.
+            Администратор должен настроить профиль врача, прежде чем вы сможете
+            изменять его данные.
           </p>
         </section>
       ) : (
@@ -120,59 +122,63 @@ export default async function DoctorProfilePage() {
             <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <p className="text-sm font-medium text-teal-700">Account</p>
+                  <p className="text-sm font-medium text-teal-700">Аккаунт</p>
                   <h2 className="mt-2 text-xl font-semibold text-slate-950">
-                    Read-only details
+                    Данные только для просмотра
                   </h2>
                 </div>
                 <span className="inline-flex w-fit rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-medium text-teal-700">
-                  {user.isActive ? "Active" : "Inactive"}
+                  {user.isActive ? "Активен" : "Неактивен"}
                 </span>
               </div>
 
               <dl className="mt-5 grid gap-4">
                 <FieldValue label="Email" value={user.email} />
-                <FieldValue label="Role" value="Doctor" />
-                <FieldValue label="Name" value={user.name ?? "Not specified"} />
+                <FieldValue label="Роль" value="Врач" />
+                <FieldValue label="Имя" value={user.name ?? "Не указано"} />
                 <FieldValue
-                  label="Specialty"
-                  value={doctorProfile.specialty?.name ?? "Not assigned"}
+                  label="Специальность"
+                  value={doctorProfile.specialty?.name ?? "Не назначено"}
                 />
                 <FieldValue
-                  label="Experience"
+                  label="Стаж"
                   value={
                     doctorProfile.experienceYears === null
-                      ? "Not specified"
-                      : `${doctorProfile.experienceYears} years`
+                      ? "Не указано"
+                      : `${doctorProfile.experienceYears} лет`
                   }
                 />
                 <FieldValue
-                  label="Account status"
-                  value={user.isActive ? "Active" : "Inactive"}
+                  label="Статус аккаунта"
+                  value={user.isActive ? "Активен" : "Неактивен"}
                 />
                 <FieldValue
-                  label="Available for booking"
-                  value={doctorProfile.isAvailable ? "Available" : "Unavailable"}
+                  label="Доступность для записи"
+                  value={
+                    doctorProfile.isAvailable
+                      ? "Доступен для записи"
+                      : "Недоступен для записи"
+                  }
                 />
               </dl>
             </div>
 
             <ProfileImageUploadForm
-              description="This professional photo is shown to patients in the doctor directory and profile pages."
+              description="Эта профессиональная фотография отображается пациентам в каталоге и на странице вашего профиля."
               endpoint="/api/doctor/photo"
-              imageAlt="Doctor profile photo"
+              imageAlt="Фотография профиля врача"
               imageSrc={
                 doctorProfile.photoStoragePath
                   ? `/api/profile-images/doctor/${doctorProfile.id}`
                   : undefined
               }
               initials={getInitials(user.name, user.email)}
-              title="Professional photo"
+              title="Профессиональная фотография"
             />
 
             <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
               <p className="text-sm font-medium text-teal-700">
-                Patient reviews
+                Отзывы пациентов
               </p>
               <h2 className="mt-2 text-xl font-semibold text-slate-950">
                 {formatReviewSummary(reviewAverageRating, reviewCount)}
@@ -183,14 +189,18 @@ export default async function DoctorProfilePage() {
                     <li className="py-3" key={review.id}>
                       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                         <p className="text-sm font-semibold text-slate-950">
-                          Verified patient
+                          Подтверждённый пациент
                         </p>
                         <p className="text-xs text-slate-500">
                           {formatReviewDate(review.createdAt)}
                         </p>
                       </div>
                       <p className="mt-2 text-sm font-medium text-teal-800">
-                        {review.rating.toFixed(1)} out of 5
+                        {review.rating.toLocaleString("ru-RU", {
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1,
+                        })}{" "}
+                        из 5
                       </p>
                       {review.comment ? (
                         <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-600">
@@ -202,7 +212,7 @@ export default async function DoctorProfilePage() {
                 </ul>
               ) : (
                 <p className="mt-3 text-sm leading-6 text-slate-600">
-                  No reviews yet.
+                  Отзывов пока нет.
                 </p>
               )}
             </div>

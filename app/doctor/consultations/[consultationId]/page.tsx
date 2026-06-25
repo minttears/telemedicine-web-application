@@ -20,7 +20,7 @@ type DoctorConsultationPageProps = {
 };
 
 function formatDateTime(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
@@ -28,10 +28,10 @@ function formatDateTime(value: Date) {
 
 function formatDate(value: Date | null) {
   if (!value) {
-    return "Not specified";
+    return "Не указано";
   }
 
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
   }).format(value);
 }
@@ -148,20 +148,21 @@ export default async function DoctorConsultationPage({
         className="inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
         href="/doctor/consultations"
       >
-        Back to consultations
+        Вернуться к консультациям
       </Link>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-medium text-teal-700">
-              {consultation.doctor.specialty?.name ?? "Specialty not assigned"}
+              {consultation.doctor.specialty?.name ??
+                "Специальность не назначена"}
             </p>
             <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-              {consultation.patient.user.name ?? "Patient profile"}
+              {consultation.patient.user.name ?? "Профиль пациента"}
             </h1>
             <p className="mt-2 text-base text-slate-600">
-              Scheduled for {formatDateTime(consultation.scheduledAt)}
+              Время консультации: {formatDateTime(consultation.scheduledAt)}
             </p>
           </div>
           <ConsultationStatusBadge status={consultation.status} />
@@ -182,11 +183,13 @@ export default async function DoctorConsultationPage({
               completedAt={consultation.completedAt}
               diagnosisDetails={consultation.diagnosisDetails}
               diagnosisStatus={consultation.diagnosisStatus}
-              doctorNotes={completedDoctorNotes || "No summary was recorded."}
+              doctorNotes={
+                completedDoctorNotes || "Итоговое заключение не добавлено."
+              }
               followUpInstructions={consultation.followUpInstructions}
               medicationNotes={consultation.medicationNotes}
               recommendations={consultation.recommendations}
-              title="Completed summary"
+              title="Итоговое заключение"
             />
           ) : (
             <ConsultationCompletionForm consultationId={consultation.id} />
@@ -201,42 +204,60 @@ export default async function DoctorConsultationPage({
 
         <aside className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-medium text-teal-700">
-            Consultation summary
+            Информация о консультации
           </p>
           <dl className="mt-5 grid gap-4 text-sm">
             <DetailItem
-              label="Scheduled time"
+              label="Время приёма"
               value={formatDateTime(consultation.scheduledAt)}
             />
             <DetailItem
-              label="Consultation status"
-              value={consultation.status}
+              label="Статус консультации"
+              value={
+                {
+                  CANCELLED: "Отменена",
+                  COMPLETED: "Завершена",
+                  IN_PROGRESS: "Идёт консультация",
+                  REQUESTED: "Ожидает подтверждения",
+                  SCHEDULED: "Запланирована",
+                }[consultation.status] ?? consultation.status
+              }
             />
             {consultation.completedAt ? (
               <DetailItem
-                label="Completed time"
+                label="Время завершения"
                 value={formatDateTime(consultation.completedAt)}
               />
             ) : null}
             <DetailItem
-              label="Slot status"
-              value={consultation.scheduleSlot?.status ?? "Not linked"}
+              label="Статус времени приёма"
+              value={
+                consultation.scheduleSlot?.status === "BOOKED"
+                  ? "Забронировано"
+                  : consultation.scheduleSlot?.status === "AVAILABLE"
+                    ? "Доступно"
+                    : consultation.scheduleSlot?.status === "CANCELLED"
+                      ? "Отменено"
+                      : consultation.scheduleSlot?.status === "BLOCKED"
+                        ? "Заблокировано"
+                        : "Не связано"
+              }
             />
             <DetailItem
-              label="Specialty"
-              value={consultation.doctor.specialty?.name ?? "Not assigned"}
+              label="Специальность"
+              value={consultation.doctor.specialty?.name ?? "Не назначено"}
             />
             <DetailItem
-              label="Patient"
-              value={consultation.patient.user.name ?? "Patient profile"}
+              label="Пациент"
+              value={consultation.patient.user.name ?? "Профиль пациента"}
             />
             <DetailItem
-              label="Date of birth"
+              label="Дата рождения"
               value={formatDate(consultation.patient.dateOfBirth)}
             />
             <DetailItem
-              label="Gender"
-              value={consultation.patient.gender ?? "Not specified"}
+              label="Пол"
+              value={consultation.patient.gender ?? "Не указано"}
             />
           </dl>
         </aside>

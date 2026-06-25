@@ -39,7 +39,7 @@ function conflict(message: string) {
 }
 
 function notFound() {
-  return Response.json({ error: "Consultation not found." }, { status: 404 });
+  return Response.json({ error: "Консультация не найдена." }, { status: 404 });
 }
 
 function optionalTextField(
@@ -52,13 +52,13 @@ function optionalTextField(
   }
 
   if (typeof value !== "string") {
-    return { error: `${fieldLabel} must be text.` };
+    return { error: `${fieldLabel}: требуется текстовое значение.` };
   }
 
   const trimmedValue = value.trim();
 
   if (trimmedValue.length > maxLength) {
-    return { error: `${fieldLabel} must be ${maxLength} characters or fewer.` };
+    return { error: `${fieldLabel}: не более ${maxLength} символов.` };
   }
 
   return { value: trimmedValue.length > 0 ? trimmedValue : null };
@@ -81,11 +81,11 @@ export async function POST(
     try {
       payload = await request.json();
     } catch {
-      return badRequest("Invalid request body.");
+      return badRequest("Некорректные данные запроса.");
     }
 
     if (!payload || typeof payload !== "object") {
-      return badRequest("Invalid request body.");
+      return badRequest("Некорректные данные запроса.");
     }
 
     const {
@@ -107,18 +107,18 @@ export async function POST(
     };
 
     if (typeof doctorNotes !== "string") {
-      return badRequest("Conclusion / summary is required.");
+      return badRequest("Добавьте заключение по консультации.");
     }
 
     const trimmedDoctorNotes = doctorNotes.trim();
 
     if (trimmedDoctorNotes.length === 0) {
-      return badRequest("Conclusion / summary is required.");
+      return badRequest("Добавьте заключение по консультации.");
     }
 
     if (trimmedDoctorNotes.length > MAX_DOCTOR_NOTES_LENGTH) {
       return badRequest(
-        `Conclusion / summary must be ${MAX_DOCTOR_NOTES_LENGTH} characters or fewer.`,
+        `Заключение должно содержать не более ${MAX_DOCTOR_NOTES_LENGTH} символов.`,
       );
     }
 
@@ -126,32 +126,32 @@ export async function POST(
       typeof diagnosisStatus !== "string" ||
       !diagnosisStatuses.has(diagnosisStatus)
     ) {
-      return badRequest("Select a valid diagnosis status.");
+      return badRequest("Выберите корректный статус диагноза.");
     }
 
     const trimmedDiagnosisDetails = optionalTextField(
       diagnosisDetails,
-      "Diagnosis details",
+      "Сведения о диагнозе",
       MAX_SHORT_OUTCOME_FIELD_LENGTH,
     );
     const trimmedRecommendations = optionalTextField(
       recommendations,
-      "Doctor recommendations",
+      "Рекомендации",
       MAX_LONG_OUTCOME_FIELD_LENGTH,
     );
     const trimmedMedicationNotes = optionalTextField(
       medicationNotes,
-      "Medication notes",
+      "Рекомендации по лекарствам",
       MAX_SHORT_OUTCOME_FIELD_LENGTH,
     );
     const trimmedFollowUpInstructions = optionalTextField(
       followUpInstructions,
-      "Follow-up instructions",
+      "Последующее наблюдение",
       MAX_SHORT_OUTCOME_FIELD_LENGTH,
     );
     const trimmedAdditionalNotes = optionalTextField(
       additionalNotes,
-      "Additional notes",
+      "Дополнительные заметки",
       MAX_SHORT_OUTCOME_FIELD_LENGTH,
     );
 
@@ -185,15 +185,17 @@ export async function POST(
     }
 
     if (consultation.status === "COMPLETED") {
-      return conflict("Consultation is already completed.");
+      return conflict("Консультация уже завершена.");
     }
 
     if (consultation.status === "CANCELLED") {
-      return conflict("Cancelled consultations cannot be completed.");
+      return conflict("Отменённую консультацию нельзя завершить.");
     }
 
     if (!completableStatuses.includes(consultation.status)) {
-      return conflict("Consultation cannot be completed from its current status.");
+      return conflict(
+        "Консультацию нельзя завершить при текущем статусе.",
+      );
     }
 
     const completedAt = new Date();
@@ -221,7 +223,7 @@ export async function POST(
     });
 
     if (updatedConsultation.count !== 1) {
-      return conflict("Consultation could not be completed.");
+      return conflict("Не удалось завершить консультацию.");
     }
 
     return Response.json({
@@ -246,10 +248,10 @@ export async function POST(
       {
         error:
           process.env.NODE_ENV === "production"
-            ? "Unable to complete consultation."
+            ? "Не удалось завершить консультацию."
             : error instanceof Error
               ? error.message
-              : "Unable to complete consultation.",
+              : "Не удалось завершить консультацию.",
       },
       { status: 500 },
     );

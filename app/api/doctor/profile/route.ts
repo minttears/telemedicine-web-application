@@ -34,7 +34,7 @@ function handleAuthError(error: unknown) {
 
 function validateTextLength(value: string, maxLength: number, label: string) {
   if (value.length > maxLength) {
-    return `${label} is too long.`;
+    return `${label}: превышена допустимая длина.`;
   }
 
   return null;
@@ -48,7 +48,7 @@ export async function PATCH(request: Request) {
       | null;
 
     if (!body || typeof body !== "object") {
-      return badRequest("Invalid profile details.");
+      return badRequest("Некорректные данные профиля.");
     }
 
     if (
@@ -56,19 +56,27 @@ export async function PATCH(request: Request) {
       typeof body.bio !== "string" ||
       typeof body.education !== "string"
     ) {
-      return badRequest("Invalid profile details.");
+      return badRequest("Некорректные данные профиля.");
     }
 
     const title = body.title.trim();
     const bio = body.bio.trim();
     const education = body.education.trim();
 
-    const titleError = validateTextLength(title, MAX_TITLE_LENGTH, "Title");
+    const titleError = validateTextLength(
+      title,
+      MAX_TITLE_LENGTH,
+      "Профессиональный заголовок",
+    );
     if (titleError) {
       return badRequest(titleError);
     }
 
-    const bioError = validateTextLength(bio, MAX_BIO_LENGTH, "Bio");
+    const bioError = validateTextLength(
+      bio,
+      MAX_BIO_LENGTH,
+      "Описание профиля",
+    );
     if (bioError) {
       return badRequest(bioError);
     }
@@ -76,7 +84,7 @@ export async function PATCH(request: Request) {
     const educationError = validateTextLength(
       education,
       MAX_EDUCATION_LENGTH,
-      "Education",
+      "Образование",
     );
     if (educationError) {
       return badRequest(educationError);
@@ -92,7 +100,7 @@ export async function PATCH(request: Request) {
     });
 
     if (!doctorProfile) {
-      return badRequest("Doctor profile is required before updating settings.");
+      return badRequest("Для изменения настроек требуется профиль врача.");
     }
 
     await prisma.doctorProfile.update({

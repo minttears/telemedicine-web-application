@@ -2,7 +2,25 @@
 
 ## Current Plan
 
-Phase 16C Russian Patient Workspace UI is completed. Patient navigation, dashboard, profile, doctor discovery, booking, consultations, chat, files, reviews, and video-call copy use formal Russian without changing behavior or technical contracts.
+Phase 16D Russian Doctor Workspace UI is completed. Doctor navigation, dashboard, profile, schedule, consultation completion, files, patient placeholders, development QA controls, and video-call copy use formal Russian without changing behavior or technical contracts.
+
+## Phase 16D: Russian Doctor Workspace UI
+
+Status: Completed
+
+Completed:
+
+- Translated doctor navigation, dashboard, profile/settings, professional photo copy, reviews, and doctor-facing date/time formatting.
+- Translated schedule creation/cancellation UI, statuses, validation, empty states, and matching safe API errors.
+- Kept development video QA tools visibly marked as development-only and translated their UI/errors without changing environment guards or API behavior.
+- Translated assigned consultation lists/details, patient summary labels, completion/outcome form, diagnosis-status presentation, recommendations, files, chat, and LiveKit call surfaces.
+- Preserved doctor/admin required 2FA, strict current-step TOTP, patient login, schedule calculations, consultation completion, chat/file/video authorization, routes, response fields, status codes, sessions, cookies, and redirects.
+- Kept database values, specialty slugs, seed/demo medical text, personal names, and user-generated content unchanged.
+
+Remaining translation phases:
+
+- Phase 16E admin workspace.
+- Phase 16F public, legal, remaining shared UI, metadata, final accessibility, and seed-visible medical copy.
 
 ## Phase 16C: Russian Patient Workspace UI
 
@@ -16,12 +34,6 @@ Completed:
 - Translated matching safe patient-facing validation and API errors without changing response keys or HTTP status codes.
 - Preserved patient login without 2FA and all booking, consultation, chat, file, video, session, redirect, authorization, and privileged-account 2FA behavior.
 - Kept specialty slugs, database values, seed/demo doctor medical text, user-generated content, routes, enum values, role constants, brands, and technical identifiers unchanged.
-
-Remaining translation phases:
-
-- Phase 16D doctor workspace.
-- Phase 16E admin workspace.
-- Phase 16F public, legal, remaining shared UI, metadata, final accessibility, and seed-visible medical copy.
 
 ## Phase 16B: Russian Auth, 2FA, And Account UI
 

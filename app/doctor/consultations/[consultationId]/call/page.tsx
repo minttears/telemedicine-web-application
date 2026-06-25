@@ -14,7 +14,7 @@ type DoctorCallPageProps = {
 };
 
 function formatDateTime(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
@@ -82,20 +82,21 @@ export default async function DoctorCallPage({ params }: DoctorCallPageProps) {
         className="inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
         href={backHref}
       >
-        Back to consultation
+        Вернуться к консультации
       </Link>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-medium text-teal-700">
-              {consultation.doctor.specialty?.name ?? "Specialty not assigned"}
+              {consultation.doctor.specialty?.name ??
+                "Специальность не назначена"}
             </p>
             <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-              {consultation.patient.user.name ?? "Patient profile"}
+              {consultation.patient.user.name ?? "Профиль пациента"}
             </h1>
             <p className="mt-2 text-base text-slate-600">
-              Scheduled for {formatDateTime(consultation.scheduledAt)}
+              Время консультации: {formatDateTime(consultation.scheduledAt)}
             </p>
           </div>
           <ConsultationStatusBadge status={consultation.status} />

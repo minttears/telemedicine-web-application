@@ -31,7 +31,7 @@ export function ScheduleSlotForm() {
     const endsAtIso = toIsoFromLocalDateTime(endsAt);
 
     if (!startsAtIso || !endsAtIso) {
-      setError("Start and end times are required.");
+      setError("Укажите время начала и окончания.");
       return;
     }
 
@@ -40,22 +40,22 @@ export function ScheduleSlotForm() {
     const durationMs = endDate.getTime() - startDate.getTime();
 
     if (startDate < new Date(Date.now() + MIN_BOOKING_LEAD_TIME_MS)) {
-      setError("Schedule slots must start at least 30 minutes from now.");
+      setError("Время приёма должно начинаться не ранее чем через 30 минут.");
       return;
     }
 
     if (endDate <= startDate) {
-      setError("End time must be after start time.");
+      setError("Время окончания должно быть позже времени начала.");
       return;
     }
 
     if (durationMs < MIN_SLOT_DURATION_MS) {
-      setError("Schedule slots must be at least 15 minutes long.");
+      setError("Продолжительность должна быть не менее 15 минут.");
       return;
     }
 
     if (durationMs > MAX_SLOT_DURATION_MS) {
-      setError("Schedule slots cannot be longer than 4 hours.");
+      setError("Продолжительность не может превышать 4 часа.");
       return;
     }
 
@@ -79,7 +79,7 @@ export function ScheduleSlotForm() {
       } | null;
 
       if (!response.ok) {
-        setError(payload?.error ?? "Unable to create schedule slot.");
+        setError(payload?.error ?? "Не удалось добавить доступное время.");
         return;
       }
 
@@ -87,7 +87,7 @@ export function ScheduleSlotForm() {
       setEndsAt("");
       router.refresh();
     } catch {
-      setError("Unable to create schedule slot.");
+      setError("Не удалось добавить доступное время. Повторите попытку.");
     } finally {
       setIsSubmitting(false);
     }
@@ -101,7 +101,7 @@ export function ScheduleSlotForm() {
             className="text-sm font-medium text-slate-700"
             htmlFor="startsAt"
           >
-            Start time
+            Время начала
           </label>
           <input
             className="mt-2 min-h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
@@ -118,7 +118,7 @@ export function ScheduleSlotForm() {
             className="text-sm font-medium text-slate-700"
             htmlFor="endsAt"
           >
-            End time
+            Время окончания
           </label>
           <input
             className="mt-2 min-h-10 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
@@ -133,8 +133,8 @@ export function ScheduleSlotForm() {
       </div>
 
       <p className="text-sm leading-6 text-slate-600">
-        Create available slots at least 30 minutes from now, between 15 minutes
-        and 4 hours long.
+        Добавляйте доступное время не ранее чем через 30 минут.
+        Продолжительность — от 15 минут до 4 часов.
       </p>
 
       {error ? (
@@ -148,7 +148,7 @@ export function ScheduleSlotForm() {
         disabled={isSubmitting}
         type="submit"
       >
-        {isSubmitting ? "Creating" : "Create available slot"}
+        {isSubmitting ? "Добавление..." : "Добавить доступное время"}
       </button>
     </form>
   );

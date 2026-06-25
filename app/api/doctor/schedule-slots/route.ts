@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     const doctorId = await getCurrentDoctorProfileId(user.id);
 
     if (!doctorId) {
-      return badRequest("Doctor profile is required before managing schedule slots.");
+      return badRequest("Для управления расписанием требуется профиль врача.");
     }
 
     const body = (await request.json().catch(() => null)) as {
@@ -89,29 +89,29 @@ export async function POST(request: Request) {
     const endsAt = parseDate(body?.endsAt);
 
     if (!startsAt || !endsAt) {
-      return badRequest("Start and end times are required.");
+      return badRequest("Укажите время начала и окончания.");
     }
 
     const minimumStartsAt = new Date(Date.now() + MIN_BOOKING_LEAD_TIME_MS);
 
     if (startsAt < minimumStartsAt) {
       return badRequest(
-        "Schedule slots must start at least 30 minutes from now.",
+        "Время приёма должно начинаться не ранее чем через 30 минут.",
       );
     }
 
     if (endsAt <= startsAt) {
-      return badRequest("End time must be after start time.");
+      return badRequest("Время окончания должно быть позже времени начала.");
     }
 
     const durationMs = endsAt.getTime() - startsAt.getTime();
 
     if (durationMs < MIN_SLOT_DURATION_MS) {
-      return badRequest("Schedule slots must be at least 15 minutes long.");
+      return badRequest("Продолжительность должна быть не менее 15 минут.");
     }
 
     if (durationMs > MAX_SLOT_DURATION_MS) {
-      return badRequest("Schedule slots cannot be longer than 4 hours.");
+      return badRequest("Продолжительность не может превышать 4 часа.");
     }
 
     const slot = await prisma.$transaction(async (tx) => {
@@ -162,11 +162,11 @@ export async function POST(request: Request) {
       (error instanceof Error && error.message === "SLOT_OVERLAP") ||
       isUniqueConstraintError(error)
     ) {
-      return conflict("This schedule slot overlaps an existing slot.");
+      return conflict("Этот временной слот пересекается с существующим.");
     }
 
     return Response.json(
-      { error: "Unable to create schedule slot." },
+      { error: "Не удалось добавить доступное время." },
       { status: 500 },
     );
   }
@@ -178,7 +178,7 @@ export async function PATCH(request: Request) {
     const doctorId = await getCurrentDoctorProfileId(user.id);
 
     if (!doctorId) {
-      return badRequest("Doctor profile is required before managing schedule slots.");
+      return badRequest("Для управления расписанием требуется профиль врача.");
     }
 
     const body = (await request.json().catch(() => null)) as {
@@ -187,11 +187,11 @@ export async function PATCH(request: Request) {
     } | null;
 
     if (body?.action !== "cancel") {
-      return badRequest("Invalid schedule slot action.");
+      return badRequest("Некорректное действие с временным слотом.");
     }
 
     if (typeof body.slotId !== "string" || body.slotId.trim() === "") {
-      return badRequest("Schedule slot is required.");
+      return badRequest("Укажите временной слот.");
     }
 
     const updatedSlot = await prisma.doctorScheduleSlot.updateMany({
@@ -209,7 +209,7 @@ export async function PATCH(request: Request) {
     });
 
     if (updatedSlot.count !== 1) {
-      return conflict("This schedule slot cannot be cancelled.");
+      return conflict("Этот временной слот нельзя отменить.");
     }
 
     return Response.json({ ok: true });
@@ -221,7 +221,7 @@ export async function PATCH(request: Request) {
     }
 
     return Response.json(
-      { error: "Unable to update schedule slot." },
+      { error: "Не удалось обновить временной слот." },
       { status: 500 },
     );
   }

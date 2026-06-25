@@ -4,13 +4,13 @@ import { WorkspaceShell } from "@/components/workspace/workspace-shell";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
 
 const doctorNavItems = [
-  { href: "/doctor/dashboard", label: "Dashboard" },
-  { href: "/doctor/schedule", label: "Schedule" },
-  { href: "/doctor/consultations", label: "Consultations" },
-  { href: "/doctor/files", label: "Files" },
-  { href: "/doctor/patients", label: "Patients" },
-  { href: "/doctor/profile", label: "Profile" },
-  { href: "/doctor/security", label: "Security" },
+  { href: "/doctor/dashboard", label: "Главная" },
+  { href: "/doctor/schedule", label: "Расписание" },
+  { href: "/doctor/consultations", label: "Консультации" },
+  { href: "/doctor/files", label: "Файлы" },
+  { href: "/doctor/patients", label: "Пациенты" },
+  { href: "/doctor/profile", label: "Профиль" },
+  { href: "/doctor/security", label: "Безопасность" },
 ];
 
 export default async function DoctorLayout({
@@ -23,7 +23,7 @@ export default async function DoctorLayout({
   return (
     <WorkspaceShell
       navItems={doctorNavItems}
-      roleLabel="Doctor workspace"
+      roleLabel="Кабинет врача"
       userEmail={user.email}
     >
       {children}

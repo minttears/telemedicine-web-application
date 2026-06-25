@@ -37,17 +37,17 @@ export function DoctorProfileForm({ initialValues }: DoctorProfileFormProps) {
     setSuccessMessage(null);
 
     if (normalizedTitle.length > 120) {
-      setFieldError("Title is too long.");
+      setFieldError("Профессиональный заголовок слишком длинный.");
       return;
     }
 
     if (normalizedBio.length > 2000) {
-      setFieldError("Bio is too long.");
+      setFieldError("Описание профиля слишком длинное.");
       return;
     }
 
     if (normalizedEducation.length > 1000) {
-      setFieldError("Education is too long.");
+      setFieldError("Описание образования слишком длинное.");
       return;
     }
 
@@ -69,14 +69,14 @@ export function DoctorProfileForm({ initialValues }: DoctorProfileFormProps) {
       const result = (await response.json().catch(() => ({}))) as ProfileResponse;
 
       if (!response.ok) {
-        setSubmitError(result.error ?? "Unable to update profile.");
+        setSubmitError(result.error ?? "Не удалось обновить профиль.");
         return;
       }
 
-      setSuccessMessage("Profile updated.");
+      setSuccessMessage("Профиль обновлён.");
       router.refresh();
     } catch {
-      setSubmitError("Unable to update profile right now.");
+      setSubmitError("Сейчас не удалось обновить профиль. Повторите попытку.");
     } finally {
       setIsPending(false);
     }
@@ -88,47 +88,51 @@ export function DoctorProfileForm({ initialValues }: DoctorProfileFormProps) {
       onSubmit={handleSubmit}
     >
       <div>
-        <p className="text-sm font-medium text-teal-700">Editable details</p>
+        <p className="text-sm font-medium text-teal-700">
+          Редактируемые данные
+        </p>
         <h2 className="mt-2 text-xl font-semibold text-slate-950">
-          Public profile copy
+          Публичный профиль
         </h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Specialty, experience, account status, and booking availability remain
-          admin-controlled.
+          Специальность, стаж, статус аккаунта и доступность для записи
+          управляются администратором.
         </p>
       </div>
 
       <div className="mt-5 grid gap-5">
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Title</span>
+          <span className="text-sm font-medium text-slate-800">
+            Профессиональный заголовок
+          </span>
           <input
             className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             maxLength={120}
             onChange={(event) => setTitle(event.target.value)}
-            placeholder="Consultant cardiologist"
+            placeholder="Например, врач-кардиолог"
             type="text"
             value={title}
           />
         </label>
 
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Bio</span>
+          <span className="text-sm font-medium text-slate-800">О себе</span>
           <textarea
             className="mt-2 min-h-36 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             maxLength={2000}
             onChange={(event) => setBio(event.target.value)}
-            placeholder="Short public doctor profile"
+            placeholder="Краткая информация для публичного профиля"
             value={bio}
           />
         </label>
 
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Education</span>
+          <span className="text-sm font-medium text-slate-800">Образование</span>
           <textarea
             className="mt-2 min-h-36 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             maxLength={1000}
             onChange={(event) => setEducation(event.target.value)}
-            placeholder="Degrees, certifications, and training"
+            placeholder="Образование, сертификаты и повышение квалификации"
             value={education}
           />
         </label>
@@ -155,7 +159,7 @@ export function DoctorProfileForm({ initialValues }: DoctorProfileFormProps) {
           disabled={isPending}
           type="submit"
         >
-          {isPending ? "Saving..." : "Save profile"}
+          {isPending ? "Сохранение..." : "Сохранить изменения"}
         </button>
       </div>
     </form>

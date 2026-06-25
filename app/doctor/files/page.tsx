@@ -3,7 +3,7 @@ import { requireRole } from "@/lib/auth/current-user";
 import { prisma } from "@/lib/prisma";
 
 function getPatientLabel(name: string | null) {
-  return name ?? "Patient profile";
+  return name ?? "Профиль пациента";
 }
 
 export default async function DoctorFilesPage() {
@@ -69,26 +69,26 @@ export default async function DoctorFilesPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">Files</p>
+        <p className="text-sm font-medium text-teal-700">Файлы</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-          Assigned consultation files
+          Файлы назначенных консультаций
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Files are uploaded inside consultation chats. This page collects them
-          for quick access across your assigned consultations.
+          Файлы отправляются в чатах консультаций. Здесь они собраны для
+          быстрого доступа по всем назначенным консультациям.
         </p>
         <p className="mt-4 text-sm font-medium text-slate-700">
-          {files.length} {files.length === 1 ? "file" : "files"} available
+          Доступно файлов: {files.length}
         </p>
       </section>
 
       <FileArchiveList
         emptyActionHref="/doctor/consultations"
-        emptyActionLabel="View consultations"
-        emptyBody="Files shared during assigned consultations will appear here. You can also manage your schedule so patients can reserve future times."
-        emptyTitle="No files shared yet"
+        emptyActionLabel="Открыть консультации"
+        emptyBody="Файлы из назначенных консультаций появятся здесь. Добавляйте доступное время в расписание, чтобы пациенты могли записываться."
+        emptyTitle="Файлов пока нет"
         files={files}
-        personHeader="Patient"
+        personHeader="Пациент"
       />
     </div>
   );

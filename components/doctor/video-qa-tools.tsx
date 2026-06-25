@@ -34,7 +34,10 @@ export function VideoQaTools() {
       } | null;
 
       if (!response.ok) {
-        setError(payload?.error ?? "Unable to create a video QA consultation.");
+        setError(
+          payload?.error ??
+            "Не удалось создать тестовую консультацию для проверки видеозвонка.",
+        );
         setPendingMode(null);
         return;
       }
@@ -45,24 +48,31 @@ export function VideoQaTools() {
         return;
       }
 
-      setError("QA consultation was created, but the next page could not be opened.");
+      setError(
+        "Тестовая консультация создана, но её страницу не удалось открыть.",
+      );
       setPendingMode(null);
     } catch {
-      setError("Unable to create a video QA consultation.");
+      setError(
+        "Не удалось создать тестовую консультацию для проверки видеозвонка.",
+      );
       setPendingMode(null);
     }
   }
 
   return (
     <section className="rounded-lg border border-amber-200 bg-amber-50 p-6 shadow-sm">
-      <p className="text-sm font-medium text-amber-800">Development QA only</p>
+      <p className="text-sm font-medium text-amber-800">
+        Только для разработки
+      </p>
       <h2 className="mt-2 text-xl font-semibold text-slate-950">
-        Create a video test consultation
+        Создать тестовую консультацию для проверки видеозвонка
       </h2>
       <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-700">
-        Creates a local development-only booked slot and scheduled consultation
-        with an existing active patient. Use this instead of changing system time
-        because video provider tokens depend on the real clock.
+        Создаёт локальное забронированное время и запланированную консультацию с
+        существующим активным пациентом. Используйте этот инструмент вместо
+        изменения системного времени: токены видеосвязи зависят от реальных
+        часов устройства.
       </p>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row">
         <button
@@ -71,7 +81,9 @@ export function VideoQaTools() {
           onClick={() => void createQaConsultation("soon")}
           type="button"
         >
-          {pendingMode === "soon" ? "Creating..." : "Start in 5 minutes"}
+          {pendingMode === "soon"
+            ? "Создание..."
+            : "Начать через 5 минут"}
         </button>
         <button
           className="inline-flex min-h-10 items-center justify-center rounded-md border border-amber-300 bg-white px-4 text-sm font-medium text-amber-900 transition hover:border-amber-700 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-500"
@@ -79,7 +91,7 @@ export function VideoQaTools() {
           onClick={() => void createQaConsultation("now")}
           type="button"
         >
-          {pendingMode === "now" ? "Creating..." : "Start now"}
+          {pendingMode === "now" ? "Создание..." : "Начать сейчас"}
         </button>
       </div>
       {error ? <p className="mt-3 text-sm leading-6 text-red-700">{error}</p> : null}

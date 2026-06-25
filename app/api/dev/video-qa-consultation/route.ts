@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
 const QA_SLOT_DURATION_MS = 30 * 60 * 1000;
 
 function unavailableInProduction() {
-  return Response.json({ error: "Not found." }, { status: 404 });
+  return Response.json({ error: "Не найдено." }, { status: 404 });
 }
 
 function badRequest(message: string) {
@@ -61,7 +61,9 @@ export async function POST(request: Request) {
     });
 
     if (!doctorProfile) {
-      return badRequest("Doctor profile is required before creating QA consultations.");
+      return badRequest(
+        "Для создания тестовой консультации требуется профиль врача.",
+      );
     }
 
     const patientProfile = await prisma.patientProfile.findFirst({
@@ -80,7 +82,9 @@ export async function POST(request: Request) {
     });
 
     if (!patientProfile) {
-      return conflict("An active patient profile is required for QA consultations.");
+      return conflict(
+        "Для тестовой консультации требуется активный профиль пациента.",
+      );
     }
 
     const consultation = await prisma.$transaction(async (tx) => {
@@ -152,11 +156,16 @@ export async function POST(request: Request) {
     }
 
     if (error instanceof Error && error.message === "SLOT_OVERLAP") {
-      return conflict("The selected QA time overlaps an existing slot.");
+      return conflict(
+        "Выбранное тестовое время пересекается с существующим слотом.",
+      );
     }
 
     return Response.json(
-      { error: "Unable to create video QA consultation." },
+      {
+        error:
+          "Не удалось создать тестовую консультацию для проверки видеозвонка.",
+      },
       { status: 500 },
     );
   }

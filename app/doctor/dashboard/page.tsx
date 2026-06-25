@@ -4,7 +4,7 @@ import { requireRole } from "@/lib/auth/current-user";
 import { prisma } from "@/lib/prisma";
 
 function formatDateTime(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
@@ -30,10 +30,13 @@ function StatCard({
 
 function formatReviewValue(averageRating: number | null, reviewCount: number) {
   if (reviewCount === 0 || averageRating === null) {
-    return "No reviews";
+    return "Нет отзывов";
   }
 
-  return averageRating.toFixed(1);
+  return averageRating.toLocaleString("ru-RU", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
 }
 
 export default async function DoctorDashboardPage() {
@@ -101,38 +104,38 @@ export default async function DoctorDashboardPage() {
   return (
     <div className="space-y-8">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">Doctor dashboard</p>
+        <p className="text-sm font-medium text-teal-700">Кабинет врача</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-          Welcome{user.name ? `, ${user.name}` : ""}
+          Добро пожаловать{user.name ? `, ${user.name}` : ""}
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Review your schedule availability and consultation status. Manage
-          future slots and open assigned consultations from your workspace.
+          Просматривайте расписание и статусы консультаций. Добавляйте доступное
+          время и открывайте назначенные консультации в кабинете врача.
         </p>
       </section>
 
       <section
-        aria-label="Doctor overview"
+        aria-label="Обзор кабинета врача"
         className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
       >
         <StatCard
-          detail="Available future schedule slots."
-          label="Upcoming slots"
+          detail="Доступное время для будущих консультаций."
+          label="Доступное время"
           value={upcomingSlots}
         />
         <StatCard
-          detail="Requested or scheduled consultations."
-          label="Booked"
+          detail="Запрошенные или запланированные консультации."
+          label="Запланировано"
           value={bookedConsultations}
         />
         <StatCard
-          detail="Consultations currently marked as in progress."
-          label="Active"
+          detail="Консультации, которые проходят сейчас."
+          label="Активные"
           value={activeConsultations}
         />
         <StatCard
-          detail={`${reviewCount} ${reviewCount === 1 ? "verified review" : "verified reviews"}.`}
-          label="Patient rating"
+          detail={`Подтверждённых отзывов: ${reviewCount}.`}
+          label="Рейтинг пациентов"
           value={formatReviewValue(reviewAverageRating, reviewCount)}
         />
       </section>
@@ -140,47 +143,51 @@ export default async function DoctorDashboardPage() {
       <section className="grid gap-4 lg:grid-cols-[1fr_1fr]">
         <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-950">
-            Profile summary
+            Краткая информация о профиле
           </h2>
           {doctorProfile ? (
             <dl className="mt-4 grid gap-3 text-sm">
               <div>
-                <dt className="font-medium text-slate-700">Specialty</dt>
+                <dt className="font-medium text-slate-700">Специальность</dt>
                 <dd className="mt-1 text-slate-600">
-                  {doctorProfile.specialty?.name ?? "Not assigned"}
+                  {doctorProfile.specialty?.name ?? "Не назначено"}
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-slate-700">Availability</dt>
+                <dt className="font-medium text-slate-700">
+                  Доступность для записи
+                </dt>
                 <dd className="mt-1 text-slate-600">
-                  {doctorProfile.isAvailable ? "Available" : "Unavailable"}
+                  {doctorProfile.isAvailable
+                    ? "Доступен для записи"
+                    : "Недоступен для записи"}
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-slate-700">Experience</dt>
+                <dt className="font-medium text-slate-700">Стаж</dt>
                 <dd className="mt-1 text-slate-600">
                   {doctorProfile.experienceYears
-                    ? `${doctorProfile.experienceYears} years`
-                    : "Not specified"}
+                    ? `${doctorProfile.experienceYears} лет`
+                    : "Не указано"}
                 </dd>
               </div>
             </dl>
           ) : (
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Your doctor profile is not configured yet.
+              Ваш профиль врача пока не настроен.
             </p>
           )}
           <Link
             className="mt-5 inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-600 hover:text-teal-700"
             href="/doctor/profile"
           >
-            Review profile
+            Открыть профиль
           </Link>
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-950">
-            Next schedule slots
+            Ближайшее доступное время
           </h2>
           {nextSlots.length > 0 ? (
             <ul className="mt-4 divide-y divide-slate-100">
@@ -190,22 +197,22 @@ export default async function DoctorDashboardPage() {
                     {formatDateTime(slot.startsAt)}
                   </p>
                   <p className="mt-1 text-sm text-slate-500">
-                    Ends {formatDateTime(slot.endsAt)}
+                    Окончание: {formatDateTime(slot.endsAt)}
                   </p>
                 </li>
               ))}
             </ul>
           ) : (
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              No upcoming available slots are configured yet. Add future slots so
-              patients can reserve consultation times.
+              Доступное время пока не добавлено. Создайте будущие интервалы,
+              чтобы пациенты могли записаться на консультацию.
             </p>
           )}
           <Link
             className="mt-5 inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-600 hover:text-teal-700"
             href="/doctor/schedule"
           >
-            Manage schedule
+            Управлять расписанием
           </Link>
         </div>
       </section>

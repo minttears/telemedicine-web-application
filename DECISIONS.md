@@ -262,7 +262,7 @@ Reason: The current product targets a Russian interface and has no active multi-
 
 Status: Accepted
 
-Phase 16C translates patient-facing presentation copy and curated in-code symptom labels, but does not translate specialty slugs, database values, seed doctor text, personal names, messages, reviews, consultation outcomes, or uploaded filenames.
+Phases 16C and 16D translate patient- and doctor-facing presentation copy and curated in-code labels, but do not translate specialty slugs, database values, seed doctor text, personal names, patient-provided profile values, messages, reviews, consultation outcomes, or uploaded filenames.
 
 Reason: Translating persisted or user-generated content would exceed a copy-only UI phase and could change data semantics. Seed/demo medical text remains a separate Phase 16F final-pass task.
 
