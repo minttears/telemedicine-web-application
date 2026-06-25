@@ -266,6 +266,14 @@ Phases 16C and 16D translate patient- and doctor-facing presentation copy and cu
 
 Reason: Translating persisted or user-generated content would exceed a copy-only UI phase and could change data semantics. Seed/demo medical text remains a separate Phase 16F final-pass task.
 
+### D034: Preserve Admin Contracts During Russian UI Translation
+
+Status: Accepted
+
+Phase 16E translates admin-facing presentation copy, safe visible validation messages, accessibility labels, and date/time formatting without changing admin authorization, route paths, API response keys, status codes, audit action enum values, invite/reset token behavior, or the required `RESET 2FA` confirmation phrase.
+
+Reason: Admin workflows include security-sensitive doctor onboarding, password recovery, and two-factor reset operations. Keeping their existing contracts unchanged limits the translation phase to presentation while preserving established authorization and audit behavior.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

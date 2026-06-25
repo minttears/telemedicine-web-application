@@ -44,7 +44,7 @@ function AdminLink({
 }
 
 export default async function AdminDashboardPage() {
-  const user = await requireRole("ADMIN");
+  await requireRole("ADMIN");
 
   const [
     totalUsers,
@@ -69,86 +69,88 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">Admin dashboard</p>
+        <p className="text-sm font-medium text-teal-700">
+          Панель администратора
+        </p>
         <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-          Operational overview{user.name ? ` for ${user.name}` : ""}
+          Обзор работы системы
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Review aggregate system status. Management actions and detailed
-          operational screens will be connected in later phases.
+          Просматривайте сводное состояние системы. Дополнительные инструменты
+          управления и подробные операционные экраны будут добавлены позднее.
         </p>
       </section>
 
       <section
-        aria-label="Admin overview"
+        aria-label="Сводка для администратора"
         className="grid gap-4 md:grid-cols-2 xl:grid-cols-3"
       >
         <StatCard
-          detail="All active and inactive user accounts."
-          label="Users"
+          detail="Все активные и неактивные учётные записи."
+          label="Пользователи"
           value={totalUsers}
         />
         <StatCard
-          detail="Patient profile records."
-          label="Patients"
+          detail="Профили пациентов."
+          label="Пациенты"
           value={patientProfiles}
         />
         <StatCard
-          detail={`${availableDoctors} marked available for patient booking.`}
-          label="Doctors"
+          detail={`${availableDoctors} доступны для записи пациентов.`}
+          label="Врачи"
           value={doctorProfiles}
         />
         <StatCard
-          detail="Configured specialty records."
-          label="Specialties"
+          detail="Настроенные медицинские специальности."
+          label="Специальности"
           value={specialties}
         />
         <StatCard
-          detail={`${activeConsultations} currently marked as in progress.`}
-          label="Consultations"
+          detail={`${activeConsultations} сейчас отмечены как текущие.`}
+          label="Консультации"
           value={consultations}
         />
         <StatCard
-          detail="Audit events recorded. Contents are not shown here."
-          label="Audit logs"
+          detail="Зарегистрированные события аудита. Содержимое здесь не показывается."
+          label="Журнал аудита"
           value={auditLogs}
         />
       </section>
 
       <section>
         <h2 className="text-lg font-semibold text-slate-950">
-          Management areas
+          Разделы управления
         </h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <AdminLink
-            description="User management screens will be implemented later."
+            description="Инструменты управления пользователями будут добавлены позднее."
             href="/admin/users"
-            label="Users"
+            label="Пользователи"
           />
           <AdminLink
-            description="Create doctor accounts and manage doctor profile visibility."
+            description="Создавайте учётные записи врачей и управляйте видимостью их профилей."
             href="/admin/doctors"
-            label="Doctors"
+            label="Врачи"
           />
           <AdminLink
-            description="Create specialties and control patient filter visibility."
+            description="Создавайте специальности и управляйте их видимостью в фильтрах для пациентов."
             href="/admin/specialties"
-            label="Specialties"
+            label="Специальности"
           />
           <AdminLink
-            description="Consultation metadata screens will be implemented later."
+            description="Экраны управления сведениями о консультациях будут добавлены позднее."
             href="/admin/consultations"
-            label="Consultations"
+            label="Консультации"
           />
           <AdminLink
-            description="Audit log details will be implemented later."
+            description="Подробный просмотр журнала аудита будет добавлен позднее."
             href="/admin/audit-log"
-            label="Audit Log"
+            label="Журнал аудита"
           />
           <AdminLink
-            description="System settings will be implemented later."
+            description="Дополнительные настройки системы будут добавлены позднее."
             href="/admin/settings"
-            label="Settings"
+            label="Настройки"
           />
         </div>
       </section>

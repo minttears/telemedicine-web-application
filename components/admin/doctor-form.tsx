@@ -96,22 +96,22 @@ export function DoctorForm({
     setSubmitError(null);
 
     if (!normalizedName) {
-      setFieldError("Name is required.");
+      setFieldError("Укажите имя врача.");
       return;
     }
 
     if (normalizedName.length > 100) {
-      setFieldError("Name is too long.");
+      setFieldError("Имя врача слишком длинное.");
       return;
     }
 
     if (!normalizedEmail || !isValidEmail(normalizedEmail)) {
-      setFieldError("Enter a valid email address.");
+      setFieldError("Введите корректный email.");
       return;
     }
 
     if (normalizedEmail.length > 254) {
-      setFieldError("Email address is too long.");
+      setFieldError("Email слишком длинный.");
       return;
     }
 
@@ -120,12 +120,12 @@ export function DoctorForm({
       setupMethod === "temporaryPassword" &&
       temporaryPassword.length < 8
     ) {
-      setFieldError("Temporary password must be at least 8 characters.");
+      setFieldError("Временный пароль должен содержать не менее 8 символов.");
       return;
     }
 
     if (!specialtyId) {
-      setFieldError("Select an active specialty.");
+      setFieldError("Выберите активную специальность.");
       return;
     }
 
@@ -134,22 +134,22 @@ export function DoctorForm({
       parsedExperienceYears < 0 ||
       parsedExperienceYears > 80
     ) {
-      setFieldError("Experience years must be between 0 and 80.");
+      setFieldError("Стаж должен быть от 0 до 80 лет.");
       return;
     }
 
     if (title.trim().length > 120) {
-      setFieldError("Title is too long.");
+      setFieldError("Название должности слишком длинное.");
       return;
     }
 
     if (bio.trim().length > 2000) {
-      setFieldError("Bio is too long.");
+      setFieldError("Описание врача слишком длинное.");
       return;
     }
 
     if (education.trim().length > 1000) {
-      setFieldError("Education is too long.");
+      setFieldError("Сведения об образовании слишком длинные.");
       return;
     }
 
@@ -189,7 +189,7 @@ export function DoctorForm({
       const result = (await response.json().catch(() => ({}))) as DoctorFormResponse;
 
       if (!response.ok) {
-        setSubmitError(result.error ?? "Unable to save doctor details.");
+        setSubmitError(result.error ?? "Не удалось сохранить данные врача.");
         return;
       }
 
@@ -205,7 +205,7 @@ export function DoctorForm({
       router.push(result.redirectTo ?? "/admin/doctors");
       router.refresh();
     } catch {
-      setSubmitError("Unable to save doctor details right now.");
+      setSubmitError("Сейчас не удалось сохранить данные врача.");
     } finally {
       setIsPending(false);
     }
@@ -220,15 +220,15 @@ export function DoctorForm({
     >
       {!hasSpecialties ? (
         <div className="rounded-md border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-800">
-          Add or reactivate a specialty before creating or editing doctor
-          assignments. Specialty management is outside this phase.
+          Добавьте или повторно активируйте специальность перед созданием или
+          редактированием врача.
         </div>
       ) : null}
 
       {mode === "create" ? (
         <fieldset className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
           <legend className="text-sm font-semibold text-slate-950">
-            Account setup
+            Настройка учётной записи
           </legend>
           <div className="mt-3 grid gap-3 lg:grid-cols-2">
             <label className="flex items-start gap-3 rounded-md border border-teal-200 bg-white p-4">
@@ -240,11 +240,11 @@ export function DoctorForm({
               />
               <span>
                 <span className="block text-sm font-medium text-slate-900">
-                  Invite link
+                  Ссылка-приглашение
                 </span>
                 <span className="mt-1 block text-sm leading-6 text-slate-600">
-                  Create an inactive doctor account and show a one-time setup
-                  link for the doctor to set a password.
+                  Создать неактивную учётную запись и показать одноразовую
+                  ссылку, по которой врач задаст пароль.
                 </span>
               </span>
             </label>
@@ -257,11 +257,11 @@ export function DoctorForm({
               />
               <span>
                 <span className="block text-sm font-medium text-slate-900">
-                  Temporary password
+                  Временный пароль
                 </span>
                 <span className="mt-1 block text-sm leading-6 text-slate-600">
-                  Keep the existing fallback flow for manually coordinated
-                  temporary passwords.
+                  Использовать резервный вариант с временным паролем,
+                  передаваемым врачу согласованным способом.
                 </span>
               </span>
             </label>
@@ -271,13 +271,13 @@ export function DoctorForm({
 
       <div className="grid gap-5 lg:grid-cols-2">
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Name</span>
+          <span className="text-sm font-medium text-slate-800">Имя врача</span>
           <input
             autoComplete="name"
             className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             maxLength={100}
             onChange={(event) => setName(event.target.value)}
-            placeholder="Doctor full name"
+            placeholder="Фамилия, имя и отчество"
             type="text"
             value={name}
           />
@@ -299,35 +299,37 @@ export function DoctorForm({
         {mode === "create" && setupMethod === "temporaryPassword" ? (
           <PasswordField
             autoComplete="new-password"
-            helpText="Use at least 8 characters. It will not be shown after creation."
+            helpText="Используйте не менее 8 символов. После создания пароль не будет показан."
             id="temporaryPassword"
-            label="Temporary password"
+            label="Временный пароль"
             onChange={setTemporaryPassword}
             value={temporaryPassword}
           />
         ) : null}
 
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Title</span>
+          <span className="text-sm font-medium text-slate-800">Должность</span>
           <input
             className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             maxLength={120}
             onChange={(event) => setTitle(event.target.value)}
-            placeholder="Consultant cardiologist"
+            placeholder="Врач-кардиолог"
             type="text"
             value={title}
           />
         </label>
 
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Specialty</span>
+          <span className="text-sm font-medium text-slate-800">
+            Специальность
+          </span>
           <select
             className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             disabled={!hasSpecialties}
             onChange={(event) => setSpecialtyId(event.target.value)}
             value={specialtyId}
           >
-            <option value="">Select specialty</option>
+            <option value="">Выберите специальность</option>
             {specialties.map((specialty) => (
               <option key={specialty.id} value={specialty.id}>
                 {specialty.name}
@@ -338,7 +340,7 @@ export function DoctorForm({
 
         <label className="block">
           <span className="text-sm font-medium text-slate-800">
-            Experience years
+            Стаж, лет
           </span>
           <input
             className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
@@ -353,23 +355,25 @@ export function DoctorForm({
 
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Bio</span>
+          <span className="text-sm font-medium text-slate-800">
+            Описание врача
+          </span>
           <textarea
             className="mt-2 min-h-36 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             maxLength={2000}
             onChange={(event) => setBio(event.target.value)}
-            placeholder="Short doctor profile"
+            placeholder="Краткая информация о враче"
             value={bio}
           />
         </label>
 
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Education</span>
+          <span className="text-sm font-medium text-slate-800">Образование</span>
           <textarea
             className="mt-2 min-h-36 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             maxLength={1000}
             onChange={(event) => setEducation(event.target.value)}
-            placeholder="Degrees, certifications, and training"
+            placeholder="Образование, сертификаты и повышение квалификации"
             value={education}
           />
         </label>
@@ -386,12 +390,12 @@ export function DoctorForm({
           />
           <span>
             <span className="block text-sm font-medium text-slate-900">
-              Account active
+              Учётная запись активна
             </span>
             <span className="mt-1 block text-sm leading-6 text-slate-600">
               {mode === "create" && setupMethod === "invite"
-                ? "Invite-created doctors start inactive until password setup is complete."
-                : "Active doctors can sign in. Deactivated doctors cannot access the doctor workspace."}
+                ? "Учётная запись по приглашению остаётся неактивной до завершения настройки пароля."
+                : "Активный врач может войти в систему. Деактивированный врач не имеет доступа к рабочему пространству."}
             </span>
           </span>
         </label>
@@ -408,12 +412,12 @@ export function DoctorForm({
           />
           <span>
             <span className="block text-sm font-medium text-slate-900">
-              Available for booking
+              Доступен для записи
             </span>
             <span className="mt-1 block text-sm leading-6 text-slate-600">
               {mode === "create" && setupMethod === "invite"
-                ? "Invite-created doctors stay unavailable for booking until an admin enables this later."
-                : "Available doctors appear in the patient directory and can show bookable slots."}
+                ? "Врач, созданный по приглашению, недоступен для записи, пока администратор не включит эту возможность."
+                : "Доступные врачи отображаются в каталоге пациентов и могут публиковать интервалы для записи."}
             </span>
           </span>
         </label>
@@ -422,15 +426,16 @@ export function DoctorForm({
       {inviteDetails ? (
         <div className="mt-5 rounded-lg border border-teal-200 bg-teal-50 p-4">
           <h2 className="text-sm font-semibold text-teal-950">
-            One-time invite link
+            Одноразовая ссылка-приглашение
           </h2>
           <p className="mt-2 text-sm leading-6 text-teal-900">
-            Copy this link now and share it through an approved secure process.
-            It will not be shown again after you leave this page.
+            Скопируйте ссылку сейчас и передайте её по согласованному
+            защищённому каналу. После ухода со страницы ссылка больше не будет
+            показана.
           </p>
           <label className="mt-3 block">
             <span className="text-xs font-medium uppercase tracking-normal text-teal-900">
-              Invite link
+              Ссылка-приглашение
             </span>
             <input
               className="mt-2 w-full rounded-md border border-teal-200 bg-white px-3 py-2 text-sm text-slate-950"
@@ -439,7 +444,8 @@ export function DoctorForm({
             />
           </label>
           <p className="mt-2 text-xs text-teal-900">
-            Expires {new Date(inviteDetails.expiresAt).toLocaleString()}.
+            Действует до{" "}
+            {new Date(inviteDetails.expiresAt).toLocaleString("ru-RU")}.
           </p>
           {inviteDetails.doctorId ? (
             <button
@@ -447,7 +453,7 @@ export function DoctorForm({
               onClick={() => router.push(`/admin/doctors/${inviteDetails.doctorId}`)}
               type="button"
             >
-              Open doctor details
+              Открыть карточку врача
             </button>
           ) : null}
         </div>
@@ -468,7 +474,7 @@ export function DoctorForm({
           onClick={() => router.push("/admin/doctors")}
           type="button"
         >
-          Cancel
+          Отмена
         </button>
         <button
           className="inline-flex min-h-11 items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300"
@@ -476,12 +482,12 @@ export function DoctorForm({
           type="submit"
         >
           {isPending
-            ? "Saving..."
+            ? "Сохранение..."
             : mode === "create"
               ? setupMethod === "invite"
-                ? "Create doctor invite"
-                : "Create doctor"
-              : "Save changes"}
+                ? "Создать приглашение врача"
+                : "Добавить врача"
+              : "Сохранить изменения"}
         </button>
       </div>
     </form>

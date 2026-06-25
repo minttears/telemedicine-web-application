@@ -10,7 +10,7 @@ function getStatusClassName(isEnabled: boolean) {
 }
 
 function formatDate(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
   }).format(value);
 }
@@ -49,41 +49,43 @@ export default async function AdminDoctorsPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-medium text-teal-700">
-              Doctor management
+              Управление врачами
             </p>
             <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-              Manage doctor accounts
+              Учётные записи врачей
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-              Create doctor accounts, maintain profile details, and control
-              account access separately from patient-facing booking visibility.
+              Создавайте учётные записи врачей, обновляйте сведения профиля и
+              управляйте доступом к аккаунту отдельно от доступности для записи.
             </p>
           </div>
           <Link
             className="inline-flex min-h-11 w-fit items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800"
             href="/admin/doctors/new"
           >
-            Create doctor
+            Добавить врача
           </Link>
         </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Total doctors</p>
+          <p className="text-sm font-medium text-slate-600">Всего врачей</p>
           <p className="mt-2 text-2xl font-semibold text-slate-950">
             {doctors.length}
           </p>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Active accounts</p>
+          <p className="text-sm font-medium text-slate-600">
+            Активные учётные записи
+          </p>
           <p className="mt-2 text-2xl font-semibold text-slate-950">
             {activeCount}
           </p>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm font-medium text-slate-600">
-            Available for booking
+            Доступны для записи
           </p>
           <p className="mt-2 text-2xl font-semibold text-slate-950">
             {bookableCount}
@@ -97,12 +99,12 @@ export default async function AdminDoctorsPage() {
             <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase tracking-normal text-slate-500">
                 <tr>
-                  <th className="px-4 py-3 font-semibold">Doctor</th>
-                  <th className="px-4 py-3 font-semibold">Specialty</th>
-                  <th className="px-4 py-3 font-semibold">Status</th>
-                  <th className="px-4 py-3 font-semibold">Booking</th>
-                  <th className="px-4 py-3 font-semibold">Updated</th>
-                  <th className="px-4 py-3 font-semibold">Action</th>
+                  <th className="px-4 py-3 font-semibold">Врач</th>
+                  <th className="px-4 py-3 font-semibold">Специальность</th>
+                  <th className="px-4 py-3 font-semibold">Статус</th>
+                  <th className="px-4 py-3 font-semibold">Запись</th>
+                  <th className="px-4 py-3 font-semibold">Обновлено</th>
+                  <th className="px-4 py-3 font-semibold">Действие</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
@@ -111,7 +113,7 @@ export default async function AdminDoctorsPage() {
                     <td className="px-4 py-4 align-top">
                       <div className="flex items-start gap-3">
                         <ProfileImage
-                          alt={`${doctor.user.name ?? "Doctor profile"} photo`}
+                          alt={`Фото врача ${doctor.user.name ?? ""}`.trim()}
                           className="h-12 w-12 shrink-0"
                           initials={getInitials(doctor.user.name)}
                           src={
@@ -122,7 +124,7 @@ export default async function AdminDoctorsPage() {
                         />
                         <div>
                           <p className="font-medium text-slate-950">
-                            {doctor.user.name ?? "Doctor profile"}
+                            {doctor.user.name ?? "Профиль врача"}
                           </p>
                           <p className="mt-1 text-slate-600">{doctor.user.email}</p>
                           {doctor.title ? (
@@ -132,7 +134,7 @@ export default async function AdminDoctorsPage() {
                       </div>
                     </td>
                     <td className="px-4 py-4 align-top text-slate-700">
-                      {doctor.specialty?.name ?? "Not assigned"}
+                      {doctor.specialty?.name ?? "Не назначено"}
                     </td>
                     <td className="px-4 py-4 align-top">
                       <span
@@ -140,7 +142,7 @@ export default async function AdminDoctorsPage() {
                           doctor.user.isActive,
                         )}`}
                       >
-                        {doctor.user.isActive ? "Active" : "Inactive"}
+                        {doctor.user.isActive ? "Активен" : "Неактивен"}
                       </span>
                     </td>
                     <td className="px-4 py-4 align-top">
@@ -149,7 +151,7 @@ export default async function AdminDoctorsPage() {
                           doctor.isAvailable,
                         )}`}
                       >
-                        {doctor.isAvailable ? "Available" : "Unavailable"}
+                        {doctor.isAvailable ? "Доступен" : "Недоступен"}
                       </span>
                     </td>
                     <td className="px-4 py-4 align-top text-slate-600">
@@ -160,7 +162,7 @@ export default async function AdminDoctorsPage() {
                         className="font-medium text-teal-700 hover:text-teal-800"
                         href={`/admin/doctors/${doctor.id}`}
                       >
-                        View details
+                        Подробнее
                       </Link>
                     </td>
                   </tr>
@@ -172,17 +174,17 @@ export default async function AdminDoctorsPage() {
       ) : (
         <section className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center">
           <h2 className="text-lg font-semibold text-slate-950">
-            No doctors have been created yet
+            Врачи ещё не добавлены
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-600">
-            Create the first doctor account and assign an active specialty before
-            patients can find and book the doctor.
+            Добавьте первого врача и назначьте активную специальность, чтобы
+            пациенты могли найти врача и записаться на консультацию.
           </p>
           <Link
             className="mt-5 inline-flex min-h-10 items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800"
             href="/admin/doctors/new"
           >
-            Create doctor
+            Добавить врача
           </Link>
         </section>
       )}

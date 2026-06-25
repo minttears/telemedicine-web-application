@@ -6,8 +6,9 @@ import {
 import { forbidden, unauthorized } from "@/lib/auth/responses";
 import { prisma } from "@/lib/prisma";
 
-const duplicateSpecialtyMessage = "A specialty with this name or slug already exists.";
-const invalidSpecialtyMessage = "Specialty not found.";
+const duplicateSpecialtyMessage =
+  "Специальность с таким названием или slug уже существует.";
+const invalidSpecialtyMessage = "Специальность не найдена.";
 const MAX_NAME_LENGTH = 100;
 const MAX_SLUG_LENGTH = 100;
 const MAX_DESCRIPTION_LENGTH = 1000;
@@ -40,7 +41,7 @@ function isValidSlug(value: string) {
 
 function validateSpecialtyBody(body: SpecialtyUpdateBody | null) {
   if (!body || typeof body !== "object") {
-    return { error: "Invalid specialty details." };
+    return { error: "Проверьте данные специальности." };
   }
 
   const name = typeof body.name === "string" ? body.name.trim() : "";
@@ -48,21 +49,23 @@ function validateSpecialtyBody(body: SpecialtyUpdateBody | null) {
   const description =
     typeof body.description === "string" ? body.description.trim() : "";
 
-  if (!name) return { error: "Name is required." };
-  if (name.length > MAX_NAME_LENGTH) return { error: "Name is too long." };
-  if (!slug) return { error: "Slug is required." };
-  if (slug.length > MAX_SLUG_LENGTH) return { error: "Slug is too long." };
+  if (!name) return { error: "Укажите название специальности." };
+  if (name.length > MAX_NAME_LENGTH) {
+    return { error: "Название специальности слишком длинное." };
+  }
+  if (!slug) return { error: "Укажите slug." };
+  if (slug.length > MAX_SLUG_LENGTH) return { error: "Slug слишком длинный." };
   if (!isValidSlug(slug)) {
     return {
       error:
-        "Slug must use lowercase letters, numbers, and hyphens without leading or trailing hyphens.",
+        "Slug может содержать строчные латинские буквы, цифры и дефисы без дефиса в начале или конце.",
     };
   }
   if (description.length > MAX_DESCRIPTION_LENGTH) {
-    return { error: "Description is too long." };
+    return { error: "Описание слишком длинное." };
   }
   if (typeof body.isActive !== "boolean") {
-    return { error: "Active status must be selected." };
+    return { error: "Выберите статус специальности." };
   }
 
   return {

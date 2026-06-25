@@ -59,6 +59,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 16B Russian Auth, 2FA, And Account UI
 - Phase 16C Russian Patient Workspace UI
 - Phase 16D Russian Doctor Workspace UI
+- Phase 16E Russian Admin Workspace UI
 
 ## Current MVP Behavior
 
@@ -84,6 +85,9 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 16D translates the doctor workspace, navigation, dashboard, profile, schedule, development-only video QA controls, consultation lists/details/completion, files, patient placeholders, call pages, and matching safe errors into formal Russian.
 - Phase 16D changes presentation copy only. Doctor schedule, consultation completion, chat/file/video authorization, routes, response shapes, status codes, sessions, cookies, redirects, strict TOTP verification, and required doctor/admin 2FA enforcement are unchanged.
 - Specialty names, doctor titles, bios, education, personal names, patient-provided profile values, consultation content, messages, reviews, and uploaded filenames remain database/user-generated content. English seed/demo medical text remains deferred to Phase 16F.
+- Phase 16E translates the admin navigation, dashboard, doctor and specialty management, user/consultation/audit placeholders, settings context, admin forms, safe visible API errors, accessibility labels, and admin date/time formatting into formal Russian.
+- Phase 16E changes presentation copy only. Admin authorization, doctor invite/password reset/2FA reset, specialties, audit records, routes, response shapes, status codes, sessions, cookies, redirects, strict TOTP verification, and required doctor/admin 2FA enforcement are unchanged. The typed `RESET 2FA` confirmation phrase remains unchanged.
+- Specialty names, slugs, doctor titles, bios, education, personal names, role constants, audit action enum values, and other persisted or user-generated content remain unchanged. English seed/demo medical text remains deferred to Phase 16F.
 - Patient doctor directory supports name, specialty, and symptom-helper filtering. Symptom filtering maps curated symptom slugs to active specialty slugs and is a doctor-discovery helper only, not diagnosis, AI triage, or emergency medical advice.
 - Patient doctor directory still shows only active `DOCTOR` users with `DoctorProfile.isAvailable=true` and active specialties.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with structured consultation outcome fields.
@@ -202,7 +206,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 16D: Russian Doctor Workspace UI.
+Phase 16E: Russian Admin Workspace UI.
 
 Latest known commit:
 
@@ -210,4 +214,4 @@ Latest known commit:
 
 ## Next Recommended Phase
 
-Choose the next MVP gap deliberately. Strong candidates are remaining admin patient/consultation/schedule management, public SEO/deployment readiness including Resend sender domain/DNS verification, broader authenticated browser QA, billing/payment, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.
+Complete the remaining public/legal/common Russian-copy final pass and deferred seed/demo content review in Phase 16F, then choose the next MVP gap deliberately. Strong candidates include admin patient/consultation/schedule management, public SEO/deployment readiness including Resend sender domain/DNS verification, broader authenticated browser QA, billing/payment, or production file-handling hardening. Supabase Realtime should remain deferred until a separate security plan is approved.

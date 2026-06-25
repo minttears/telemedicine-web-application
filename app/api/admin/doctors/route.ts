@@ -11,8 +11,9 @@ import { hashPassword } from "@/lib/auth/password";
 import { forbidden, unauthorized } from "@/lib/auth/responses";
 import { prisma } from "@/lib/prisma";
 
-const duplicateEmailMessage = "A doctor account with this email cannot be created.";
-const invalidSpecialtyMessage = "Select an active specialty.";
+const duplicateEmailMessage =
+  "Не удалось создать учётную запись врача с этим email.";
+const invalidSpecialtyMessage = "Выберите активную специальность.";
 const DOCTOR_INVITE_EXPIRATION_DAYS = 7;
 const MAX_TITLE_LENGTH = 120;
 const MAX_BIO_LENGTH = 2000;
@@ -45,17 +46,21 @@ function isUniqueConstraintError(error: unknown) {
   );
 }
 
-function validateBoolean(value: unknown, fieldName: string) {
+function validateBoolean(value: unknown, errorMessage: string) {
   if (typeof value !== "boolean") {
-    return `${fieldName} must be selected.`;
+    return errorMessage;
   }
 
   return null;
 }
 
-function validateTextLength(value: string, maxLength: number, label: string) {
+function validateTextLength(
+  value: string,
+  maxLength: number,
+  errorMessage: string,
+) {
   if (value.length > maxLength) {
-    return `${label} is too long.`;
+    return errorMessage;
   }
 
   return null;
@@ -104,7 +109,7 @@ export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as DoctorCreateBody | null;
 
   if (!body || typeof body !== "object") {
-    return Response.json({ error: "Invalid doctor details." }, { status: 400 });
+    return Response.json({ error: "Проверьте данные врача." }, { status: 400 });
   }
 
   const name = typeof body.name === "string" ? body.name.trim() : "";
@@ -123,24 +128,24 @@ export async function POST(request: Request) {
     : "invite";
 
   if (!name) {
-    return Response.json({ error: "Name is required." }, { status: 400 });
+    return Response.json({ error: "Укажите имя врача." }, { status: 400 });
   }
 
   if (name.length > 100) {
-    return Response.json({ error: "Name is too long." }, { status: 400 });
+    return Response.json({ error: "Имя врача слишком длинное." }, { status: 400 });
   }
 
   if (!email || !isValidEmail(email)) {
-    return Response.json({ error: "Enter a valid email address." }, { status: 400 });
+    return Response.json({ error: "Введите корректный email." }, { status: 400 });
   }
 
   if (email.length > 254) {
-    return Response.json({ error: "Email address is too long." }, { status: 400 });
+    return Response.json({ error: "Email слишком длинный." }, { status: 400 });
   }
 
   if (setupMethod === "temporaryPassword" && temporaryPassword.length < 8) {
     return Response.json(
-      { error: "Temporary password must be at least 8 characters." },
+      { error: "Временный пароль должен содержать не менее 8 символов." },
       { status: 400 },
     );
   }
@@ -149,12 +154,20 @@ export async function POST(request: Request) {
     return Response.json({ error: invalidSpecialtyMessage }, { status: 400 });
   }
 
-  const titleError = validateTextLength(title, MAX_TITLE_LENGTH, "Title");
+  const titleError = validateTextLength(
+    title,
+    MAX_TITLE_LENGTH,
+    "Название должности слишком длинное.",
+  );
   if (titleError) {
     return Response.json({ error: titleError }, { status: 400 });
   }
 
-  const bioError = validateTextLength(bio, MAX_BIO_LENGTH, "Bio");
+  const bioError = validateTextLength(
+    bio,
+    MAX_BIO_LENGTH,
+    "Описание врача слишком длинное.",
+  );
   if (bioError) {
     return Response.json({ error: bioError }, { status: 400 });
   }
@@ -162,7 +175,7 @@ export async function POST(request: Request) {
   const educationError = validateTextLength(
     education,
     MAX_EDUCATION_LENGTH,
-    "Education",
+    "Сведения об образовании слишком длинные.",
   );
   if (educationError) {
     return Response.json({ error: educationError }, { status: 400 });
@@ -175,20 +188,23 @@ export async function POST(request: Request) {
     experienceYears > 80
   ) {
     return Response.json(
-      { error: "Experience years must be between 0 and 80." },
+      { error: "Стаж должен быть от 0 до 80 лет." },
       { status: 400 },
     );
   }
 
   if (setupMethod === "temporaryPassword") {
-    const activeError = validateBoolean(body.isActive, "Account active");
+    const activeError = validateBoolean(
+      body.isActive,
+      "Выберите статус учётной записи.",
+    );
     if (activeError) {
       return Response.json({ error: activeError }, { status: 400 });
     }
 
     const availableError = validateBoolean(
       body.isAvailable,
-      "Available for booking",
+      "Выберите доступность врача для записи.",
     );
     if (availableError) {
       return Response.json({ error: availableError }, { status: 400 });

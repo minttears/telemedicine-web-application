@@ -19,7 +19,7 @@ type AdminDoctorDetailPageProps = {
 };
 
 function formatDateTime(value: Date) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(value);
@@ -97,7 +97,7 @@ export default async function AdminDoctorDetailPage({
     doctor.specialty && !activeSpecialties.some((item) => item.id === doctor.specialtyId)
       ? {
           id: doctor.specialtyId ?? "",
-          name: `${doctor.specialty.name} (inactive)`,
+          name: `${doctor.specialty.name} (неактивна)`,
         }
       : null;
   const specialties = currentInactiveSpecialty
@@ -112,18 +112,18 @@ export default async function AdminDoctorDetailPage({
         className="inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
         href="/admin/doctors"
       >
-        Back to doctors
+        Назад к врачам
       </Link>
 
       {created ? (
         <p className="rounded-md border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800">
-          Doctor account created. The temporary password is not displayed.
+          Учётная запись врача создана. Временный пароль не отображается.
         </p>
       ) : null}
 
       {updated ? (
         <p className="rounded-md border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800">
-          Doctor details updated.
+          Данные врача обновлены.
         </p>
       ) : null}
 
@@ -131,7 +131,7 @@ export default async function AdminDoctorDetailPage({
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
             <ProfileImage
-              alt={`${doctor.user.name ?? "Doctor profile"} photo`}
+              alt={`Фото врача ${doctor.user.name ?? ""}`.trim()}
               className="h-24 w-24 shrink-0"
               initials={getInitials(doctor.user.name)}
               src={
@@ -142,10 +142,10 @@ export default async function AdminDoctorDetailPage({
             />
             <div>
               <p className="text-sm font-medium text-teal-700">
-                {doctor.specialty?.name ?? "Specialty not assigned"}
+                {doctor.specialty?.name ?? "Специальность не назначена"}
               </p>
               <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-                {doctor.user.name ?? "Doctor profile"}
+                {doctor.user.name ?? "Профиль врача"}
               </h1>
               <p className="mt-2 text-sm text-slate-600">{doctor.user.email}</p>
               {doctor.title ? (
@@ -159,14 +159,14 @@ export default async function AdminDoctorDetailPage({
                 doctor.user.isActive,
               )}`}
             >
-              Account {doctor.user.isActive ? "active" : "inactive"}
+              Учётная запись {doctor.user.isActive ? "активна" : "неактивна"}
             </span>
             <span
               className={`inline-flex rounded-full border px-3 py-1 text-xs font-medium ${getStatusClassName(
                 doctor.isAvailable,
               )}`}
             >
-              Booking {doctor.isAvailable ? "available" : "unavailable"}
+              Запись {doctor.isAvailable ? "доступна" : "недоступна"}
             </span>
           </div>
         </div>
@@ -174,25 +174,25 @@ export default async function AdminDoctorDetailPage({
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Role</p>
+          <p className="text-sm font-medium text-slate-600">Роль</p>
           <p className="mt-2 text-lg font-semibold text-slate-950">
             {doctor.user.role}
           </p>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Experience</p>
+          <p className="text-sm font-medium text-slate-600">Стаж</p>
           <p className="mt-2 text-lg font-semibold text-slate-950">
-            {doctor.experienceYears ?? 0} years
+            {doctor.experienceYears ?? 0} лет
           </p>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Created</p>
+          <p className="text-sm font-medium text-slate-600">Создано</p>
           <p className="mt-2 text-sm font-semibold text-slate-950">
             {formatDateTime(doctor.user.createdAt)}
           </p>
         </div>
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-medium text-slate-600">Updated</p>
+          <p className="text-sm font-medium text-slate-600">Обновлено</p>
           <p className="mt-2 text-sm font-semibold text-slate-950">
             {formatDateTime(doctor.updatedAt)}
           </p>
@@ -200,11 +200,13 @@ export default async function AdminDoctorDetailPage({
       </section>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold text-slate-950">Edit doctor</h2>
+        <h2 className="text-xl font-semibold text-slate-950">
+          Редактировать врача
+        </h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Update basic account and profile fields. Schedule
-          management, consultation content, and file access are outside this
-          phase.
+          Обновите основные данные учётной записи и профиля. Управление
+          расписанием, содержимым консультаций и доступом к файлам не входит в
+          этот раздел.
         </p>
         <div className="mt-5">
           <DoctorForm

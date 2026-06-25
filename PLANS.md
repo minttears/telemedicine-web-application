@@ -2089,6 +2089,23 @@ Goals:
 - Consultation list.
 - Audit log.
 
+### Phase 16E: Russian Admin Workspace UI
+
+Status: Completed
+
+Completed:
+
+- Translated admin navigation, dashboard, doctor management, specialty management, settings context, and existing user, consultation, and audit placeholders into formal Russian.
+- Translated doctor and specialty form labels, validation messages, warnings, empty states, confirmations, and safe admin API errors.
+- Changed admin-facing date and time formatting to `ru-RU` where safe.
+- Preserved doctor invite, password reset, and 2FA reset behavior, including the exact `RESET 2FA` confirmation phrase.
+- Preserved admin authorization, routes, response keys, status codes, sessions, cookies, redirects, audit action enum values, and strict privileged-account 2FA enforcement.
+
+Deferred:
+
+- Seed/demo specialty names and descriptions, doctor titles, bios, education, personal names, and other persisted or user-generated content remain unchanged for Phase 16F.
+- Remaining translation work is the public/legal/common final pass.
+
 ## Phase 6: Quality, SEO, And Deployment Readiness
 
 Status: Not started

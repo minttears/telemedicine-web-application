@@ -76,34 +76,34 @@ export function SpecialtyForm({
     setSubmitError(null);
 
     if (!normalizedName) {
-      setFieldError("Name is required.");
+      setFieldError("Укажите название специальности.");
       return;
     }
 
     if (normalizedName.length > 100) {
-      setFieldError("Name is too long.");
+      setFieldError("Название специальности слишком длинное.");
       return;
     }
 
     if (!normalizedSlug) {
-      setFieldError("Slug is required.");
+      setFieldError("Укажите slug.");
       return;
     }
 
     if (normalizedSlug.length > 100) {
-      setFieldError("Slug is too long.");
+      setFieldError("Slug слишком длинный.");
       return;
     }
 
     if (!isValidSlug(normalizedSlug)) {
       setFieldError(
-        "Slug must use lowercase letters, numbers, and hyphens without leading or trailing hyphens.",
+        "Slug может содержать строчные латинские буквы, цифры и дефисы без дефиса в начале или конце.",
       );
       return;
     }
 
     if (normalizedDescription.length > 1000) {
-      setFieldError("Description is too long.");
+      setFieldError("Описание слишком длинное.");
       return;
     }
 
@@ -131,14 +131,16 @@ export function SpecialtyForm({
       const result = (await response.json().catch(() => ({}))) as SpecialtyFormResponse;
 
       if (!response.ok) {
-        setSubmitError(result.error ?? "Unable to save specialty details.");
+        setSubmitError(
+          result.error ?? "Не удалось сохранить данные специальности.",
+        );
         return;
       }
 
       router.push(result.redirectTo ?? "/admin/specialties");
       router.refresh();
     } catch {
-      setSubmitError("Unable to save specialty details right now.");
+      setSubmitError("Сейчас не удалось сохранить данные специальности.");
     } finally {
       setIsPending(false);
     }
@@ -151,12 +153,12 @@ export function SpecialtyForm({
     >
       <div className="grid gap-5 lg:grid-cols-2">
         <label className="block">
-          <span className="text-sm font-medium text-slate-800">Name</span>
+          <span className="text-sm font-medium text-slate-800">Название</span>
           <input
             className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
             maxLength={100}
             onChange={(event) => handleNameChange(event.target.value)}
-            placeholder="Cardiology"
+            placeholder="Кардиология"
             type="text"
             value={name}
           />
@@ -176,19 +178,19 @@ export function SpecialtyForm({
             value={slug}
           />
           <span className="mt-2 block text-xs leading-5 text-amber-700">
-            Changing a slug can break old doctor filter URLs that used the
-            previous slug.
+            Изменение slug может нарушить работу старых URL фильтра врачей, в
+            которых использовалось предыдущее значение.
           </span>
         </label>
       </div>
 
       <label className="mt-5 block">
-        <span className="text-sm font-medium text-slate-800">Description</span>
+        <span className="text-sm font-medium text-slate-800">Описание</span>
         <textarea
           className="mt-2 min-h-32 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-100"
           maxLength={1000}
           onChange={(event) => setDescription(event.target.value)}
-          placeholder="Short specialty description"
+          placeholder="Краткое описание специальности"
           value={description}
         />
       </label>
@@ -202,11 +204,11 @@ export function SpecialtyForm({
         />
         <span>
           <span className="block text-sm font-medium text-slate-900">
-            Active
+            Активна
           </span>
           <span className="mt-1 block text-sm leading-6 text-slate-600">
-            Active specialties can be assigned to doctors and appear in patient
-            directory filters.
+            Активные специальности можно назначать врачам; они отображаются в
+            фильтрах каталога для пациентов.
           </span>
         </span>
       </label>
@@ -226,7 +228,7 @@ export function SpecialtyForm({
           onClick={() => router.push("/admin/specialties")}
           type="button"
         >
-          Cancel
+          Отмена
         </button>
         <button
           className="inline-flex min-h-11 items-center justify-center rounded-md bg-teal-700 px-4 text-sm font-medium text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-300"
@@ -234,10 +236,10 @@ export function SpecialtyForm({
           type="submit"
         >
           {isPending
-            ? "Saving..."
+            ? "Сохранение..."
             : mode === "create"
-              ? "Create specialty"
-              : "Save changes"}
+              ? "Добавить специальность"
+              : "Сохранить изменения"}
         </button>
       </div>
     </form>

@@ -1,3 +1,3 @@
 export default function AdminUsersPage() {
-  return <main className="p-6">Admin users placeholder.</main>;
+  return <main className="p-6">Управление пользователями будет добавлено позднее.</main>;
 }

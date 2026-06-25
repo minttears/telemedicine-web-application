@@ -6,9 +6,10 @@ import {
 import { forbidden, unauthorized } from "@/lib/auth/responses";
 import { prisma } from "@/lib/prisma";
 
-const duplicateEmailMessage = "A doctor account with this email cannot be updated.";
-const invalidDoctorMessage = "Doctor not found.";
-const invalidSpecialtyMessage = "Select an active specialty.";
+const duplicateEmailMessage =
+  "Не удалось обновить учётную запись врача с этим email.";
+const invalidDoctorMessage = "Врач не найден.";
+const invalidSpecialtyMessage = "Выберите активную специальность.";
 const MAX_TITLE_LENGTH = 120;
 const MAX_BIO_LENGTH = 2000;
 const MAX_EDUCATION_LENGTH = 1000;
@@ -57,9 +58,13 @@ function parseExperienceYears(value: unknown) {
   return null;
 }
 
-function validateTextLength(value: string, maxLength: number, label: string) {
+function validateTextLength(
+  value: string,
+  maxLength: number,
+  errorMessage: string,
+) {
   if (value.length > maxLength) {
-    return `${label} is too long.`;
+    return errorMessage;
   }
 
   return null;
@@ -135,7 +140,7 @@ export async function PATCH(
   const body = (await request.json().catch(() => null)) as DoctorUpdateBody | null;
 
   if (!body || typeof body !== "object") {
-    return Response.json({ error: "Invalid doctor details." }, { status: 400 });
+    return Response.json({ error: "Проверьте данные врача." }, { status: 400 });
   }
 
   const name = typeof body.name === "string" ? body.name.trim() : "";
@@ -153,31 +158,39 @@ export async function PATCH(
   }
 
   if (!name) {
-    return Response.json({ error: "Name is required." }, { status: 400 });
+    return Response.json({ error: "Укажите имя врача." }, { status: 400 });
   }
 
   if (name.length > 100) {
-    return Response.json({ error: "Name is too long." }, { status: 400 });
+    return Response.json({ error: "Имя врача слишком длинное." }, { status: 400 });
   }
 
   if (!email || !isValidEmail(email)) {
-    return Response.json({ error: "Enter a valid email address." }, { status: 400 });
+    return Response.json({ error: "Введите корректный email." }, { status: 400 });
   }
 
   if (email.length > 254) {
-    return Response.json({ error: "Email address is too long." }, { status: 400 });
+    return Response.json({ error: "Email слишком длинный." }, { status: 400 });
   }
 
   if (!specialtyId) {
     return Response.json({ error: invalidSpecialtyMessage }, { status: 400 });
   }
 
-  const titleError = validateTextLength(title, MAX_TITLE_LENGTH, "Title");
+  const titleError = validateTextLength(
+    title,
+    MAX_TITLE_LENGTH,
+    "Название должности слишком длинное.",
+  );
   if (titleError) {
     return Response.json({ error: titleError }, { status: 400 });
   }
 
-  const bioError = validateTextLength(bio, MAX_BIO_LENGTH, "Bio");
+  const bioError = validateTextLength(
+    bio,
+    MAX_BIO_LENGTH,
+    "Описание врача слишком длинное.",
+  );
   if (bioError) {
     return Response.json({ error: bioError }, { status: 400 });
   }
@@ -185,7 +198,7 @@ export async function PATCH(
   const educationError = validateTextLength(
     education,
     MAX_EDUCATION_LENGTH,
-    "Education",
+    "Сведения об образовании слишком длинные.",
   );
   if (educationError) {
     return Response.json({ error: educationError }, { status: 400 });
@@ -198,21 +211,21 @@ export async function PATCH(
     experienceYears > 80
   ) {
     return Response.json(
-      { error: "Experience years must be between 0 and 80." },
+      { error: "Стаж должен быть от 0 до 80 лет." },
       { status: 400 },
     );
   }
 
   if (typeof body.isActive !== "boolean") {
     return Response.json(
-      { error: "Account active must be selected." },
+      { error: "Выберите статус учётной записи." },
       { status: 400 },
     );
   }
 
   if (typeof body.isAvailable !== "boolean") {
     return Response.json(
-      { error: "Available for booking must be selected." },
+      { error: "Выберите доступность врача для записи." },
       { status: 400 },
     );
   }

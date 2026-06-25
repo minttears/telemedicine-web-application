@@ -23,17 +23,17 @@ export default async function AdminNewDoctorPage() {
         className="inline-flex min-h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 transition hover:border-teal-700 hover:text-teal-700"
         href="/admin/doctors"
       >
-        Back to doctors
+        Назад к врачам
       </Link>
 
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-sm font-medium text-teal-700">New doctor</p>
+        <p className="text-sm font-medium text-teal-700">Новый врач</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-normal text-slate-950">
-          Create a doctor account
+          Добавление врача
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Enter account and profile details. Invite link setup is recommended;
-          temporary passwords remain available as a fallback.
+          Укажите данные учётной записи и профиля. Рекомендуется использовать
+          ссылку-приглашение; временный пароль доступен как резервный вариант.
         </p>
       </section>
 

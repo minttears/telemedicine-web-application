@@ -4,13 +4,13 @@ import { WorkspaceShell } from "@/components/workspace/workspace-shell";
 import { requireWorkspaceRole } from "@/lib/auth/workspace";
 
 const adminNavItems = [
-  { href: "/admin/dashboard", label: "Dashboard" },
-  { href: "/admin/users", label: "Users" },
-  { href: "/admin/doctors", label: "Doctors" },
-  { href: "/admin/specialties", label: "Specialties" },
-  { href: "/admin/consultations", label: "Consultations" },
-  { href: "/admin/audit-log", label: "Audit Log" },
-  { href: "/admin/settings", label: "Settings" },
+  { href: "/admin/dashboard", label: "Панель администратора" },
+  { href: "/admin/users", label: "Пользователи" },
+  { href: "/admin/doctors", label: "Врачи" },
+  { href: "/admin/specialties", label: "Специальности" },
+  { href: "/admin/consultations", label: "Консультации" },
+  { href: "/admin/audit-log", label: "Журнал аудита" },
+  { href: "/admin/settings", label: "Настройки" },
 ];
 
 export default async function AdminLayout({
@@ -23,7 +23,7 @@ export default async function AdminLayout({
   return (
     <WorkspaceShell
       navItems={adminNavItems}
-      roleLabel="Admin workspace"
+      roleLabel="Рабочее пространство администратора"
       userEmail={user.email}
     >
       {children}
