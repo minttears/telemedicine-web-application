@@ -109,7 +109,7 @@ export default async function DoctorSchedulePage() {
           Управление доступным временем
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-          Добавляйте время для консультаций не менее чем за 30 минут до начала,
+          Добавляйте время для консультаций не менее чем за 5 минут до начала,
           чтобы пациенты могли записаться через ваш профиль. Забронированное
           время доступно только для просмотра.
         </p>
@@ -142,7 +142,7 @@ export default async function DoctorSchedulePage() {
                 </h2>
               </div>
               <span className="inline-flex w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
-                Не менее чем за 30 минут
+                Не менее чем за 5 минут
               </span>
             </div>
             <div className="mt-5">

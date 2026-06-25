@@ -26,7 +26,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Consultation detail shells for patient and doctor views
 - PostgreSQL/Prisma text chat persistence
 - Safe polling-based chat refresh with server-rendered authorized reads
-- Doctor schedule management with future slot creation, soft cancellation of future `AVAILABLE` slots, and 30-minute minimum lead time
+- Doctor schedule management with future slot creation, soft cancellation of future `AVAILABLE` slots, and a 5-minute minimum lead time for doctor-created availability
 - Phase 7B code-level MVP workflow QA and small copy/documentation polish
 - Phase 8A first-version doctor-only consultation completion summary
 - Phase 8B consultation history filters and read-only completed chat

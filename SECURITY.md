@@ -206,7 +206,7 @@ Doctor schedule boundaries:
 
 - Doctor schedule management is scoped to the current doctor's `DoctorProfile`.
 - Doctors can create schedule slots only for their own profile.
-- Doctors cannot create schedule slots that start less than 30 minutes from now.
+- Doctors cannot create schedule slots that start less than 5 minutes from the displayed current minute. Patient booking retains its separate 30-minute lead time.
 - Doctors can cancel only future `AVAILABLE` slots in Phase 7A.
 - `BOOKED` slot cancellation, consultation cancellation, and automatic expiration cleanup are not implemented in Phase 7A.
 

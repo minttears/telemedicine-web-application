@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react";
 
 const MIN_SLOT_DURATION_MS = 15 * 60 * 1000;
 const MAX_SLOT_DURATION_MS = 4 * 60 * 60 * 1000;
-const MIN_BOOKING_LEAD_TIME_MS = 30 * 60 * 1000;
+const MIN_SCHEDULE_LEAD_MINUTES = 5;
 
 function toIsoFromLocalDateTime(value: string) {
   const date = new Date(value);
@@ -39,8 +39,15 @@ export function ScheduleSlotForm() {
     const endDate = new Date(endsAtIso);
     const durationMs = endDate.getTime() - startDate.getTime();
 
-    if (startDate < new Date(Date.now() + MIN_BOOKING_LEAD_TIME_MS)) {
-      setError("Время приёма должно начинаться не ранее чем через 30 минут.");
+    const minimumStartsAt = new Date();
+
+    minimumStartsAt.setSeconds(0, 0);
+    minimumStartsAt.setMinutes(
+      minimumStartsAt.getMinutes() + MIN_SCHEDULE_LEAD_MINUTES,
+    );
+
+    if (startDate < minimumStartsAt) {
+      setError("Время приёма должно начинаться не ранее чем через 5 минут.");
       return;
     }
 
@@ -133,7 +140,7 @@ export function ScheduleSlotForm() {
       </div>
 
       <p className="text-sm leading-6 text-slate-600">
-        Добавляйте доступное время не ранее чем через 30 минут.
+        Добавляйте доступное время не ранее чем через 5 минут.
         Продолжительность — от 15 минут до 4 часов.
       </p>
 

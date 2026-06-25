@@ -962,8 +962,8 @@ Status: Completed
 
 Completed:
 
-- Doctor schedule management uses a 30-minute minimum lead time for schedule slot creation and patient booking.
-- Doctors cannot create schedule slots that start less than 30 minutes from now.
+- Doctor schedule management uses a 5-minute minimum lead time for schedule slot creation and a separate 30-minute minimum lead time for patient booking.
+- Doctors cannot create schedule slots that start less than 5 minutes from the displayed current minute.
 - Patients cannot book schedule slots that start less than 30 minutes from now.
 - Patient-facing doctor profiles show only bookable `AVAILABLE` slots that start at least 30 minutes from now.
 - Expired `AVAILABLE` slots are hidden from patient booking and rejected by the booking API, but are not auto-cleaned in this phase.
@@ -987,7 +987,7 @@ Status: Completed
 Completed:
 
 - Performed a code-level QA pass over the doctor schedule, patient booking, patient consultation, doctor consultation, and text chat workflow.
-- Confirmed by inspection that doctor schedule creation enforces doctor-only access, future starts, 30-minute lead time, 15-minute minimum duration, 4-hour maximum duration, and same-doctor overlap checks against `AVAILABLE`, `BOOKED`, and `BLOCKED` slots.
+- Confirmed by inspection that doctor schedule creation enforces doctor-only access, future starts, a 5-minute lead time, 15-minute minimum duration, 4-hour maximum duration, and same-doctor overlap checks against `AVAILABLE`, `BOOKED`, and `BLOCKED` slots.
 - Confirmed by inspection that future `AVAILABLE` doctor slots at least 30 minutes away are shown to patients and that past or too-soon `AVAILABLE` slots are hidden from patient booking.
 - Confirmed by inspection that patient booking uses a Prisma transaction, conditionally changes slots from `AVAILABLE` to `BOOKED`, rejects too-soon or unavailable slots, and creates scheduled consultations for the current patient only.
 - Confirmed by inspection that patient and doctor consultation pages remain server-rendered and scoped to the current patient or assigned doctor.

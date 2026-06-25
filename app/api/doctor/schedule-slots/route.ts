@@ -10,7 +10,7 @@ import { prisma } from "@/lib/prisma";
 
 const MIN_SLOT_DURATION_MS = 15 * 60 * 1000;
 const MAX_SLOT_DURATION_MS = 4 * 60 * 60 * 1000;
-const MIN_BOOKING_LEAD_TIME_MS = 30 * 60 * 1000;
+const MIN_SCHEDULE_LEAD_MINUTES = 5;
 const overlapStatuses: ScheduleSlotStatus[] = [
   "AVAILABLE",
   "BOOKED",
@@ -92,11 +92,16 @@ export async function POST(request: Request) {
       return badRequest("Укажите время начала и окончания.");
     }
 
-    const minimumStartsAt = new Date(Date.now() + MIN_BOOKING_LEAD_TIME_MS);
+    const minimumStartsAt = new Date();
+
+    minimumStartsAt.setSeconds(0, 0);
+    minimumStartsAt.setMinutes(
+      minimumStartsAt.getMinutes() + MIN_SCHEDULE_LEAD_MINUTES,
+    );
 
     if (startsAt < minimumStartsAt) {
       return badRequest(
-        "Время приёма должно начинаться не ранее чем через 30 минут.",
+        "Время приёма должно начинаться не ранее чем через 5 минут.",
       );
     }
 
