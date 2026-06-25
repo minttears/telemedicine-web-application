@@ -36,9 +36,9 @@ const users = [
 
 const specialties = [
   {
-    name: "Общая медицина",
+    name: "Терапия",
     slug: "general-medicine",
-    description: "Первичная помощь и общие медицинские консультации.",
+    description: "Первичная помощь и консультации по общим вопросам здоровья.",
   },
   {
     name: "Кардиология",

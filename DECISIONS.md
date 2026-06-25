@@ -290,6 +290,14 @@ Translate development seed specialty names/descriptions and doctor titles/bios/e
 
 Reason: Seeded medical presentation text appears directly in the Russian UI. Keeping stable identifiers preserves filters and relationships, while an intentional rerun of the idempotent seed can update existing development rows without a migration or destructive reset.
 
+### D037: Update Current Specialty Display Data By Stable Slug
+
+Status: Accepted
+
+Use a focused one-off Prisma script to update only current `Specialty.name` and `Specialty.description` values by stable slug. The script must be idempotent, transaction-based, collision-aware, and limited to safe count-only output.
+
+Reason: Running the full seed would also touch users, doctor profiles, and schedule data. A focused updater translates the existing database display values while preserving specialty IDs, slugs, doctor relations, booking data, consultations, sessions, tokens, and 2FA records.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

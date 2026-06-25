@@ -61,6 +61,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 16D Russian Doctor Workspace UI
 - Phase 16E Russian Admin Workspace UI
 - Phase 16F Public, Legal, Common UI And Final Russian Pass
+- Phase 16G Translate Existing Specialty Data To Russian
 
 ## Current MVP Behavior
 
@@ -93,6 +94,10 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 16F translates seeded specialty names/descriptions and doctor titles/bios/education while preserving personal names, slugs, IDs, relationships, role constants, and enum values. Existing database rows are updated only if the idempotent seed is intentionally rerun; no database reset or migration was performed.
 - The final English-string audit intentionally preserves vendor and protocol names, `Email`, `Slug`, API/URL/QR/2FA/TOTP/ID/SMS/WebAuthn/passkeys, MIME/image formats, route paths, environment names, package names, enum values, role constants, audit action values, internal server exceptions/log messages, and confirmation contracts such as `RESET 2FA`.
 - Phase 16F changes presentation and seed copy only. Authentication, 2FA, booking, consultation, chat, file, video, review, authorization, route, response, status-code, cookie, session, and redirect behavior remain unchanged.
+- Phase 16G adds `scripts/translate-specialties-to-russian.mjs` and the `db:translate-specialties:ru` package command for safely translating current database specialty `name` and `description` values by stable slug, including two preserved legacy Phase 10B QA specialties.
+- The Phase 16G updater is idempotent, checks for target-name conflicts, runs updates transactionally, reports safe counts only, and verifies that the number of doctor-to-specialty links remains unchanged. It does not change specialty IDs, slugs, status, doctor relations, booking data, consultations, users, sessions, tokens, or 2FA data.
+- Phase 16G execution translated 17 distinct current-database specialty rows in total: 15 seeded specialties and 2 legacy Phase 10B QA specialties. Verification found no remaining Latin specialty display text and confirmed all 25 doctor-to-specialty links remained present.
+- The future development seed uses the same Russian specialty display values, including `Терапия` for `general-medicine`.
 - Patient doctor directory supports name, specialty, and symptom-helper filtering. Symptom filtering maps curated symptom slugs to active specialty slugs and is a doctor-discovery helper only, not diagnosis, AI triage, or emergency medical advice.
 - Patient doctor directory still shows only active `DOCTOR` users with `DoctorProfile.isAvailable=true` and active specialties.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with structured consultation outcome fields.
@@ -211,7 +216,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 16F: Public, Legal, Common UI And Final Russian Pass.
+Phase 16G: Translate Existing Specialty Data To Russian.
 
 Latest known commit:
 

@@ -2124,6 +2124,27 @@ Operational note:
 - No seed command or database reset was run. Existing development rows receive the translated seed copy only when the idempotent seed is intentionally rerun or the rows are updated manually.
 - No authentication, 2FA, booking, consultation, chat, file, video, review, authorization, route, session, cookie, redirect, or status-code logic changed.
 
+### Phase 16G: Translate Existing Specialty Data To Russian
+
+Status: Completed
+
+Completed:
+
+- Added `scripts/translate-specialties-to-russian.mjs`.
+- Added `npm run db:translate-specialties:ru`.
+- Mapped the existing seeded specialty slugs and two preserved legacy Phase 10B QA specialty slugs to Russian `name` and `description` values.
+- Added preflight checks for target-name collisions and a transaction for changed rows only.
+- Added count-only reporting for mappings, matched, updated, unchanged, missing, and preserved doctor links.
+- Kept the future development seed aligned with the current-database mapping.
+- Ran the updater against the current local/development database and translated 17 distinct specialty rows in total, including 2 preserved legacy QA rows.
+- Verified 17 Russian specialty names/descriptions, zero remaining Latin specialty display rows, and 25 preserved doctor-to-specialty links.
+
+Preserved:
+
+- No database reset, full seed, schema change, or migration.
+- No changes to specialty IDs, slugs, activation status, doctor relations, booking data, consultations, users, sessions, tokens, or 2FA records.
+- Symptom/filter query values continue to use the same stable specialty slugs.
+
 ## Phase 6: Quality, SEO, And Deployment Readiness
 
 Status: Not started
