@@ -1,10 +1,10 @@
 import { requireRole, UnauthorizedError, ForbiddenError } from "@/lib/auth/current-user";
 import { forbidden, unauthorized } from "@/lib/auth/responses";
+import { getMinimumBookingStartsAt } from "@/lib/booking-lead-time";
 import { prisma } from "@/lib/prisma";
 
 const slotUnavailableMessage =
   "Это время больше недоступно. Выберите другое доступное время.";
-const MIN_BOOKING_LEAD_TIME_MS = 30 * 60 * 1000;
 
 function isBookingBody(value: unknown): value is {
   doctorId: string;
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
 
   try {
     const consultation = await prisma.$transaction(async (tx) => {
-      const minimumStartsAt = new Date(Date.now() + MIN_BOOKING_LEAD_TIME_MS);
+      const minimumStartsAt = getMinimumBookingStartsAt();
       const patientProfile = await tx.patientProfile.findUnique({
         where: {
           userId: user.id,

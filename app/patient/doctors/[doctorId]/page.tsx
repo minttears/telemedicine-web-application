@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { BookingForm } from "@/components/patient/booking-form";
 import { ProfileImage } from "@/components/profile/profile-image";
+import { getMinimumBookingStartsAt } from "@/lib/booking-lead-time";
 import { prisma } from "@/lib/prisma";
 
 type PatientDoctorProfilePageProps = {
@@ -10,8 +11,6 @@ type PatientDoctorProfilePageProps = {
     doctorId: string;
   }>;
 };
-
-const MIN_BOOKING_LEAD_TIME_MS = 30 * 60 * 1000;
 
 function formatExperience(years: number | null) {
   if (!years) {
@@ -78,9 +77,7 @@ export default async function PatientDoctorProfilePage({
   params,
 }: PatientDoctorProfilePageProps) {
   const { doctorId } = await params;
-  const minimumStartsAt = new Date(
-    new Date().getTime() + MIN_BOOKING_LEAD_TIME_MS,
-  );
+  const minimumStartsAt = getMinimumBookingStartsAt();
 
   const doctor = await prisma.doctorProfile.findFirst({
     where: {
@@ -344,8 +341,8 @@ export default async function PatientDoctorProfilePage({
           </h2>
           <p className="mt-3 text-sm leading-6 text-slate-600">
             Выберите доступное время в расписании. После подтверждения оно будет
-            зарезервировано за вами. Отображается время, до которого осталось не
-            менее 30 минут.
+            зарезервировано за вами. Показываются доступные времена, которые
+            начинаются не раньше чем через 5 минут.
           </p>
           <p className="mt-3 text-sm leading-6 text-slate-600">
             После записи на странице консультации будут доступны чат и

@@ -195,7 +195,7 @@ Consultation booking boundaries:
 - The booking API performs server-side role checks with `requireRole("PATIENT")`.
 - Patients can create consultations only for their own `PatientProfile`.
 - Patients cannot book past, unavailable, booked, or wrong-doctor schedule slots.
-- Patients cannot book schedule slots that start less than 30 minutes from now.
+- Patients cannot see or book schedule slots that start less than 5 minutes from the displayed current minute.
 - Expired `AVAILABLE` slots are hidden and not bookable, but are not auto-cleaned in Phase 7A.
 - Double-booking is prevented with a Prisma transaction, a conditional slot update from `AVAILABLE` to `BOOKED`, and `Consultation.scheduleSlotId` uniqueness.
 - Patient consultation list and detail pages show only consultations owned by the current patient.
@@ -206,7 +206,7 @@ Doctor schedule boundaries:
 
 - Doctor schedule management is scoped to the current doctor's `DoctorProfile`.
 - Doctors can create schedule slots only for their own profile.
-- Doctors cannot create schedule slots that start less than 5 minutes from the displayed current minute. Patient booking retains its separate 30-minute lead time.
+- Doctors cannot create schedule slots that start less than 5 minutes from the displayed current minute. Patient availability and booking use the same shared lead-time calculation.
 - Doctors can cancel only future `AVAILABLE` slots in Phase 7A.
 - `BOOKED` slot cancellation, consultation cancellation, and automatic expiration cleanup are not implemented in Phase 7A.
 

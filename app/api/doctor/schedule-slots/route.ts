@@ -6,11 +6,11 @@ import {
   UnauthorizedError,
 } from "@/lib/auth/current-user";
 import { forbidden, unauthorized } from "@/lib/auth/responses";
+import { getMinimumBookingStartsAt } from "@/lib/booking-lead-time";
 import { prisma } from "@/lib/prisma";
 
 const MIN_SLOT_DURATION_MS = 15 * 60 * 1000;
 const MAX_SLOT_DURATION_MS = 4 * 60 * 60 * 1000;
-const MIN_SCHEDULE_LEAD_MINUTES = 5;
 const overlapStatuses: ScheduleSlotStatus[] = [
   "AVAILABLE",
   "BOOKED",
@@ -92,12 +92,7 @@ export async function POST(request: Request) {
       return badRequest("Укажите время начала и окончания.");
     }
 
-    const minimumStartsAt = new Date();
-
-    minimumStartsAt.setSeconds(0, 0);
-    minimumStartsAt.setMinutes(
-      minimumStartsAt.getMinutes() + MIN_SCHEDULE_LEAD_MINUTES,
-    );
+    const minimumStartsAt = getMinimumBookingStartsAt();
 
     if (startsAt < minimumStartsAt) {
       return badRequest(
