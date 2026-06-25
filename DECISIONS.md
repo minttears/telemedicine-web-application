@@ -298,6 +298,14 @@ Use a focused one-off Prisma script to update only current `Specialty.name` and 
 
 Reason: Running the full seed would also touch users, doctor profiles, and schedule data. A focused updater translates the existing database display values while preserving specialty IDs, slugs, doctor relations, booking data, consultations, sessions, tokens, and 2FA records.
 
+### D038: Translate Only Known Doctor Demo Display Data
+
+Status: Accepted
+
+Use a focused Prisma updater to change only known seed/demo doctors' `User.name`, `DoctorProfile.title`, `DoctorProfile.bio`, and `DoctorProfile.education` values. Match by original or target demo name together with stable specialty slug, use Slavic-style full names with patronymics, and keep future seed copy aligned.
+
+Reason: Demo doctor cards should read naturally in the Russian interface, while login identities and operational data must remain stable. This decision narrows the earlier personal-name preservation rule for these explicitly identified demo records only; non-demo doctors and user-generated data remain unchanged.
+
 ## Pending Decisions
 
 - Exact application name and public branding.

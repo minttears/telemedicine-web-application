@@ -2161,6 +2161,26 @@ Preserved:
 - No auth, 2FA, booking, consultation, chat, file, video, review, admin authorization, route, response-shape, status-code, cookie, session, redirect, database, or dependency behavior changed.
 - No migration, full seed, or `.env.local` edit was performed.
 
+### Phase 16I: Translate Existing Doctor Demo Data To Russian
+
+Status: Completed
+
+Completed:
+
+- Added `scripts/translate-doctor-demo-data-to-russian.mjs` and `npm run db:translate-doctors:ru`.
+- Mapped 16 known seed/demo doctors by original or target display name plus stable specialty slug, without storing or printing their login emails in the updater.
+- Replaced demo doctor display names with professional Slavic-style full names containing patronymics.
+- Updated doctor titles, concise user-facing bios, and education display text in Russian.
+- Made the updater idempotent and transactional, with duplicate-match protection and post-update verification of protected fields and relation counts.
+- Aligned `prisma/seed.mjs` with the same Russian display values for future development setups.
+- Ran the updater against the current local/development database: all 16 mappings matched, all 16 profiles were updated and verified, all 16 specialty links remained present, and no Latin text remained in the translated display fields.
+
+Preserved:
+
+- No database reset, full seed, schema change, migration, dependency addition, or `.env.local` edit.
+- No changes to emails, IDs, specialty slugs/links, roles, passwords, tokens, schedules, consultations, reviews, sessions, 2FA records, experience, availability, or storage paths.
+- Non-demo doctors and user-generated medical content remain unchanged.
+
 ## Phase 6: Quality, SEO, And Deployment Readiness
 
 Status: Not started

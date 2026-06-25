@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "db:translate-doctors:ru": "node --env-file=.env.local scripts/translate-doctor-demo-data-to-russian.mjs",
     "db:translate-specialties:ru": "node --env-file=.env.local scripts/translate-specialties-to-russian.mjs",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

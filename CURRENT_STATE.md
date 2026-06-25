@@ -63,6 +63,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - Phase 16F Public, Legal, Common UI And Final Russian Pass
 - Phase 16G Translate Existing Specialty Data To Russian
 - Phase 16H Russian UI Manual QA And Copy Polish
+- Phase 16I Translate Existing Doctor Demo Data To Russian
 
 ## Current MVP Behavior
 
@@ -101,6 +102,10 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 - The future development seed uses the same Russian specialty display values, including `Терапия` for `general-medicine`.
 - Phase 16H completed a final Russian UI audit and polished safe wording in consultation files/outcomes, doctor schedule messages, patient doctor discovery, legal pages, and the password-reset email. No application behavior or contracts changed.
 - Remaining English is intentionally limited to technical/vendor terms, stable identifiers, internal diagnostics, data values, and security confirmation contracts such as `RESET 2FA`.
+- Phase 16I adds `scripts/translate-doctor-demo-data-to-russian.mjs` and the `db:translate-doctors:ru` package command for updating only known demo-doctor display fields by original/target name and stable specialty slug.
+- Existing demo-doctor `User.name`, `DoctorProfile.title`, `bio`, and `education` values now use Russian copy and Slavic-style full names with patronymics. Emails, IDs, specialty slugs/links, schedules, consultations, reviews, sessions, 2FA records, authentication fields, and storage paths remain unchanged.
+- The development seed uses the same Phase 16I doctor display values for future setups. The focused updater is idempotent, transactional, verifies protected fields and relation counts, and prints safe counts only.
+- Phase 16I execution matched, updated, and verified all 16 known demo-doctor profiles. Read-only verification found 16 preserved specialty links and no Latin text in the translated display fields.
 - Patient doctor directory supports name, specialty, and symptom-helper filtering. Symptom filtering maps curated symptom slugs to active specialty slugs and is a doctor-discovery helper only, not diagnosis, medical triage, or emergency medical advice.
 - Patient doctor directory still shows only active `DOCTOR` users with `DoctorProfile.isAvailable=true` and active specialties.
 - Doctors can log in, manage future schedule slots, cancel future `AVAILABLE` slots, view assigned consultations, send/read text messages, upload/download allowed consultation files, use `/doctor/files` as a secure assigned-consultation attachment archive, and complete assigned `SCHEDULED` or `IN_PROGRESS` consultations with structured consultation outcome fields.
@@ -219,7 +224,7 @@ Build a Next.js telemedicine MVP where patients register, choose doctors, book c
 
 ## Latest Known Completed Phase
 
-Phase 16H: Russian UI Manual QA And Copy Polish.
+Phase 16I: Translate Existing Doctor Demo Data To Russian.
 
 Latest known commit:
 
